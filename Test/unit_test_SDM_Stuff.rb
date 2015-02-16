@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'test/unit'
-require_relative 'lib/SDM'
-require_relative 'lib/reform_ratio'
-require_relative 'lib/stuff'
+require_relative '../lib/SDM'
+require_relative '../lib/reform_ratio'
+require_relative '../lib/stuff'
 
 #Take 4 numbers generated randomly that follow a normal distribution, rnorm(4, mean=10, sd=2)
 
@@ -20,9 +20,9 @@ end
 
 class TestSuff < Test::Unit::TestCase
 	def setup
-		@vcf_file = "Test/test/test.vcf"
-		@fasta_file = "Test/test/test.fasta"
-		@f_array = ReformRatio::fasta_array("Test/test/test.fasta")
+		@vcf_file = "test/test.vcf"
+		@fasta_file = "test/test.fasta"
+		@f_array = ReformRatio::fasta_array("test/test.fasta")
 		# @snp_data = ReformRatio::get_snp_data('arabidopsis_datasets/dataset_small2kb/snps.vcf')
 		# @genome_length = ReformRatio::genome_length(@fasta_array)
 	end
@@ -61,20 +61,21 @@ class TestSuff < Test::Unit::TestCase
 		snps_1 = [2.0, 0.0, 0.0]
 		snps_2 = [0, 1.0, 1.0]
 		ids, lengths = ReformRatio.fasta_id_n_lengths(@f_array)
-		dic_norm1, dic_norm2 = Stuff.normalise_by_length(dic1, dic2, snps_1, snps_2, lengths)
+		dic_norm1, dic_norm2 = Stuff.normalise_by_length(ids, dic1, dic2, lengths)
 		assert_equal(dic_norm1, {"frag1"=>2.0/11, "frag3"=>0/8, "frag2"=>0/8})
 		assert_equal(dic_norm2, {"frag1"=>0/11, "frag3"=>1.0/8, "frag2"=>1.0/8})
 
 	end
 	def test_create_perm_fasta
 		perm = []
-		@fasta_array = ReformRatio::fasta_array("Test/test/test2.fasta")
+		@fasta_array = ReformRatio::fasta_array("test/test2.fasta")
 		ids, lengths = ReformRatio.fasta_id_n_lengths(@fasta_array)
 		perm = ["frag1", "frag3", "frag2"]
 		fasta_perm = Stuff.create_perm_fasta(perm, @fasta_array, ids)
 		assert_equal(fasta_perm, [">frag1 Length = 8", "CCAAATAC\n", ">frag3 Length = 7", "ACGACAC\n", ">frag2 Length = 8", "GCAATCGG\n"])
 	end 
 
+	def test_positions_by_fragment
 
 end 
 

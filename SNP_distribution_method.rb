@@ -184,6 +184,8 @@ hm_list_3 << hm_list
 hm_list_2.flatten!
 hm_list_3.flatten!
 
+pp ok_hm_del
+
 hm_ok = Stuff.positions_by_fragment(ok_hm_del, hm_list)
 
 hm_p = Stuff.positions_by_fragment(hm_del, hm_list_2)
@@ -202,7 +204,7 @@ short_sh.each do |frag|
 end
 positions_hm.flatten!
 
-mutation = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
+# mutation = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
 
 # puts positions_hm
 
