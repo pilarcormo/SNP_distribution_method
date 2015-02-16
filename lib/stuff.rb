@@ -124,13 +124,12 @@ class Stuff
 
 	def self.positions_by_fragment(dic, snp_list)
 		dic.each do |id, number|
-			if number.to_i > 0
-				dic.store(id, snp_list[0..(number.to_i-1)])
-				(number.to_i).times do
-		    		snp_list.delete_at(0)
-				end
+			dic.store(id, snp_list[0..(number.to_i-1)])
+			(number.to_i).times do
+		    	snp_list.delete_at(0)
 			end
 		end
+		dic.delete_if { |id, number|  number.empty?}
 		return dic
 	end
 

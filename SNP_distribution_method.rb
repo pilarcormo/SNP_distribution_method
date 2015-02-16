@@ -184,11 +184,12 @@ hm_list_3 << hm_list
 hm_list_2.flatten!
 hm_list_3.flatten!
 
-pp ok_hm_del
+pp hm_list
 
 hm_ok = Stuff.positions_by_fragment(ok_hm_del, hm_list)
 
 hm_p = Stuff.positions_by_fragment(hm_del, hm_list_2)
+
 
 
 
