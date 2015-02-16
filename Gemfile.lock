@@ -1,0 +1,16 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+	pdist (1.0.0)
+	bio (1.4.3.0001)
+	bio-samtools (2.0.4)
+	rinruby (2.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  pdist
+  bio
+  bio-samtools
+  rinruby

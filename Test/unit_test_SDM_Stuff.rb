@@ -76,6 +76,12 @@ class TestSuff < Test::Unit::TestCase
 	end 
 
 	def test_positions_by_fragment
-
+		dic = {"frag1" => 1.0, "frag2"=>1.0, "frag3"=>2.0, "frag4"=>0.0}
+		snp_list = [15, 18, 20, 25]
+		assert_kind_of(Hash, dic)
+		assert_kind_of(Array, snp_list)
+		dic = Stuff.positions_by_fragment(dic, snp_list)
+		assert_equal(dic, {"frag1" =>[15], "frag2"=>[18], "frag3"=>[20, 25]})
+	end 
 end 
 
