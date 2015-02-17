@@ -7,37 +7,18 @@ require_relative 'fitness_score'
 require 'csv'
 
 class Mutation
+
 	def self.define(hm, ht, perm_hm, perm_ht, genome_length, ratios, expected_ratios) 
 		div = 100
 		n = 1048576*4
-		# hyp = SNPdist.hyp_snps(ratios, genome_length)
-		# puts hyp.length
-		
 
-		peak =  LocateMutation.find_peak(hm, n) # Find the peak in the approximated (hypothetical SNP) distribution
+		hyp = SNPdist.hyp_snps(ratios, genome_length)
+	
+		peak =  LocateMutation.find_peak(hyp, n) # Find the peak in the approximated (hypothetical SNP) distribution
  
 		causal = LocateMutation.closest_snp(peak, hm)
-
-		# Dir.chdir(File.join(Dir.home, "small_genomes_SNPs/arabidopsis_datasets")) do
-		# 	# CSV.open("ratios.csv", "ab") do |csv|
-		# 	# 	csv << ["ratios", "perm_ratios"]
-		# 	# end
-		# 	ratios.each do |i|
-		# 		CSV.open("expected_ratios.csv", "ab") do |csv|
-		# 			csv << [i]
-		# 		end
-		# 	end
-		# 	expected_ratios.each do |o|
-		# 		CSV.open("expected_ratios.csv", "ab") do |csv|
-		# 			csv << [o]
-		# 		end
-		# 	end 
-		# end
-
-		# perm_hyp = SNPdist.hyp_snps(expected_ratios, genome_length)
-
-
-		perm_peak = LocateMutation.find_peak(perm_hm, n)
+		perm_hyp = SNPdist.hyp_snps(expected_ratios, genome_length)
+		perm_peak = LocateMutation.find_peak(perm_hyp, n)
 		candidate = LocateMutation.closest_snp(perm_peak, perm_hm)
 
 		puts "Location of causal mutation in correctly ordered genome: #{causal}"
@@ -49,5 +30,21 @@ class Mutation
 		puts "Shift #{percent} %"
 
 		return percent
+	end
+	def self.distribution_plot(hom_snps, het_snps, perm_hm, perm_ht, genome_length, ratios, expected_ratios)
+		dataset = ARGV[0]
+		perm = ARGV[1]
+		hm, ht, hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[],[],[]
+		hm << hom_snps
+		ylim_hm << SNPdist.get_ylim(hom_snps, genome_length, 'density')
+		ht << het_snps
+		ylim_ht << SNPdist.get_ylim(het_snps, genome_length, 'density')
+		hyp_snps = SNPdist.hyp_snps(expected_ratios, genome_length)
+		hyp << hyp_snps
+		ylim_hyp << SNPdist.get_ylim(hyp_snps, genome_length, 'density')
+		SNPdist.plot_snps(perm_hm, hm[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hm', 'Homozygous SNP density', ylim_hm[0])
+		SNPdist.plot_snps(perm_ht, ht[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'ht', 'Heterozygous SNP density', ylim_ht[0])
+		perm_hyp = SNPdist.hyp_snps(ratios, genome_length)
+		SNPdist.plot_snps(perm_hyp, hyp[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hyp', 'Approximated ratio of homozygous to heterozygous SNP density', ylim_hyp[0])
 	end
 end

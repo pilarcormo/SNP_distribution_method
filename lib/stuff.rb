@@ -35,10 +35,10 @@ class Stuff
 		return dic_hm, dic_ht
 	end
 
-	##Input 1: Array of IDs (from shuffled fasta file)
+	##Input 1: Array of fragment ids.
 	##Input 2: Hash of hm SNPs
 	##Input 3: Hash of ht SNPs
-	##Assign the number of SNPs to each fragment in the shuffled list.
+	##Assign the number of SNPs to each fragment.
 	##If a fragment does not have SNPs, the value assigned will be 0.
 	##Output: New hashes with SNP values assigned to the unordered fragments
   def self.define_snps(ids, hm, ht)
@@ -133,9 +133,23 @@ class Stuff
 		return dic
 	end
 
+	def self.important_ratios(snps_hm, snps_ht, ids) 
+		x = 0
+		dic_ratios, ratios = {}, []
+		snps_hm.length.times do
+			ratio = (snps_hm[x]+1)/(snps_ht[x]+1)
+			dic_ratios.store(ids[x], ratio.to_f) 
+			x = x + 1
+		end
+		dic_ratios.delete_if { |id, ratio|  ratio <= 1  }
+		ratios << dic_ratios.values
+		ratios.flatten!
+		return dic_ratios, ratios
+	end
+
   # @param [array] original
   # @param [array] perm
-  def self.top_and_tail(original, perm)
+  	def self.top_and_tail(original, perm)
 		original.delete(perm.shift)
 		original.delete(perm.pop)
 		return original, perm

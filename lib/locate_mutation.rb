@@ -1,6 +1,8 @@
 #encoding: utf-8
-require 'rinruby'
+
 class LocateMutation
+	require 'rinruby'
+
 	# Input 0: List of SNP positions
 	# Input 1: The number of equally spaced points at which the density is to be estimated. Specify n as a power of two.
 	# Output: The highest kernel density value for this SNP distribution
@@ -15,6 +17,9 @@ class LocateMutation
 		myr.quit
 		return peak
 	end
+
+	
+
 	# Input 0: Value under distribution peak (genome position as a float)
 	# Input 1: List of homozygous SNP positions
 	# Output: The closest homozygous SNP to the peak

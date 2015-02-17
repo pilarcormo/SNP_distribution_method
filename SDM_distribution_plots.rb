@@ -9,11 +9,12 @@ dataset = ARGV[0]
 perm = ARGV[1]
 div = 10
 
-genome_length = ReformRatio.genome_length("arabidopsis_datasets/#{dataset}/frags.fasta")
+# genome_length = ReformRatio.genome_length("arabidopsis_datasets/#{dataset}/frags.fasta")
+genome_length = 333
 
 hm, ht, hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[],[],[]
 
-Dir.chdir(File.join(Dir.home, "small_genomes_SNPs/arabidopsis_datasets/#{dataset}")) do
+Dir.chdir(File.join(Dir.home, "SNP_distribution_method/arabidopsis_datasets/#{dataset}")) do
 	
 	hom_snps = WriteIt.file_to_ints_array("hm_snps.txt")
 	hm << hom_snps
@@ -31,18 +32,18 @@ Dir.chdir(File.join(Dir.home, "small_genomes_SNPs/arabidopsis_datasets/#{dataset
 
 end
 
-Dir.chdir(File.join(Dir.home, "small_genomes_SNPs/arabidopsis_datasets/#{dataset}/#{perm}")) do
+Dir.chdir(File.join(Dir.home, "SNP_distribution_method/arabidopsis_datasets/#{dataset}/#{perm}")) do
 
 	perm_hm = WriteIt.file_to_ints_array("perm_hm.txt")
-	SNPdist.plot_snps(perm_hm, hm[0], "small_genomes_SNPs/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hm',
+	SNPdist.plot_snps(perm_hm, hm[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hm',
 		'Homozygous SNP density', ylim_hm[0])
 
 	perm_ht = WriteIt.file_to_ints_array("perm_ht.txt")
-	SNPdist.plot_snps(perm_ht, ht[0], "small_genomes_SNPs/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'ht',
+	SNPdist.plot_snps(perm_ht, ht[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'ht',
 		'Heterozygous SNP density', ylim_ht[0])
 
 	ratios = FitnessScore::ratio(perm_hm, perm_ht, div, genome_length)
 	perm_hyp = SNPdist.hyp_snps(ratios, genome_length)
-	SNPdist.plot_snps(perm_hyp, hyp[0], "small_genomes_SNPs/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hyp', 
+	SNPdist.plot_snps(perm_hyp, hyp[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hyp', 
 		'Approximated ratio of homozygous to heterozygous SNP density', ylim_hyp[0])
 end
