@@ -32,8 +32,6 @@ class Mutation
 		return percent
 	end
 	def self.distribution_plot(hom_snps, het_snps, perm_hm, perm_ht, genome_length, ratios, expected_ratios)
-		dataset = ARGV[0]
-		perm = ARGV[1]
 		hm, ht, hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[],[],[]
 		hm << hom_snps
 		ylim_hm << SNPdist.get_ylim(hom_snps, genome_length, 'density')
@@ -42,9 +40,10 @@ class Mutation
 		hyp_snps = SNPdist.hyp_snps(expected_ratios, genome_length)
 		hyp << hyp_snps
 		ylim_hyp << SNPdist.get_ylim(hyp_snps, genome_length, 'density')
-		SNPdist.plot_snps(perm_hm, hm[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hm', 'Homozygous SNP density', ylim_hm[0])
-		SNPdist.plot_snps(perm_ht, ht[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'ht', 'Heterozygous SNP density', ylim_ht[0])
+		plot_hm = SNPdist.plot_snps(perm_hm, hm[0], "SNP_distribution_method/arabidopsis_datasets", "dataset_small2kb/1802", genome_length, 'hm', 'Homozygous SNP density', ylim_hm[0])
+		plot_ht = SNPdist.plot_snps(perm_ht, ht[0], "SNP_distribution_method/arabidopsis_datasets", "dataset_small2kb/1802", genome_length, 'ht', 'Heterozygous SNP density', ylim_ht[0])
 		perm_hyp = SNPdist.hyp_snps(ratios, genome_length)
-		SNPdist.plot_snps(perm_hyp, hyp[0], "SNP_distribution_method/arabidopsis_datasets", "#{dataset}/#{perm}", 1, genome_length, 'hyp', 'Approximated ratio of homozygous to heterozygous SNP density', ylim_hyp[0])
+		plot_hyp = SNPdist.plot_snps(perm_hyp, hyp[0], "SNP_distribution_method/arabidopsis_datasets", "dataset_small2kb/1802", genome_length, 'hyp', 'Approximated ratio of homozygous to heterozygous SNP density', ylim_hyp[0])
+		return plot_hm, plot_ht, plot_hyp
 	end
 end

@@ -83,5 +83,15 @@ class TestSuff < Test::Unit::TestCase
 		dic = Stuff.positions_by_fragment(dic, snp_list)
 		assert_equal(dic, {"frag1" =>[15], "frag2"=>[18], "frag3"=>[20, 25]})
 	end 
+	def test_important_ratios
+		snp_hm = [0, 14, 20, 2]
+		snp_ht = [5, 4, 2, 5]
+		ids = ["frag1", "frag2", "frag3", "frag4"]
+		dic_ratios, ratios = Stuff.important_ratios(snp_hm, snp_ht, ids)
+		assert_kind_of(Hash, dic_ratios)
+		assert_kind_of(Array, ratios)
+		assert_equal(dic_ratios, {"frag2" => 3.to_f, "frag3" => 7.to_f})
+		assert_equal(ratios, [3.to_f, 7.to_f])
+	end 
 end 
 

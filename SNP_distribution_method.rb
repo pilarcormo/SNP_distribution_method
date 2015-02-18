@@ -5,15 +5,13 @@ require_relative 'lib/write_it'
 require_relative 'lib/stuff'
 require_relative 'lib/mutation'
 require_relative 'lib/SDM'
+require_relative 'lib/snp_dist'
 
-require 'Bio'
 require 'pp'
-require 'csv'
 require 'benchmark'
-require 'PDist'
 
 dataset = ARGV[0] # Name of dataset directory in 'small_genomes_SNPs/arabidopsis_datasets'
-perm_files = ARGV[1]
+perm = ARGV[1]
 
 ######Files
 vcf_file = "arabidopsis_datasets/#{dataset}/snps.vcf"
@@ -158,12 +156,38 @@ positions_hm.flatten!
 
 
 mutation = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
-distribution_plots = Mutation.distribution_plot(hm_list_3, ht_list, positions_hm, het_snps, center, ratios, expected_ratios)
+# distribution_plots = Mutation.distribution_plot(hm_list_3, ht_list, positions_hm, het_snps, center, ratios, expected_ratios)
 
-Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm_files}")
-Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm_files}") do
+hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[]
+
+Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
+Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
 	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
 	WriteIt::write_txt("perm_ht", het_snps)
 end
+Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
+	hm << hm_list_3
+	ht << ht_list
+	ylim_hm << SNPdist.get_ylim(hom_snps, genome_length, 'density')
+	ylim_ht << SNPdist.get_ylim(het_snps, genome_length, 'density')
+	hyp_snps = SNPdist.hyp_snps(expected_ratios, genome_length)
+	hyp << hyp_snps
+	hyp_snps = SNPdist.hyp_snps(expected_ratios, genome_length)
+	hyp << hyp_snps
+	ylim_hyp << SNPdist.get_ylim(hyp_snps, genome_length, 'density')
+
+	SNPdist.plot_snps(positions_hm, hm[0], genome_length, 'hm',
+		'Homozygous SNP density', ylim_hm[0])
+
+	perm_ht = WriteIt.file_to_ints_array("perm_ht.txt")
+	SNPdist.plot_snps(het_snps, ht[0], genome_length, 'ht',
+		'Heterozygous SNP density', ylim_ht[0])
+
+	perm_hyp = SNPdist.hyp_snps(ratios, genome_length)
+	SNPdist.plot_snps(perm_hyp, hyp[0], genome_length, 'hyp', 
+		'Approximated ratio of homozygous to heterozygous SNP density', ylim_hyp[0])
+end
+
+
 
 

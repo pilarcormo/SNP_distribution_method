@@ -1,9 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-	pdist (1.0.0)
+	pdist (1.1.0)
 	bio (1.4.3.0001)
-	bio-samtools (2.0.4)
+	bio-samtools (2.1.0)
 	rinruby (2.0.3)
 
 PLATFORMS
