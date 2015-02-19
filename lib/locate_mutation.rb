@@ -15,7 +15,7 @@ class LocateMutation
 		myr.eval 'peak <- kernel_density$x[index]'
 		peak = myr.pull 'peak'
 		myr.quit
-		return peak
+		return peak.to_i
 	end
 
 	
