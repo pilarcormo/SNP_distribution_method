@@ -9,8 +9,8 @@ dataset = ARGV[0]
 perm = ARGV[1]
 div = 10
 
-# genome_length = ReformRatio.genome_length("arabidopsis_datasets/#{dataset}/frags.fasta")
-genome_length = 333
+genome_length = ReformRatio.genome_length("arabidopsis_datasets/#{dataset}/frags.fasta")
+# genome_length = 333
 
 hm, ht, hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[],[],[]
 
