@@ -5,7 +5,7 @@ require 'test/unit'
 class TestModelGenome < Test::Unit::TestCase
 
 	def test_fasta_to_char_array
-		assert_equal(%w(A T G C A T A A A A A), ModelGenome::fasta_to_char_array('test/test/dummy.fasta'))
+		assert_equal(%w(A T G C A T A A A A A), ModelGenome::fasta_to_char_array('test/test.fasta'))
 	end
 
 	def test_get_snps

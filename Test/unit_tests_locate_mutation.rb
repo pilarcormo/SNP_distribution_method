@@ -9,7 +9,7 @@ class TestLocateMutation < Test::Unit::TestCase
 	end
 
 	def test_find_peak
-		assert_equal(94, (LocateMutation.find_peak(@example_snps, 512)))
+		assert_equal(93, (LocateMutation.find_peak(@example_snps, 512)))
 	end
 
 	def test_closest
