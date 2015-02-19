@@ -154,40 +154,27 @@ short_or.each do |frag|
 end
 positions_hm.flatten!
 
+pp short_ids.length
+pp short_or.length
 
-mutation = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
-# distribution_plots = Mutation.distribution_plot(hm_list_3, ht_list, positions_hm, het_snps, center, ratios, expected_ratios)
 
-hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[]
+causal, candidate, percent = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
+
 
 Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
 Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
 	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
 	WriteIt::write_txt("perm_ht", het_snps)
-end
-Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
-	hm << hm_list_3
-	ht << ht_list
-	ylim_hm << SNPdist.get_ylim(hom_snps, genome_length, 'density')
-	ylim_ht << SNPdist.get_ylim(het_snps, genome_length, 'density')
-	hyp_snps = SNPdist.hyp_snps(expected_ratios, genome_length)
-	hyp << hyp_snps
-	hyp_snps = SNPdist.hyp_snps(expected_ratios, genome_length)
-	hyp << hyp_snps
-	ylim_hyp << SNPdist.get_ylim(hyp_snps, genome_length, 'density')
-
-	SNPdist.plot_snps(positions_hm, hm[0], genome_length, 'hm',
-		'Homozygous SNP density', ylim_hm[0])
-
-	perm_ht = WriteIt.file_to_ints_array("perm_ht.txt")
-	SNPdist.plot_snps(het_snps, ht[0], genome_length, 'ht',
-		'Heterozygous SNP density', ylim_ht[0])
-
-	perm_hyp = SNPdist.hyp_snps(ratios, genome_length)
-	SNPdist.plot_snps(perm_hyp, hyp[0], genome_length, 'hyp', 
-		'Approximated ratio of homozygous to heterozygous SNP density', ylim_hyp[0])
+	File.open("mutation.txt", "w+") do |f|
+		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
+		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
+		f.puts "Candidate SNP position in permutation: #{candidate}"
+		f.puts "Shift #{percent} %"
+	end
 end
 
+
+distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)
 
 
 
