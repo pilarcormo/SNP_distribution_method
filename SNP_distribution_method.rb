@@ -158,7 +158,7 @@ pp short_ids.length
 pp short_or.length
 
 
-causal, candidate, percent = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
+# causal, candidate, percent = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
 
 
 Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
@@ -174,7 +174,7 @@ Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
 end
 
 
-distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)
+# distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)
 
 
 

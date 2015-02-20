@@ -4,7 +4,6 @@ GEM
 	pdist (1.1.0)
 	bio (1.4.3.0001)
 	bio-samtools (2.1.0)
-	rinruby (2.0.3)
 
 PLATFORMS
   ruby
@@ -13,4 +12,3 @@ DEPENDENCIES
   pdist
   bio
   bio-samtools
-  rinruby

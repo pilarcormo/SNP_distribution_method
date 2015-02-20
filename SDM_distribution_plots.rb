@@ -28,7 +28,6 @@ Dir.chdir(File.join(Dir.home, "SNP_distribution_method/arabidopsis_datasets/#{da
 	hyp_snps = SNPdist.hyp_snps(expected_ratio, genome_length)
 	hyp << hyp_snps
 	ylim_hyp << SNPdist.get_ylim(hyp_snps, genome_length, 'density')
-	pp ylim_hyp
 
 end
 
