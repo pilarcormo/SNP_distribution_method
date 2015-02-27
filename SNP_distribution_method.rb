@@ -1,4 +1,4 @@
-#encoding: utf-8
+#encoding: utf-8r
 
 require_relative 'lib/reform_ratio'
 require_relative 'lib/write_it'
