@@ -1,5 +1,4 @@
-#encoding: utf-8r
-
+#encoding: utf-8
 require_relative 'lib/reform_ratio'
 require_relative 'lib/write_it'
 require_relative 'lib/stuff'
@@ -45,7 +44,7 @@ ok_hm, ok_ht, snps_hm, snps_ht = Stuff.define_snps(ids_ok, dic_hm, dic_ht)
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
 dic_hm_norm, dic_ht_norm = Stuff.normalise_by_length(ids_ok, dic_hm, dic_ht, lengths)
 dic_shuf_hm_norm, dic_shuf_ht_norm = Stuff.normalise_by_length(ids, dic_hm, dic_ht, lengths)
-
+pp dic_hm_norm
 
 #Invert the hash so we can have the SNP density as a key.
 
@@ -77,6 +76,8 @@ dic_or_hm, dic_or_ht, snps_hm_or, snps_ht_or = Stuff.define_snps(perm_hm, dic_hm
 ###Calculate ratios and delete those equal to or lower than 1 so only the important contigs remain.
 dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
 dic_expected_ratios, expected_ratios = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm)
+
+
 
 ##Create a shorter version of the ordered array of fragments with only the fragments that have a high hm/ht ratio 
 
@@ -161,17 +162,17 @@ pp short_or.length
 causal, candidate, percent = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
 
 
-Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
-Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
-	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
-	WriteIt::write_txt("perm_ht", het_snps)
-	File.open("mutation.txt", "w+") do |f|
-		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
-		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
-		f.puts "Candidate SNP position in permutation: #{candidate}"
-		f.puts "Shift #{percent} %"
-	end
-end
+# Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
+# Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
+# 	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
+# 	WriteIt::write_txt("perm_ht", het_snps)
+# 	File.open("mutation.txt", "w+") do |f|
+# 		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
+# 		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
+# 		f.puts "Candidate SNP position in permutation: #{candidate}"
+# 		f.puts "Shift #{percent} %"
+# 	end
+# end
 
 
 distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)

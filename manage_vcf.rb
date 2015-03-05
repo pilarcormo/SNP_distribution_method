@@ -3,27 +3,28 @@ require_relative 'lib/reform_ratio'
 require_relative 'lib/write_it'
 require 'pp'
 
-vcf_file = "Varscan_galaxy2502.vcf"
+vcf_file = "BCF2.vcf"
+# vcf_file = "Varscan.vcf"
 chromosome = ARGV[0]
 
-# m = [] 
-# Dir.mkdir("chromosome#{chromosome}")
+m = [] 
+Dir.mkdir("BCF2_chromosome#{chromosome}")
 
-# File.open(vcf_file, 'r').each do |line|
-# 	next if line =~ /^#/
-#     v = Bio::DB::Vcf.new(line)
-#     a = line.split("\t")
-#     first = a.first
-#     if first == "#{chromosome}"
-#     	m << line 
-#     end
-# end 
+File.open(vcf_file, 'r').each do |line|
+	next if line =~ /^#/
+    v = Bio::DB::Vcf.new(line)
+    a = line.split("\t")
+    first = a.first
+    if first == "#{chromosome}"
+    	m << line 
+    end
+end 
 
-# File.open("chromosome#{chromosome}/vcf_file_#{chromosome}.vcf", "w+") do |f|
-#   m.each { |element| f.puts(element) }
-# end
+File.open("BCF2_chromosome#{chromosome}/vcf_file_#{chromosome}.vcf", "w+") do |f|
+  m.each { |element| f.puts(element) }
+end
 
-vcf_file_chr = "chromosome#{chromosome}/vcf_file_#{chromosome}.vcf"
+vcf_file_chr = "BCF2_chromosome#{chromosome}/vcf_file_#{chromosome}.vcf"
 
 vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info = ReformRatio.get_snp_data(vcf_file_chr)
 
@@ -48,7 +49,7 @@ snps.each do |pos, type|
 	end 
 end 		
 
-WriteIt::write_txt("chromosome#{chromosome}/hm", hm) 
-WriteIt::write_txt("chromosome#{chromosome}/ht", ht)
+WriteIt::write_txt("BCF2_chromosome#{chromosome}/hm", hm) 
+WriteIt::write_txt("BCF2_chromosome#{chromosome}/ht", ht)
 
 
