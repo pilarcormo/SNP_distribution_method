@@ -162,17 +162,17 @@ pp short_or.length
 causal, candidate, percent = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
 
 
-# Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
-# Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
-# 	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
-# 	WriteIt::write_txt("perm_ht", het_snps)
-# 	File.open("mutation.txt", "w+") do |f|
-# 		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
-# 		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
-# 		f.puts "Candidate SNP position in permutation: #{candidate}"
-# 		f.puts "Shift #{percent} %"
-# 	end
-# end
+Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
+Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
+	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
+	WriteIt::write_txt("perm_ht", het_snps)
+	File.open("mutation.txt", "w+") do |f|
+		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
+		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
+		f.puts "Candidate SNP position in permutation: #{candidate}"
+		f.puts "Shift #{percent} %"
+	end
+end
 
 
 distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)
