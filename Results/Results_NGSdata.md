@@ -34,6 +34,7 @@ In here I'm showing the overlapping plots with both densities. In red, the hm SN
 
 #####Chromosome 3
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/BCF2_chromosome3/Rplot.overlap_hmht.png?raw=true)
+
 #####Chromosome 4
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/BCF2_chromosome4/Rplot.overlap_hmht.png?raw=true)
 #####Chromosome 5 
