@@ -52,5 +52,5 @@ pp ht2
 # WriteIt::write_data("chromosome1/#{ARGV[0]}/snps.vcf", vcf)
 # WriteIt::write_data("chromosome1/#{ARGV[0]}/frags_shuffled.fasta", fastaformat_array_shuf)
 # WriteIt::write_txt("chromosome1/#{ARGV[0]}/info", [hm_r, ht_r, "Contig size = #{contig_size}"])
-# WriteIt::write_txt("chromosome1/#{ARGV[0]}/hm_snps", hm)
-# WriteIt::write_txt("chromosome1/#{ARGV[0]}/ht_snps", ht)
+WriteIt::write_txt("chromosome1/#{ARGV[0]}/hm_snps", hm)
+WriteIt::write_txt("chromosome1/#{ARGV[0]}/ht_snps", ht)

@@ -141,7 +141,7 @@ class Stuff
 			dic_ratios.store(ids[x], ratio.to_f) 
 			x = x + 1
 		end
-		# dic_ratios.delete_if { |id, ratio|  ratio <= 1  }
+		dic_ratios.delete_if { |id, ratio|  ratio <= 1  }
 		ratios << dic_ratios.values
 		ratios.flatten!
 		return dic_ratios, ratios
