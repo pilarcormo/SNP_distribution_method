@@ -40,11 +40,9 @@ genome_length = ReformRatio.genome_length(fasta_file)
 ##If a fragment does not have SNPs, the value assigned will be 0.
 ok_hm, ok_ht, snps_hm, snps_ht = Stuff.define_snps(ids_ok, dic_hm, dic_ht)
 
-
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
-dic_hm_norm, dic_ht_norm = Stuff.normalise_by_length(ids_ok, dic_hm, dic_ht, lengths)
+# dic_hm_norm, dic_ht_norm = Stuff.normalise_by_length(ids_, dic_hm, dic_ht, lengths)
 dic_shuf_hm_norm, dic_shuf_ht_norm = Stuff.normalise_by_length(ids, dic_hm, dic_ht, lengths)
-pp dic_hm_norm
 
 #Invert the hash so we can have the SNP density as a key.
 
@@ -74,22 +72,16 @@ end
 dic_or_hm, dic_or_ht, snps_hm_or, snps_ht_or = Stuff.define_snps(perm_hm, dic_hm, dic_ht)
 
 ###Calculate ratios and delete those equal to or lower than 1 so only the important contigs remain.
-dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
+#dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
 dic_expected_ratios, expected_ratios = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm)
 
-pp dic_ratios
-
-# File.open("arabidopsis_datasets/#{dataset}/ratios.txt", "w+") do |f|
-#   ratios.each { |element| f.puts(element) }
-# end
-
 ##Create a shorter version of the ordered array of fragments with only the fragments that have a high hm/ht ratio 
-
 
 short_ids = []
 dic_expected_ratios.each do |id, ratio|
 	short_ids << id
 end 
+
 
 ids_ok_short = []
 ids_ok.each { |element|
@@ -123,15 +115,15 @@ File.open("arabidopsis_datasets/#{dataset}/frags_ordered_short_less1.fasta", "w+
   fasta_perm_short.each { |element| f.puts(element) }
 end
 
-fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered_less1.fasta"
+fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered.fasta"
 frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
 
 ###Calculate size of the group of fragments that have a high hm/ht ratio
-contig_size = (genome_length/perm_hm.length).to_f
-center = contig_size*(short_or.length)
+contig_size = (genome_length/ids_ok.length).to_f
+center = contig_size*(perm.length)
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
 
 ###Create arrays of correct SNP positions
@@ -161,24 +153,21 @@ short_or.each do |frag|
 end
 positions_hm.flatten!
 
-pp short_ids.length
-pp short_or.length
+
+causal, candidate, percent = Mutation.define(hm_list_3, ht_list, hom_snps, het_snps, genome_length, ratios, expected_ratios)
 
 
-causal, candidate, percent = Mutation.define(hm_list_3, ht_list, positions_hm, het_snps, genome_length, ratios, expected_ratios)
-
-
-# Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
-# Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
-# 	WriteIt::write_txt("perm_hm", positions_hm) # save the SNP distributions for the best permutation in the generation
-# 	WriteIt::write_txt("perm_ht", het_snps)
-# 	File.open("mutation.txt", "w+") do |f|
-# 		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
-# 		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
-# 		f.puts "Candidate SNP position in permutation: #{candidate}"
-# 		f.puts "Shift #{percent} %"
-# 	end
-# end
+Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
+Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
+	WriteIt::write_txt("perm_hm", hom_snps) # save the SNP distributions for the best permutation in the generation
+	WriteIt::write_txt("perm_ht", het_snps)
+	File.open("mutation.txt", "w+") do |f|
+		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
+		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
+		f.puts "Candidate SNP position in permutation: #{candidate}"
+		f.puts "Shift #{percent} %"
+	end
+end
 
 
 distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)

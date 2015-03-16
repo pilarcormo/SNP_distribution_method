@@ -135,7 +135,7 @@ class Stuff
 
 	def self.important_ratios(snps_hm, snps_ht, ids) 
 		x = 0
-		dic_ratios, ratios = {}, []
+		dic_ratios, ratios, ids_s = {}, [], []
 		snps_hm.length.times do
 			ratio = (snps_hm[x]+1)/(snps_ht[x]+1)
 			dic_ratios.store(ids[x], ratio.to_f) 
@@ -143,8 +143,9 @@ class Stuff
 		end
 		dic_ratios.delete_if { |id, ratio|  ratio <= 1  }
 		ratios << dic_ratios.values
+		ids_s << dic_ratios.keys
 		ratios.flatten!
-		return dic_ratios, ratios
+		return dic_ratios, ratios, ids_s
 	end
 
   # @param [array] original

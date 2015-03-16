@@ -1,6 +1,10 @@
-h<-hist(hm4$V1, breaks=10, density=10, col="lightgray", xlab="Accuracy", main="Overall") 
-xfit<-seq(min(hm4$V1),max(hm4$V1),length=40) 
-yfit<-dnorm(xfit,mean=mean(g),sd=sd(hm4$V1)) 
-yfit <- yfit*diff(h$mids[1:2])*length(hm4$V1) 
-lines(xfit, yfit, col="black", lwd=2)
+data <- c(hm5$V1)
+length <- 31000000
+
+h<-hist(data, breaks=50, density=50, col="gray", xlab="Chromosome length", xlim =c(0,length), main="Homozygous SNPs on chromosome 5") 
+multiplier <- h$counts / h$density
+mydensity <- density(data)
+mydensity$y <- mydensity$y * multiplier[1]
+
+lines(mydensity, col="darkred")
 
