@@ -1,3 +1,0 @@
-hm <- rnorm(50, 1000, 100)
-ht <- runif(50, 1, 2000)
-Contig size = 25

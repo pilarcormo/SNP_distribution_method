@@ -22,6 +22,24 @@ fasta_shuffle = "arabidopsis_datasets/#{dataset}/frags_shuffled.fasta"
 hm, ht = Stuff.snps_in_vcf(vcf_file)
 snp_data = ReformRatio.get_snp_data(vcf_file)
 
+
+hm_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/hm_snps.txt") # Get SNP distributions
+ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.txt")
+
+dic_pos_hm, dic_pos_ht = {}, {}
+
+x = 0 
+Array(0..hm.length - 1).each do |o|
+  dic_pos_hm.store(hm[x], hm_list[x])
+  x += 1 
+end
+
+Array(0..ht.length - 1).each do |o|
+  dic_pos_ht.store(ht[x], ht_list[x])
+  x += 1 
+end
+
+
 ##Create dictionaries with the id of the fragment as the key and the NUMBER of SNPs as value
 dic_hm, dic_ht = Stuff.create_hash_snps(hm, ht)
 
@@ -52,6 +70,43 @@ ids.each do |frag|
     ids.delete(frag)
   end
 end 
+
+ids_short.flatten!
+
+dic_pos_hm.each do |frag, pos|
+  if ids_short.include?(frag)
+  else 
+    dic_pos_hm.delete(frag)
+  end 
+end 
+dic_pos_ht.each do |frag, pos|
+  if ids_short.include?(frag)
+  else 
+    dic_pos_ht.delete(frag)
+  end 
+end 
+
+
+hm, ht = [], []
+hm = dic_pos_hm.values
+ht = dic_pos_ht.values
+
+# hm.each do |frag|
+#   if ids_short.include?(frag)
+#   else 
+#     hm.delete(frag)
+#     ht.delete(frag)
+#   end
+# end 
+
+File.open("arabidopsis_datasets/#{dataset}/hm_snps_short.txt", "w+") do |f|
+  hm.each { |element| f.puts(element) }
+end
+
+File.open("arabidopsis_datasets/#{dataset}/ht_snps_short.txt", "w+") do |f|
+  ht.each { |element| f.puts(element) }
+end
+
 
 
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
@@ -103,14 +158,16 @@ frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
 
+
+
 ###Calculate size of the group of fragments that have a high hm/ht ratio
 contig_size = (genome_length/ids_ok.length).to_f
 center = contig_size*(perm.length)
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
 
 ###Create arrays of correct SNP positions
-hm_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/hm_snps.txt") # Get SNP distributions
-ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.txt")
+hm_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/hm_snps_short.txt") # Get SNP distributions
+ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps_short.txt")
 
 causal, candidate, percent = Mutation.define(hm_list, ht_list, hom_snps, het_snps, genome_length, ratios, expected_ratios)
 
@@ -126,6 +183,9 @@ Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
 		f.puts "Shift #{percent} %"
 	end
 end
+
+pp hom_snps 
+pp hom_snps.length
 
 
 distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)
