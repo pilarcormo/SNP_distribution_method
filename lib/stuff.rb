@@ -133,7 +133,7 @@ class Stuff
 		return dic
 	end
 
-	def self.important_ratios(snps_hm, snps_ht, ids) 
+	def self.important_ratios(snps_hm, snps_ht, ids, threshold) 
 		x = 0
 		dic_ratios, ratios, ids_s = {}, [], []
 		snps_hm.length.times do
@@ -141,7 +141,7 @@ class Stuff
 			dic_ratios.store(ids[x], ratio.to_f) 
 			x = x + 1
 		end
-		dic_ratios.delete_if { |id, ratio|  ratio <= 1  }
+		dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
 		ratios << dic_ratios.values
 		ids_s << dic_ratios.keys
 		ratios.flatten!

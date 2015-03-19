@@ -23,8 +23,8 @@ Dir.mkdir(File.join(Dir.home, "SNP_distribution_method/arabidopsis_datasets/#{na
 # puts "Is there a SNP at the centre of the distribution? -- #{snp_pos.include?(7500000)}"
 hm, ht = [], []
 
-hm = WriteIt::file_to_ints_array("chromosom1/hm.txt")
-ht = WriteIt::file_to_ints_array("chromosome/ht.txt")
+hm = WriteIt::file_to_ints_array("chromosome1/hm.txt")
+ht = WriteIt::file_to_ints_array("chromosome1/ht.txt")
 # 
 
 # hm = WriteIt::file_to_array("hm.txt")

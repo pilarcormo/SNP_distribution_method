@@ -28,12 +28,12 @@ class Mutation
 
 	def self.distribution_plot(genome_length, ratios, expected_ratios, dataset, perm)
 		hm, ht, hyp, ylim_hm, ylim_ht, ylim_hyp = [],[],[],[],[],[]
-		Dir.chdir(File.join(Dir.home, "SNP_distribution_method/arabidopsis_datasets/#{dataset}")) do
-			hom_snps = WriteIt.file_to_ints_array("hm_snps.txt")
+		Dir.chdir(File.join(Dir.home, "SNP_distribution_method/arabidopsis_datasets/#{dataset}/#{perm}")) do
+			hom_snps = WriteIt.file_to_ints_array("hm_snps_short.txt")
 			hm << hom_snps
 			ylim_hm << SNPdist.get_ylim(hom_snps, genome_length, 'density')
 
-			het_snps = WriteIt.file_to_ints_array("ht_snps.txt")
+			het_snps = WriteIt.file_to_ints_array("ht_snps_short.txt")
 			ht << het_snps
 			ylim_ht << SNPdist.get_ylim(het_snps, genome_length, 'density')
 
