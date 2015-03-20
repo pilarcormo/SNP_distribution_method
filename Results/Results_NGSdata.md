@@ -3,7 +3,7 @@ Working from home this morning (waiting for a parcel collection, hopefully they'
 Results
 ====
 
-from [BCF2 reads](http://1001genomes.org/software/shoremap.html)
+###[BCF2 reads](http://bioinfo.mpipz.mpg.de/shoremap/SHOREmap_v3.0.html)
 
 In here I'm showing the overlapping plots with both densities. In red, the hm SNP density and in blue, the ht SNP density. By doing this, I can start guessing how the hm/ht ratio distribution will look like. 
 
@@ -32,3 +32,23 @@ In here I'm showing the overlapping plots with both densities. In red, the hm SN
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/BCF2/BCF2_chromosome5/Rplot.hmhtdensities_magblu.png?raw=true)
 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/BCF2/BCF2_chromosome5/Rplot.hist%26den.png?raw=true)
+
+###[Galvao/OCF2 reads](http://bioinfo.mpipz.mpg.de/shoremap/SHOREmap_v3.0.html)
+
+#####Chromosome 1 
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome1/Rplot.hmhtdensities.png?raw=true)
+
+#####Chromosome 2 
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome2/Rplot.hmht.png?raw=true)
+
+
+#####Chromosome 3
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome3/Rplot.png?raw=true)
+
+
+
+#####Chromosome 4
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome4/Rplot.hmht.png?raw=true)
+
+#####Chromosome 5 
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome5/Rplot.hmht.png?raw=true)
