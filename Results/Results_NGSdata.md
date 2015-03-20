@@ -46,7 +46,6 @@ In here I'm showing the overlapping plots with both densities. In red, the hm SN
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome3/Rplot.png?raw=true)
 
 
-
 #####Chromosome 4
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome4/Rplot.hmht.png?raw=true)
 
