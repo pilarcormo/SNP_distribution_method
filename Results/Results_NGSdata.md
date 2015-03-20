@@ -35,19 +35,12 @@ In here I'm showing the overlapping plots with both densities. In red, the hm SN
 
 ###[Galvao/OCF2 reads](http://bioinfo.mpipz.mpg.de/shoremap/SHOREmap_v3.0.html)
 
-#####Chromosome 1 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome1/Rplot.hmhtdensities.png?raw=true)
 
-#####Chromosome 2 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome2/Rplot.hmht.png?raw=true)
 
-
-#####Chromosome 3
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome3/Rplot.png?raw=true)
 
-
-#####Chromosome 4
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome4/Rplot.hmht.png?raw=true)
 
-#####Chromosome 5 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Galvao/chromosome5/Rplot.hmht.png?raw=true)
