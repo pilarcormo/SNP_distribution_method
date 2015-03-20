@@ -1,6 +1,7 @@
 
-for i in {0..5} 
+for i in {1..5} 
 do
 	echo "$i"
-	ruby SNP_distribution_method_variation.rb BCF2_4_v2 Perm_1903_ratio_$i $i
+	ruby manage_vcf.rb Galvao $i output_galvao
+	ruby manage_vcf.rb Sch $i sch
 done 
