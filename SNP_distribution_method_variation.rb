@@ -19,32 +19,33 @@ fasta_file = "arabidopsis_datasets/#{dataset}/frags.fasta"
 fasta_shuffle = "arabidopsis_datasets/#{dataset}/frags_shuffled.fasta"
 
 
-#Create lists of SNPs
+#Create list of fragment ids that contain  SNPs from vcf file 
 hm, ht = Stuff.snps_in_vcf(vcf_file)
+
 snp_data = ReformRatio.get_snp_data(vcf_file)
 
-#Create hashes for fragments id and SNP position
+#Create hashes for fragments ids and SNP position
 
 hm_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/hm_snps.txt") # Get SNP distributions
 ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.txt")
 
-dic_pos_hm, dic_pos_ht = {}, {}
+dic_pos_hm, dic_pos_ht =  Stuff.dic_id_pos(hm, ht, hm_list, ht_list)
 
-x = 0 
-Array(0..hm.length - 1).each do |o|
-  dic_pos_hm.store(hm[x], hm_list[x])
-  x += 1 
+class Hash
+  def safe_invert
+    self.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
+  end
 end
 
-Array(0..ht.length - 1).each do |o|
-  dic_pos_ht.store(ht[x], ht_list[x])
-  x += 1 
-end
+dic_pos_hm = dic_pos_hm.safe_invert
+dic_pos_ht = dic_pos_ht.safe_invert
+
 
 ##Create dictionaries with the id of the fragment as the key and the NUMBER of SNPs as value
 dic_hm, dic_ht = Stuff.create_hash_snps(hm, ht)
 
-##Open the fasta file with the randomly ordered fragments  and create an array with all the information
+
+##Create array with ordered fragments (fromf fasta_file) and from shuffled fragments (fasta_shuffle)
 frags = ReformRatio.fasta_array(fasta_file)
 frags_shuffled = ReformRatio.fasta_array(fasta_shuffle)
 
@@ -66,45 +67,19 @@ s_hm, s_ht, s_snps_hm, s_snps_ht = Stuff.define_snps(ids_short, dic_hm, dic_ht)
 
 ##if the ratio is not higher than a given threshold, eliminate the ids from the ids array
 ##and then eliminate those SNPs positions from the files, create new files.  
-shuf_short_ids = []
-ids_short.flatten!
-ids.each do |frag|
-  if ids_short.include?(frag)
-    shuf_short_ids << frag
-  end 
-end 
-
-
-shuf_short_ids.flatten!
-
-dic_pos_hm.each do |frag, pos|
-  if ids_short.include?(frag)
-  else 
-    dic_pos_hm.delete(frag)
-  end 
-end 
-dic_pos_ht.each do |frag, pos|
-  if ids_short.include?(frag)
-  else 
-    dic_pos_ht.delete(frag)
-  end 
-end 
-
-hm_sh, ht_sh = [], []
-hm_sh = dic_pos_hm.values
-ht_sh = dic_pos_ht.values
+shuf_short_ids, hm_sh, ht_sh = Stuff.important_positions(ids_short, dic_pos_hm, dic_pos_ht, ids)
 
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
 # dic_hm_norm, dic_ht_norm = Stuff.normalise_by_length(ids_, dic_hm, dic_ht, lengths)
 dic_shuf_hm_norm, dic_shuf_ht_norm = Stuff.normalise_by_length(shuf_short_ids, dic_hm, dic_ht, lengths)
 
 #Invert the hash so we can have the SNP density as a key.
-
 class Hash
   def safe_invert
     self.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
   end
 end
+
 
 dic_hm_inv = dic_shuf_hm_norm.safe_invert
 
@@ -114,13 +89,10 @@ dic_hm_inv = dic_shuf_hm_norm.safe_invert
 
 perm_hm = SDM.sorting(dic_hm_inv)
 
-pp perm_hm.length
-
 ##Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
  Benchmark.bm do |b|
     b.report {10.times do ; perm_hm = SDM.sorting(dic_hm_inv);  end}
 end
-
 
 #Define SNPs in the recently ordered array of fragments.
 dic_or_hm, dic_or_ht, snps_hm_or, snps_ht_or = Stuff.define_snps(perm_hm, dic_hm, dic_ht)
@@ -138,7 +110,6 @@ File.open("arabidopsis_datasets/#{dataset}/frags_ordered#{threshold}.fasta", "w+
   fasta_perm.each { |element| f.puts(element) }
 end
 
-
 fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered#{threshold}.fasta"
 frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 
@@ -153,7 +124,6 @@ puts "The length of the group of contigs that have a high hm/ht ratio is #{cente
 
 
 causal, candidate, percent = Mutation.define(hm_sh, ht_sh, hom_snps, het_snps, genome_length, ratios, expected_ratios)
-
 
 Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
 Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
