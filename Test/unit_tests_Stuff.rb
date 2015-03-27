@@ -14,6 +14,17 @@ class TestSuff < Test::Unit::TestCase
 		assert_equal(["frag1", "frag1"], hm)
 		assert_equal(["frag2", "frag3"], ht)
 	end 
+	def test_dic_id_pos
+		hm = ["frag1", "frag1", "frag1", "frag4"]
+		ht = ["frag1", "frag1", "frag2", "frag4"]
+		pos1 = [12, 13, 14, 45]
+		pos2 = [12, 14, 30, 40]
+		dic_pos_hm, dic_pos_ht = Stuff.dic_id_pos(hm, ht, pos1, pos2)
+		assert_kind_of(Hash, dic_pos_hm)
+		assert_kind_of(Hash, dic_pos_ht)
+		assert_equal(dic_pos_hm, {"frag1"=>2.0, "frag3"=>0, "frag2"=>0})
+		assert_equal(dic_pos_ht, )
+	end
 	def test_create_hash_snps
 		hm = ["frag1", "frag1"]
 		ht = ["frag2", "frag3"]
@@ -69,12 +80,20 @@ class TestSuff < Test::Unit::TestCase
 	def test_important_ratios
 		snp_hm = [0, 14, 20, 2]
 		snp_ht = [5, 4, 2, 5]
+		threhold = 0 
 		ids = ["frag1", "frag2", "frag3", "frag4"]
-		dic_ratios, ratios = Stuff.important_ratios(snp_hm, snp_ht, ids)
+		dic_ratios, ratios = Stuff.important_ratios(snp_hm, snp_ht, ids, threhold)
 		assert_kind_of(Hash, dic_ratios)
 		assert_kind_of(Array, ratios)
 		assert_equal(dic_ratios, {"frag2" => 3.to_f, "frag3" => 7.to_f})
 		assert_equal(ratios, [3.to_f, 7.to_f])
+	end 
+
+	def test_important_positions(ids_short, dic_pos_hm, dic_pos_ht, ids)
+		ids = ["frag1", "frag2", "frag3", "frag4"]
+		ids_short = ["frag2", "frag3", "frag4"]
+		dic_pos_ht = 
+		dic_pos_hm
 	end 
 end 
 

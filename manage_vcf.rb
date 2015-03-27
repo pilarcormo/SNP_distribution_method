@@ -3,8 +3,6 @@ require_relative 'lib/reform_ratio'
 require_relative 'lib/write_it'
 require 'pp'
 
-
-
 file = ARGV[0]
 chromosome = ARGV[1].to_i
 vcf = ARGV[2]
@@ -12,8 +10,7 @@ vcf = ARGV[2]
 vcf_file = "#{file}/#{vcf}.vcf"
 location = "#{file}/chromosome#{chromosome}"
 
-
-new_vcf = [] 
+new_vcf, vaf = [], []
 Dir.mkdir(location)
 
 File.open(vcf_file, 'r').each do |line|
@@ -36,7 +33,6 @@ vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info = ReformRatio.get_snp_data(v
 
 snps = {}
 x = 0
-
 vcfs_info.each do |hash|
 	hash.each do |thing, number|
 		if number == "1" 
@@ -53,7 +49,7 @@ snps.each do |pos, type|
 	elsif type == "HOM"
 		hm << pos
 	end 
-end 	
+end 
 
-WriteIt::write_txt("#{location}/hm2", hm) 
-WriteIt::write_txt("#{location}/ht2", ht)
+WriteIt::write_txt("#{location}/hm", hm) 
+WriteIt::write_txt("#{location}/ht", ht)

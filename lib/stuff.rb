@@ -26,6 +26,20 @@ class Stuff
 		return hm, ht
 	end
 
+	def self.dic_id_pos(hm, ht, hm_list, ht_list)
+		dic_pos_hm, dic_pos_ht = {}, {}
+	  	x = 0 
+	  	Array(0..hm.length - 1).each do |o|
+	    	dic_pos_hm.store(hm_list[x], hm[x])
+	   	 	x += 1 
+	 	 end
+	  	Array(0..ht.length - 1).each do |o|
+	    	dic_pos_ht.store(ht_list[x], ht[x])
+	    	x += 1 
+	  	end
+	  	return dic_pos_hm, dic_pos_ht
+	end 
+
 	##Input: Lists of hm and ht SNPs
 	##Output: dictionaries with the id of the fragment as key and the absolute number of SNPs as value
 	def self.create_hash_snps(hm, ht)
@@ -34,7 +48,6 @@ class Stuff
 		ht.uniq.each { |elem| dic_ht.store("#{elem}", "#{ht.count(elem).to_i}") }
 		return dic_hm, dic_ht
 	end
-
 	##Input 1: Array of fragment ids.
 	##Input 2: Hash of hm SNPs
 	##Input 3: Hash of ht SNPs
@@ -147,6 +160,34 @@ class Stuff
 		ratios.flatten!
 		return dic_ratios, ratios, ids_s
 	end
+
+	def self.important_positions(ids_short, dic_pos_hm, dic_pos_ht, ids)
+		shuf_short_ids, hm_sh, ht_sh = [], [], []
+		ids_short.flatten!
+		ids.each do |frag|
+		  if ids_short.include?(frag)
+		    shuf_short_ids << frag
+		  end 
+		end 
+		shuf_short_ids.flatten!
+		dic_pos_hm.each do |frag, positions|
+		  if ids_short.include?(frag)
+		  else 
+		    dic_pos_hm.delete(frag)
+		  end 
+		end 
+		dic_pos_ht.each do |frag, positions|
+		  if ids_short.include?(frag)
+		  else 
+		    dic_pos_ht.delete(frag)
+		  end 
+		end 
+		hm_sh = dic_pos_hm.values
+		hm_sh.flatten!
+		ht_sh = dic_pos_ht.values
+		ht_sh.flatten!
+		return shuf_short_ids, hm_sh, ht_sh
+	end 
 
   # @param [array] original
   # @param [array] perm

@@ -8,6 +8,7 @@ require_relative 'lib/snp_dist'
 
 require 'pp'
 require 'benchmark'
+require 'csv'
 
 dataset = ARGV[0] # Name of dataset directory in 'small_genomes_SNPs/arabidopsis_datasets'
 perm = ARGV[1]
@@ -38,6 +39,7 @@ class Hash
 end
 
 dic_pos_hm = dic_pos_hm.safe_invert
+
 dic_pos_ht = dic_pos_ht.safe_invert
 
 
@@ -62,6 +64,31 @@ ok_hm, ok_ht, snps_hm, snps_ht = Stuff.define_snps(ids_ok, dic_hm, dic_ht)
 
 #ratios
 dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold)
+
+
+CSV.open("arabidopsis_datasets/#{dataset}/ratio_positions.csv", "wb") do |csv|
+  csv << ["Position", "Ratio"]
+end
+
+dic_ratios_short = {}
+dic_ratios_short = dic_ratios 
+rat_short = []
+
+dic_ratios_short.each do |id, ratio|
+  if dic_pos_hm.has_key?(id)
+  else 
+    dic_ratios_short.delete(id)
+  end
+end
+
+x = 0 
+dic_pos_hm.each do |id, array|
+  array.each do |elem|
+    CSV.open("arabidopsis_datasets/#{dataset}/ratio_positions#{threshold}.csv", "ab") do |csv|
+      csv << [elem, dic_ratios_short[id]] 
+    end
+  end 
+end 
 
 s_hm, s_ht, s_snps_hm, s_snps_ht = Stuff.define_snps(ids_short, dic_hm, dic_ht)
 
