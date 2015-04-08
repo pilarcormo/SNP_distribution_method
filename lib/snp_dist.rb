@@ -13,7 +13,6 @@ class SNPdist
 		(1..ratios.length).to_a.each do |i|
 			breaks << (genome_length/ratios.length.to_f)*i
 		end
-		# pp "This are breaks #{breaks}"
 		hyp, x = [], 0
 		ratios.each do |ratio| 
 			(ratio*10).to_i.times do
@@ -21,7 +20,6 @@ class SNPdist
 			end
 			x+=1
 		end
-		# pp "hyp hyp #{hyp}"
 		return hyp # These don't need to be unique or integers like the real SNPs, since they are just representing a distribution
 	end
 
