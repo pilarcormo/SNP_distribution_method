@@ -1,44 +1,61 @@
 
 #encoding: utf-8
 require_relative 'reform_ratio'
-require 'bio'
 
 ##Open the vcf file and create lists of heterozygous and homozygous SNPs
 
 class Stuff
 	##Input: vcf file
 	##Ouput: lists of hm and ht SNPS
-	def self.snps_in_vcf(vcf_file)
-		hm = []
-		ht = []
-		File.open(vcf_file, 'r').each { |line|
-      next if line =~ /^#/
-      v = Bio::DB::Vcf.new(line)
-      a = line.split("\t")
-      first = a.first
-      last = a.last
-      if last == "AF=0.5\n"
-        ht << first
-      elsif last == "AF=1.0\n"
-        hm << first
-      end
-    }
-		return hm, ht
+	def self.snps_in_vcf(vcf_file, ht_cutoff=0.5, hm_cutoff=1.0)
+		vcfs_chrom, vcfs_pos, vcfs_info, hm, ht = [], [], [], [], []
+		frag_pos = Hash.new{ |h,k| h[k] = Hash.new(&h.default_proc) }
+		File.open(vcf_file, "r").each do |line| # get array of vcf lines, you can call a method on one line
+			next if line =~ /^#/
+			v = Bio::DB::Vcf.new(line)
+			vcfs_chrom << v.chrom
+			vcfs_pos << v.pos
+			vcfs_info << v.info # so this will be an array of hashes of strings
+			allele_freq = v.info["AF"].to_f
+			if allele_freq == ht_cutoff
+		        #frag_pos[:het][v.chrom][v.pos] = 1
+		        if frag_pos[:het].has_key?(v.chrom)
+		        	frag_pos[:het][v.chrom] << v.pos
+		        else
+		        	frag_pos[:het][v.chrom] = []
+		        	frag_pos[:het][v.chrom] << v.pos
+		        end
+		    elsif allele_freq == hm_cutoff
+		       	if  frag_pos[:hom].has_key?(v.chrom)
+		        	frag_pos[:hom][v.chrom] << v.pos
+		        else
+		        	frag_pos[:hom][v.chrom] = []
+		        	frag_pos[:hom][v.chrom] << v.pos
+		        end
+		    end
+		end 
+		num_snps_frag_hash = Hash.new(0)
+		vcfs_chrom.each {|v| num_snps_frag_hash[v] +=1 } # we have the number of snps on each frag, by counting the repeats of each frag in the vcf
+		# # the frag_id(.chrom) is the key, the number of snps for that frag is the value. putting the number of snps for each frag into hash
+		snp_data = vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info
+		hm = frag_pos[:hom].keys
+		ht = frag_pos[:het].keys
+		return snp_data, hm, ht, frag_pos
 	end
 
-	def self.dic_id_pos(hm, ht, hm_list, ht_list)
-		dic_pos_hm, dic_pos_ht = {}, {}
-	  	x = 0 
-	  	Array(0..hm.length - 1).each do |o|
-	    	dic_pos_hm.store(hm_list[x], hm[x])
-	   	 	x += 1 
-	 	 end
-	  	Array(0..ht.length - 1).each do |o|
-	    	dic_pos_ht.store(ht_list[x], ht[x])
-	    	x += 1 
-	  	end
-	  	return dic_pos_hm, dic_pos_ht
-	end 
+	# def self.dic_id_pos(hm, ht, hm_list, ht_list)
+	# 	dic_pos_hm, dic_pos_ht = {}, {}
+	#   	x = 0 
+	#   	Array(0..hm_list.length - 1).each do |o|
+	#     	dic_pos_hm.store(hm_list[x], hm[x])
+	#    	 	x += 1 
+	#  	 end
+	#   	Array(0..ht_list.length - 1).each do |o|
+	#     	dic_pos_ht.store(ht_list[x], ht[x])
+	#     	x += 1 
+	#   	end
+	#   	return dic_pos_hm, dic_pos_ht
+	# end 
 
 	##Input: Lists of hm and ht SNPs
 	##Output: dictionaries with the id of the fragment as key and the absolute number of SNPs as value
