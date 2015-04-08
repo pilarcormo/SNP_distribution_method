@@ -54,7 +54,6 @@ child_chr_vcf.each do |line|
     end 
 end 
 
-pp short_child_chr_vcf
 
 int = "BCF2/Interesting_#{chromosome}"
 Dir.mkdir(int)

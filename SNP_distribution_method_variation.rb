@@ -10,9 +10,9 @@ require 'pp'
 require 'benchmark'
 require 'csv'
 
-dataset = ARGV[0] # Name of dataset directory in 'small_genomes_SNPs/arabidopsis_datasets'
-perm = ARGV[1]
-threshold = ARGV[2]
+dataset = ARGV[0] 
+# perm = ARGV[1]
+# threshold = ARGV[2]
 
 ######Files
 vcf_file = "arabidopsis_datasets/#{dataset}/snps.vcf"
@@ -21,31 +21,42 @@ fasta_shuffle = "arabidopsis_datasets/#{dataset}/frags_shuffled.fasta"
 
 
 #Create list of fragment ids that contain  SNPs from vcf file 
-hm, ht = Stuff.snps_in_vcf(vcf_file)
+snp_data, hm, ht, frag_pos = Stuff.snps_in_vcf(vcf_file)
+# snp_data = ReformRatio.get_snp_data(vcf_file)
 
-snp_data = ReformRatio.get_snp_data(vcf_file)
+
+
 
 #Create hashes for fragments ids and SNP position
 
 hm_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/hm_snps.txt") # Get SNP distributions
 ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.txt")
 
-dic_pos_hm, dic_pos_ht =  Stuff.dic_id_pos(hm, ht, hm_list, ht_list)
 
-class Hash
-  def safe_invert
-    self.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
-  end
-end
+# dic_pos_hm, dic_pos_ht =  Stuff.dic_id_pos(hm, ht, hm_list, ht_list)
 
-dic_pos_hm = dic_pos_hm.safe_invert
+# puts dic_pos_hm
 
-dic_pos_ht = dic_pos_ht.safe_invert
+# class Hash
+#   def safe_invert
+#     self.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
+#   end
+# end
+
+# dic_pos_hm = dic_pos_hm.safe_invert
+
+# dic_pos_ht = dic_pos_ht.safe_invert
+
+dic_pos_hm = frag_pos[:hom]
+dic_pos_ht = frag_pos[:het]
+
+pp hm 
+
+exit
 
 
 ##Create dictionaries with the id of the fragment as the key and the NUMBER of SNPs as value
 dic_hm, dic_ht = Stuff.create_hash_snps(hm, ht)
-
 
 ##Create array with ordered fragments (fromf fasta_file) and from shuffled fragments (fasta_shuffle)
 frags = ReformRatio.fasta_array(fasta_file)
@@ -65,30 +76,8 @@ ok_hm, ok_ht, snps_hm, snps_ht = Stuff.define_snps(ids_ok, dic_hm, dic_ht)
 #ratios
 dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold)
 
+ids_short.flatten!
 
-CSV.open("arabidopsis_datasets/#{dataset}/ratio_positions.csv", "wb") do |csv|
-  csv << ["Position", "Ratio"]
-end
-
-dic_ratios_short = {}
-dic_ratios_short = dic_ratios 
-rat_short = []
-
-dic_ratios_short.each do |id, ratio|
-  if dic_pos_hm.has_key?(id)
-  else 
-    dic_ratios_short.delete(id)
-  end
-end
-
-x = 0 
-dic_pos_hm.each do |id, array|
-  array.each do |elem|
-    CSV.open("arabidopsis_datasets/#{dataset}/ratio_positions#{threshold}.csv", "ab") do |csv|
-      csv << [elem, dic_ratios_short[id]] 
-    end
-  end 
-end 
 
 s_hm, s_ht, s_snps_hm, s_snps_ht = Stuff.define_snps(ids_short, dic_hm, dic_ht)
 
@@ -101,12 +90,6 @@ shuf_short_ids, hm_sh, ht_sh = Stuff.important_positions(ids_short, dic_pos_hm, 
 dic_shuf_hm_norm, dic_shuf_ht_norm = Stuff.normalise_by_length(shuf_short_ids, dic_hm, dic_ht, lengths)
 
 #Invert the hash so we can have the SNP density as a key.
-class Hash
-  def safe_invert
-    self.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
-  end
-end
-
 
 dic_hm_inv = dic_shuf_hm_norm.safe_invert
 
@@ -128,7 +111,7 @@ dic_or_hm, dic_or_ht, snps_hm_or, snps_ht_or = Stuff.define_snps(perm_hm, dic_hm
 #dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
 dic_expected_ratios, expected_ratios = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold)
 
-##Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
+#Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
 
