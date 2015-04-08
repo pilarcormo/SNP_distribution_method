@@ -56,3 +56,7 @@ For [OCF2](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-313X.2012.04993.x/f
 
 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/OF/chromosome2/Rplot.ratio.png?raw=true)
+
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/OF/chromosome2/Rplot.10-20Mb.png?raw=true)
+
+
