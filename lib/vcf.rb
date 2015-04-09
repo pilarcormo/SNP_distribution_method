@@ -39,4 +39,23 @@ class Vcf
 	    end 
 		return new_vcf, vcfs_chrom, vcfs_pos, vcfs_info
 	end 
+	def self.filtering(vcfs_pos_c, snps_p, snps_c, child_chr_vcf)
+		short_vcfs_pos_c = vcfs_pos_c
+		short_vcfs_pos_c.flatten!
+		snps_p.each do |pos, type|
+		    if snps_c.has_key?(pos)
+		        snps_c.delete(pos) 
+		        short_vcfs_pos_c.delete(pos)
+		    end 
+		end 
+
+		short_child_chr_vcf = []
+		child_chr_vcf.each do |line|
+		    position = line.split("\t")[1].to_i
+		    if short_vcfs_pos_c.include?(position) 
+		        short_child_chr_vcf << line
+		    end 
+		end 
+		return short_child_chr_vcf
+	end 
 end 

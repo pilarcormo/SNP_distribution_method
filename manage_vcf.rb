@@ -12,15 +12,16 @@ parent_vcf = "#{file}/#{vcf}.vcf"
 location = "#{file}/chromosome#{chromosome}"
 Dir.mkdir(location)
 
-child_vcf = "BCF2/BCF2_chromosome#{chromosome}/vcf_file_#{chromosome}.vcf"
+child_vcf = "OF/chromosome#{chromosome}/vcf_file_#{chromosome}.vcf"
 
-
+puts "Opening the vcf file"
 parent_chr_vcf, vcfs_chrom_p, vcfs_pos_p, vcfs_info_p = Vcf.open_vcf(parent_vcf, chromosome)
+
 
 snps_p, hm_p, ht_p = Vcf.type_per_pos(vcfs_info_p, vcfs_pos_p)
 
 vcf_file_chr = "#{location}/vcf_file_#{chromosome}.vcf"
-
+puts "Creating parental VCF file for #{chromosome}"
 #write parental vcf file
 File.open("#{location}/vcf_file_#{chromosome}.vcf", "w+") do |f|
   parent_chr_vcf.each { |element| f.puts(element) }
@@ -34,7 +35,6 @@ child_chr_vcf, vcfs_chrom_c, vcfs_pos_c, vcfs_info_c = Vcf.open_vcf(child_vcf, c
 
 snps_c, hm_c, ht_c = Vcf.type_per_pos(vcfs_info_c, vcfs_pos_c)
 
-
 short_vcfs_pos_c = vcfs_pos_c
 short_vcfs_pos_c.flatten!
 snps_p.each do |pos, type|
@@ -46,16 +46,15 @@ end
 
 short_child_chr_vcf = []
 child_chr_vcf.each do |line|
-    puts  line 
     position = line.split("\t")[1].to_i
-    puts position 
     if short_vcfs_pos_c.include?(position) 
         short_child_chr_vcf << line
     end 
 end 
 
 
-int = "BCF2/Interesting_#{chromosome}"
+
+int = "OF/Interesting_#{chromosome}"
 Dir.mkdir(int)
 
 File.open("#{int}/chromosome#{chromosome}_interesting.vcf", "w+") do |f|
