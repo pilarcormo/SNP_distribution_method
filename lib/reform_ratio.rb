@@ -7,11 +7,13 @@ class ReformRatio
 	# Output 1: Array of lengths (integers)
 	def self.fasta_id_n_lengths(fasta)
 		ids, lengths = [], []
+		id_len = {}
 		fasta.each do |i|
 			ids << i.entry_id
 			lengths << i.length
+			id_len.store(i.entry_id, i.length)
 		end
-		return ids, lengths
+		return ids, lengths, id_len
 	end
 
 	# Input: VCF file

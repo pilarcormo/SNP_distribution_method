@@ -18,13 +18,13 @@ class Stuff
 			vcfs_info << v.info # so this will be an array of hashes of strings
 			allele_freq = v.info["AF"].to_f
 			if allele_freq == ht_cutoff
-		        #frag_pos[:het][v.chrom][v.pos] = 1
 		        if frag_pos[:het].has_key?(v.chrom)
 		        	frag_pos[:het][v.chrom] << v.pos
 		        else
 		        	frag_pos[:het][v.chrom] = []
 		        	frag_pos[:het][v.chrom] << v.pos
 		        end
+		        ht << v.chrom
 		    elsif allele_freq == hm_cutoff
 		       	if  frag_pos[:hom].has_key?(v.chrom)
 		        	frag_pos[:hom][v.chrom] << v.pos
@@ -32,30 +32,29 @@ class Stuff
 		        	frag_pos[:hom][v.chrom] = []
 		        	frag_pos[:hom][v.chrom] << v.pos
 		        end
+		        hm << v.chrom 
 		    end
 		end 
 		num_snps_frag_hash = Hash.new(0)
 		vcfs_chrom.each {|v| num_snps_frag_hash[v] +=1 } # we have the number of snps on each frag, by counting the repeats of each frag in the vcf
 		# # the frag_id(.chrom) is the key, the number of snps for that frag is the value. putting the number of snps for each frag into hash
 		snp_data = vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info
-		hm = frag_pos[:hom].keys
-		ht = frag_pos[:het].keys
 		return snp_data, hm, ht, frag_pos
 	end
 
-	# def self.dic_id_pos(hm, ht, hm_list, ht_list)
-	# 	dic_pos_hm, dic_pos_ht = {}, {}
-	#   	x = 0 
-	#   	Array(0..hm_list.length - 1).each do |o|
-	#     	dic_pos_hm.store(hm_list[x], hm[x])
-	#    	 	x += 1 
-	#  	 end
-	#   	Array(0..ht_list.length - 1).each do |o|
-	#     	dic_pos_ht.store(ht_list[x], ht[x])
-	#     	x += 1 
-	#   	end
-	#   	return dic_pos_hm, dic_pos_ht
-	# end 
+	def self.dic_id_pos(hm, ht, hm_list, ht_list)
+		dic_pos_hm, dic_pos_ht = {}, {}
+	  	x = 0 
+	  	Array(0..hm_list.length - 1).each do |o|
+	    	dic_pos_hm.store(hm_list[x], hm[x])
+	   	 	x += 1 
+	 	 end
+	  	Array(0..ht_list.length - 1).each do |o|
+	    	dic_pos_ht.store(ht_list[x], ht[x])
+	    	x += 1 
+	  	end
+	  	return dic_pos_hm, dic_pos_ht
+	end 
 
 	##Input: Lists of hm and ht SNPs
 	##Output: dictionaries with the id of the fragment as key and the absolute number of SNPs as value
@@ -163,19 +162,27 @@ class Stuff
 		return dic
 	end
 
-	def self.important_ratios(snps_hm, snps_ht, ids, threshold) 
+	def self.important_ratios(snps_hm, snps_ht, ids, id_len, threshold, adjust) 
 		x = 0
-		dic_ratios, ratios, ids_s = {}, [], []
+		dic_ratios, ratios, ids_s, ratios_by_len = {}, [], [], []
 		snps_hm.length.times do
-			ratio = (snps_hm[x]+1)/(snps_ht[x]+1)
+			ratio = (snps_hm[x]+adjust.to_f)/(snps_ht[x]+adjust.to_f)
 			dic_ratios.store(ids[x], ratio.to_f) 
-			x = x + 1
+			x += 1
 		end
 		dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
 		ratios << dic_ratios.values
 		ids_s << dic_ratios.keys
 		ratios.flatten!
-		return dic_ratios, ratios, ids_s
+		x = 0 
+		id_len.each do |id, len|
+			if dic_ratios.has_key?(id)
+				ratio_by_len = ratios[x].to_f/len.to_i
+				ratios_by_len << ratio_by_len
+			end 
+			x += 1
+		end 
+		return dic_ratios, ratios, ids_s, ratios_by_len
 	end
 
 	def self.important_positions(ids_short, dic_pos_hm, dic_pos_ht, ids)
@@ -206,35 +213,28 @@ class Stuff
 		return shuf_short_ids, hm_sh, ht_sh
 	end 
 
-  # @param [array] original
-  # @param [array] perm
-  	def self.top_and_tail(original, perm)
-		original.delete(perm.shift)
-		original.delete(perm.pop)
-		return original, perm
-	end
+	def self.csv_pos_ratio(csv, dic_pos_hm, dic_ratios)
+		CSV.open(csv, "wb") do |csv|
+		  csv << ["Position", "Ratio"]
+		end
 
+		dic_poshm_short = {}
+		dic_poshm_short = dic_pos_hm
 
-	##Shuffle ends of the permutation, just in case when to use this in the algorithm.
+		dic_poshm_short.each do |id, array|
+		  if dic_ratios.has_key?(id)
+		  else 
+		    dic_poshm_short.delete(id)
+		  end
+		end
 
-	# def self.shuffle_ends(fasta)
-	# 	l = fasta.length/10.to_i
-	# 	q = l - 1
-	# 	master = fasta.each_slice(l).to_a
-	# 	new_array = []
-	# 	new_array2 = []
-	# 	x = 0
-	# 	q.times do
-	# 		new_array = (master[x] << master[-(x+1)]).flatten!.shuffle 
-	# 		lu = new_array.each_slice(2).to_a
-	# 		master.delete_at(x)
-	# 		master.insert(x, lu[0])
-	# 		master.delete_at(-(x+1))
-	# 		master.insert(-(x+1), lu[1])
-	# 		new_array = []
-	# 		lu = []
-	# 		x =+ 1
-	# 	end
-	# 	return master.flatten! 
-	# end
+		dic_poshm_short.each do |id, array|
+		  array.each do |elem| 
+		    CSV.open(csv, "ab") do |csv|
+		      csv << [elem, dic_ratios[id]] 
+		    end
+		  end 
+		end 
+	end 
+
 end
