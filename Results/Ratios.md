@@ -19,3 +19,13 @@ ________
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/arabidopsis_datasets/BCF2_chr3_100kb/Rplot.ratios.png?raw=true)
 
 In this case, we cannot distinguish a point of the chromosome where the ratio is higher but this was expected as all the candidate SNPs they defined where scattered through all the beginning of the chromosome and there is not a clear linkage between hm SNPs. However, we are able to narrow the window to look for candidate SNPs. Again, when using 100kb fragments, the important ratios are highlighted.  
+
+##Ws reads
+
+#####Chromosome 1
+
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Aw_sup1-2/Variant_calling/sup1_2_1/Rplot.ratios.png?raw=true)
+
+#####Chromosome 4
+
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Aw_sup1-2/Variant_calling/sup1_2_4/Rplot.ratiios_comparison.png?raw=true)
