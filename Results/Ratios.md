@@ -26,6 +26,7 @@ In this case, we cannot distinguish a point of the chromosome where the ratio is
 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Aw_sup1-2/Variant_calling/sup1_2_1/Rplot.ratios.png?raw=true)
 
+
 #####Chromosome 4
 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Aw_sup1-2/Variant_calling/sup1_2_4/Rplot.ratiios_comparison.png?raw=true)
