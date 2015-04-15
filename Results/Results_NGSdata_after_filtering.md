@@ -33,4 +33,5 @@ EMS mutagenesis. sup#1 and sup#2 mutants. Arabidopsis Wassilewskija (Ws) and Col
 #####sup#2
 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Aw_sup1-2/Variant_calling/sup2_2_1/Rplot.k1.png?raw=true)
+
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Aw_sup1-2/Variant_calling/sup2_2_4/Rplot.k2.png?raw=true)
