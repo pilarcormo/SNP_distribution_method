@@ -19,25 +19,19 @@ leg_r2 <- function(k)
 }
 
 
-hm <- read.table("~/SNP_distribution_method/Aw_sup1-2/Variant_calling/sup1_2_4/hm.txt", quote="\"")
+hm <- read.table("~/SNP_distribution_method/Aw_sup1-2/Variant_calling/sup1_2_1/hm.txt", quote="\"")
 
 x <- rnorm(length(y), mean(y), sd(y))
 y <- c(hm$V1)
 df <- data.frame(x, y)
 
-V = qqplot(x, y, main="Q-Q Plot", ylab="Sample", xlab = "Theoretical")
-qqline2(x, y, col = 6) 
+V = qqplot(x, y, main="Q-Q Plot for sup#1", ylab="hm SNP density in chromosome 1", xlab = "Theoretical normal disitribution")
+l <- qqline2(x, y, col = 6) 
 fg <- data.frame(V$x, V$y)
 k <- lm(V$y ~ V$x)
-l <- leg_r2(k)
+len <- leg_r2(k)
 
-
-
-
-
-qqnorm(y)
-qqline(y, col = 5)   
-
+n <- qqnorm(y); qqline(y, col = 6)   
 
 ##Option 2- ggplot2, stat_qq and geom_line
 
@@ -53,8 +47,4 @@ ggQQ <- function(df) # argument: a linear model
 }
 
 p <- ggQQ(df)
-p
 
-
-
-  
