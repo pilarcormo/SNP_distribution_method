@@ -39,8 +39,6 @@ dic_pos_ht =  Stuff.dic_id_pos(ht, ht_list)
 dic_hm = Stuff.create_hash_number(hm)
 dic_ht = Stuff.create_hash_number(ht)
 
-
-
 ##Create array with ordered fragments (fromf fasta_file) and from shuffled fragments (fasta_shuffle)
 frags = ReformRatio.fasta_array(fasta_file)
 frags_shuffled = ReformRatio.fasta_array(fasta_shuffle)

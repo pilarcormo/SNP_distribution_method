@@ -1,4 +1,5 @@
 
+
 #encoding: utf-8
 require_relative 'reform_ratio'
 require 'pp'
@@ -57,8 +58,6 @@ class Stuff
 	 	dic_pos = Stuff::safe_invert(dic_pos)
 	  	return dic_pos
 	end 
-
-
 
 	##Input: Lists of hm and ht SNPs
 	##Output: dictionaries with the id of the fragment as key and the absolute number of SNPs as value
