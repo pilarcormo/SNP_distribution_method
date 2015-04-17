@@ -1,6 +1,7 @@
 
 #encoding: utf-8
 require_relative 'reform_ratio'
+require 'pp'
 
 ##Open the vcf file and create lists of heterozygous and homozygous SNPs
 
@@ -39,102 +40,85 @@ class Stuff
 		vcfs_chrom.each {|v| num_snps_frag_hash[v] +=1 } # we have the number of snps on each frag, by counting the repeats of each frag in the vcf
 		# # the frag_id(.chrom) is the key, the number of snps for that frag is the value. putting the number of snps for each frag into hash
 		snp_data = vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info
-		return snp_data, hm, ht, frag_pos
+		return snp_data, hm, ht
 	end
 
-	def self.dic_id_pos(hm, ht, hm_list, ht_list)
-		dic_pos_hm, dic_pos_ht = {}, {}
+	def self.safe_invert(hash)
+    	hash.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
+ 	end
+
+	def self.dic_id_pos(h, snp_list)
+		dic_pos = {}
 	  	x = 0 
-	  	Array(0..hm_list.length - 1).each do |o|
-	    	dic_pos_hm.store(hm_list[x], hm[x])
+	  	Array(0..snp_list.length - 1).each do |o|
+	    	dic_pos.store(snp_list[x], h[x])
 	   	 	x += 1 
-	 	 end
-	  	Array(0..ht_list.length - 1).each do |o|
-	    	dic_pos_ht.store(ht_list[x], ht[x])
-	    	x += 1 
-	  	end
-	  	return dic_pos_hm, dic_pos_ht
+	 	end
+	 	dic_pos = Stuff::safe_invert(dic_pos)
+	  	return dic_pos
 	end 
+
+
 
 	##Input: Lists of hm and ht SNPs
 	##Output: dictionaries with the id of the fragment as key and the absolute number of SNPs as value
-	def self.create_hash_snps(hm, ht)
-		dic_hm, dic_ht = {}, {}
-		hm.uniq.each { |elem| dic_hm.store("#{elem}", "#{hm.count(elem).to_i}") }
-		ht.uniq.each { |elem| dic_ht.store("#{elem}", "#{ht.count(elem).to_i}") }
-		return dic_hm, dic_ht
+	def self.create_hash_number(array)
+		hash1 = {}
+		array.uniq.each { |elem| hash1.store("#{elem}", "#{array.count(elem).to_i}") }
+		return hash1
 	end
 	##Input 1: Array of fragment ids.
 	##Input 2: Hash of hm SNPs
 	##Input 3: Hash of ht SNPs
 	##Assign the number of SNPs to each fragment.
 	##If a fragment does not have SNPs, the value assigned will be 0.
-	##Output: New hashes with SNP values assigned to the unordered fragments
-  def self.define_snps(ids, hm, ht)
-		shuf_ht, shuf_hm = {}, {}
+	##Output1: New hash with the number of SNPs assigned to the unordered fragments
+	##Output2: Array with the number of SNPs 
+  def self.define_snps(ids, dic_snps)
+		shuf = {}
+		snps = []
 		ids.each { |frag|
-      if hm.has_key?(frag)
-        shuf_hm.store(frag, hm[frag].to_f)
-      else
-        shuf_hm.store(frag, 0)
-      end
-      if ht.has_key?(frag)
-        shuf_ht.store(frag, ht[frag].to_f)
-      else
-        shuf_ht.store(frag, 0)
-      end
-    }
-    snps_hm, snps_ht = [], []
-		shuf_hm.each { |id, snp| snps_hm << snp }
-		shuf_ht.each { |id, snp| snps_ht << snp }
-		return shuf_hm, shuf_ht, snps_hm, snps_ht
+	      if dic_snps.has_key?(frag)
+	        shuf.store(frag, dic_snps[frag].to_f)
+	      else
+	        shuf.store(frag, 0)
+	      end
+	  	}
+		shuf.each { |id, snp| snps << snp }
+		return shuf, snps
 	end
 
-	##Invert the keys and values in a hash.
-	##Avoid elimination of pairs key-value if values in the first hash are repeated.
-	# def safe_invert
-	# 	self.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
-	# end
-
-	##Inputs: hashes with IDs as keys and the SNP density as values
-
-	def self.normalise_by_length(ids, hm, ht, lengths)
-		shuf_hm, shuf_ht, snps_hm, snps_ht = Stuff.define_snps(ids, hm, ht)
-		shuf_hm_norm, shuf_ht_norm = {}, {}
-		x = 0
-		l = snps_hm.length
-		Array(0..l-1).each { |i|
-      snp_norm = snps_hm[x].to_f/lengths[x].to_f
-      keys = shuf_hm.keys
-      shuf_hm_norm.store(keys[x], snp_norm)
-      x +=1
-    }
-    x = 0
-		l2 = snps_ht.length
-		Array(0..l2-1).each do |i|
-			snp_norm_ht = snps_ht[x].to_f/lengths[x].to_f
-			keys = shuf_ht.keys
-			shuf_ht_norm.store(keys[x], snp_norm_ht)
-			x +=1
-		end
-		return shuf_hm_norm, shuf_ht_norm
-		##Invert the hashes to have the SNP number as the key and all the fragments with the same SNP number together as valuess
+	##Inputs: hashes with IDs as keys and the SNP density as value
+	##Divide absolute number of SNPs by the length of the given fragment. 
+	##Output: hashes with IDs as keys and the normalised SNP density as value
+	def self.normalise_by_length(lengths, shuf)
+		shuf_norm = {}
+		l = shuf.length
+		Array(0..l-1).each { |x|
+	      snp_norm = shuf[shuf.keys[x]].to_f/lengths[x].to_f
+	      shuf_norm.store(shuf.keys[x], snp_norm)
+    	}
+		shuf_norm = Stuff::safe_invert(shuf_norm)
+		return shuf_norm
 	end
+
+	##Input1: permutation array after SDM
+	##Input2: fasta file converted to array
+	##Input3: list of fragment ids from the shuffled fasta file
+	##Output: permutation of fragments after SDM with the data (lengths, etc) obtained from the original fasta file
 
 	def self.create_perm_fasta(perm, frags, ids)
-		defs, data, defs_p, data_p = [], [], [], []
+		defs, data, defs_p, data_p, fasta_perm = [], [], [], [], []
 		frags.each do |i|
 			defs << i.definition
 			data << i.data
 		end
 		perm.each { |frag|
-      index_frag = ids.index(frag).to_i
-      defs_p << defs[index_frag]
-      data_p << data[index_frag]
-    }
-
+	      index_frag = ids.index(frag).to_i
+	      defs_p << defs[index_frag]
+	      data_p << data[index_frag]
+    	}
     ###Create fasta array with the information above
-		fasta_perm = []
 		x = 0
 		Array(0..perm.length-1).each do |i|
 			fasta_perm << defs_p[x]
@@ -165,12 +149,15 @@ class Stuff
 	def self.important_ratios(snps_hm, snps_ht, ids, id_len, threshold, adjust) 
 		x = 0
 		dic_ratios, ratios, ids_s, ratios_by_len = {}, [], [], []
+		dic_ratios_by_length = {}
 		snps_hm.length.times do
 			ratio = (snps_hm[x]+adjust.to_f)/(snps_ht[x]+adjust.to_f)
 			dic_ratios.store(ids[x], ratio.to_f) 
 			x += 1
 		end
-		dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
+		if threshold.to_i > 0 
+			dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
+		end 
 		ratios << dic_ratios.values
 		ids_s << dic_ratios.keys
 		ratios.flatten!
@@ -179,62 +166,58 @@ class Stuff
 			if dic_ratios.has_key?(id)
 				ratio_by_len = ratios[x].to_f/len.to_i
 				ratios_by_len << ratio_by_len
+				dic_ratios_by_length.store(id, ratio_by_len)
 			end 
 			x += 1
 		end 
-		return dic_ratios, ratios, ids_s, ratios_by_len
+		return dic_ratios, ratios, ids_s, ratios_by_len, dic_ratios_by_length
 	end
 
-	def self.important_positions(ids_short, dic_pos_hm, dic_pos_ht, ids)
-		shuf_short_ids, hm_sh, ht_sh = [], [], []
+	def self.important_ids(ids_short, ids)
+		shuf_short_ids = []
 		ids_short.flatten!
 		ids.each do |frag|
-		  if ids_short.include?(frag)
-		    shuf_short_ids << frag
-		  end 
+			if ids_short.include?(frag)
+		    	shuf_short_ids << frag
+		  	end 
 		end 
 		shuf_short_ids.flatten!
-		dic_pos_hm.each do |frag, positions|
-		  if ids_short.include?(frag)
-		  else 
-		    dic_pos_hm.delete(frag)
-		  end 
+		return shuf_short_ids
+	end 
+	def self.important_pos(ids_short, pos)
+		sh = []
+		pos.each do |frag, positions|
+			if ids_short.include?(frag)
+		  	else 
+		    	pos.delete(frag)
+		  	end 
 		end 
-		dic_pos_ht.each do |frag, positions|
-		  if ids_short.include?(frag)
-		  else 
-		    dic_pos_ht.delete(frag)
-		  end 
-		end 
-		hm_sh = dic_pos_hm.values
-		hm_sh.flatten!
-		ht_sh = dic_pos_ht.values
-		ht_sh.flatten!
-		return shuf_short_ids, hm_sh, ht_sh
+		sh = pos.values
+		sh.flatten!
+		return sh
 	end 
 
-	def self.csv_pos_ratio(csv, dic_pos_hm, dic_ratios)
+	#Input1 location for the csv file
+	#Input2 hash with the id and positions for the hm SNPs
+	#Input3 hash with the id and ratio for each fragment
+	def self.csv_pos_ratio(csv, pos, ratios)
 		CSV.open(csv, "wb") do |csv|
 		  csv << ["Position", "Ratio"]
 		end
-
-		dic_poshm_short = {}
-		dic_poshm_short = dic_pos_hm
-
-		dic_poshm_short.each do |id, array|
-		  if dic_ratios.has_key?(id)
+		short = {}
+		short = pos
+		short.each do |id, array|
+		  if ratios.has_key?(id)
 		  else 
-		    dic_poshm_short.delete(id)
+		    short.delete(id)
 		  end
 		end
-
-		dic_poshm_short.each do |id, array|
-		  array.each do |elem| 
-		    CSV.open(csv, "ab") do |csv|
-		      csv << [elem, dic_ratios[id]] 
-		    end
-		  end 
+		short.each do |id, array|
+			array.each do |elem| 
+		    	CSV.open(csv, "ab") do |csv|
+		      		csv << [elem, ratios[id]] 
+		      	end 
+		    end 
 		end 
 	end 
-
 end
