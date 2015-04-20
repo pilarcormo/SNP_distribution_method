@@ -10,14 +10,19 @@ require 'pp'
 require 'benchmark'
 require 'csv'
 
-dataset = ARGV[0] 
-perm = ARGV[1]
-threshold = ARGV[2]
-adjust = ARGV[3]
 
-# puts "A factor of #{adjust} will be used to calculate the ratio"
-# puts "All the contigs with a ratio lower than #{adjust} will not be considered in the analysis"
-
+if ARGV.empty?
+	puts "Please specify a (1) dataset, a (2) name for the output folder, a (3) threshold to discard the contigs which a ratio below it and a (4) factor to calculate the ratio (1, 0.1, 0.01...) "
+else 
+	dataset = ARGV[0] 
+	perm = ARGV[1]
+	threshold = ARGV[2]
+	adjust = ARGV[3]
+	puts "Looking for SNPs in #{dataset}"
+	puts "Output will be in #{dataset}/#{perm}"
+	puts "A factor of #{adjust} will be used to calculate the ratio"
+	puts "All the contigs with a ratio lower than #{adjust} will not be considered in the analysis"
+end 
 ######Files
 vcf_file = "arabidopsis_datasets/#{dataset}/snps.vcf"
 fasta_file = "arabidopsis_datasets/#{dataset}/frags.fasta"
@@ -81,13 +86,15 @@ dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
 ##Iteration: look for the minimum value in the array of values, that will be 0 (fragments without SNPs) and put the fragments 
 #with this value in a list. Then, the list is cut by half and each half is added to a new array (right, that will be used 
 #to reconstruct the right side of the distribution, and left, for the left side)
-
+puts "\n"
 perm_hm = SDM.sorting(dic_shuf_hm_norm)
 
 ##Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
- Benchmark.bm do |b|
+puts "Time spent sorting the contigs:"
+Benchmark.bm do |b|
     b.report {10.times do ; perm_hm = SDM.sorting(dic_shuf_hm_norm);  end}
 end
+puts "done"
 
 #Define SNPs in the recently ordered array of fragments.
 dic_or_hm, snps_hm_or = Stuff.define_snps(perm_hm, dic_hm)
@@ -111,17 +118,20 @@ frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
-
+puts "\n"
 ###Calculate size of the group of fragments that have a high hm/ht ratio
 contig_size = (genome_length/ids_ok.length).to_f
 center = contig_size*(perm_hm.length)
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
+puts "..."
+het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
 
 
+"Defining the mutation..."
 
 causal, candidate, percent = Mutation.define(hm_sh, ht_sh, hom_snps, het_snps, genome_length, ratios, expected_ratios)
-
-
+puts "\n"
+puts "Writing the output..."
 Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
 Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
 	WriteIt::write_txt("perm_hm", hom_snps) # save the SNP distributions for the best permutation in the generation
