@@ -5,67 +5,73 @@ require_relative 'lib/vcf'
 require 'pp'
 
 file = ARGV[0]
-chromosome = ARGV[1].to_i
-vcf = ARGV[2]
+vcf = ARGV[1]
+chromosome = ARGV[2].to_i
+filtering = ARGV[3]
+parent = ARGV[4]
 
-parent_vcf = "#{file}/#{vcf}.vcf"
-location = "#{file}/chromosome#{chromosome}"
-Dir.mkdir(location)
-
-child_vcf = "OF/chromosome#{chromosome}/vcf_file_#{chromosome}.vcf"
-
-puts "Opening the vcf file"
-parent_chr_vcf, vcfs_chrom_p, vcfs_pos_p, vcfs_info_p = Vcf.open_vcf(parent_vcf, chromosome)
+location = "#{file}/#{vcf}_chromosome#{chromosome}"
 
 
-snps_p, hm_p, ht_p = Vcf.type_per_pos(vcfs_info_p, vcfs_pos_p)
+#######
 
-vcf_file_chr = "#{location}/vcf_file_#{chromosome}.vcf"
-puts "Creating parental VCF file for #{chromosome}"
-#write parental vcf file
-File.open("#{location}/vcf_file_#{chromosome}.vcf", "w+") do |f|
-  parent_chr_vcf.each { |element| f.puts(element) }
-end
+case filtering
+when 'background_vcf' 
+    puts "Opening the vcf file"
 
-WriteIt::write_txt("#{location}/hm", hm_p) 
-WriteIt::write_txt("#{location}/ht", ht_p)
+    Dir.mkdir("#{location}")
+    vcf, vcfs_chrom, vcfs_pos, vcfs_info = Vcf.open_vcf("#{file}/#{vcf}.vcf", chromosome)
+    
+    vcf_file_chr = "#{location}/chromosome#{chromosome}.vcf"
+    puts "Creating VCF file for chromosome #{chromosome}"
+    
+    File.open(vcf_file_chr, "w+") do |f|
+      vcf.each { |element| f.puts(element) }
+    end
 
+    chr_vcf, vcfs_chrom_p, vcfs_pos_p, vcfs_info_p = Vcf.open_vcf(vcf_file_chr, chromosome)
+    snps_p, hm_p, ht_p = Vcf.type_per_pos(vcfs_info_p, vcfs_pos_p)
 
-child_chr_vcf, vcfs_chrom_c, vcfs_pos_c, vcfs_info_c = Vcf.open_vcf(child_vcf, chromosome)
+    WriteIt::write_txt("#{location}/hm", hm_p) 
+    WriteIt::write_txt("#{location}/ht", ht_p)
 
-snps_c, hm_c, ht_c = Vcf.type_per_pos(vcfs_info_c, vcfs_pos_c)
+when 'filter_vcf' 
+    puts "Opening the child vcf file"
+    vcf_file_chr = "#{location}/chromosome#{chromosome}.vcf"
+    chr_vcf, vcfs_chrom_c, vcfs_pos_c, vcfs_info_c = Vcf.open_vcf(vcf_file_chr, chromosome)
 
-short_vcfs_pos_c = vcfs_pos_c
-short_vcfs_pos_c.flatten!
-snps_p.each do |pos, type|
-    if snps_c.has_key?(pos)
-        snps_c.delete(pos) 
-        short_vcfs_pos_c.delete(pos)
-    end 
+    snps_c, hm_c, ht_c = Vcf.type_per_pos(vcfs_info_c, vcfs_pos_c)
+    puts "Opening the parental vcf file"
+    parental_chr_vcf, vcfs_chrom_p, vcfs_pos_p, vcfs_info_p = Vcf.open_vcf("#{parent}", chromosome)
+
+    snps_p, hm_p, ht_p = Vcf.type_per_pos(vcfs_info_p, vcfs_pos_p)
+
+    short_child_chr_vcf = Vcf.filtering(vcfs_pos_c, snps_p, snps_c, chr_vcf)
+    puts "Writing the interesting SNPs"
+
+    int = "interesting_#{chromosome}"
+    Dir.mkdir(int)
+
+    File.open("#{int}/chromosome#{chromosome}_interesting.vcf", "w+") do |f|
+      short_child_chr_vcf.each { |element| f.puts(element) }
+    end
+
+    interesting = "#{int}/chromosome#{chromosome}_interesting.vcf"
+
+    int_chr_vcf, vcfs_chrom_i, vcfs_pos_i, vcfs_info_i = Vcf.open_vcf(interesting, chromosome)
+    snps_i, hm_i, ht_i = Vcf.type_per_pos(vcfs_info_i, vcfs_pos_i)
+
+    WriteIt::write_txt("#{int}/hm", hm_i) 
+    WriteIt::write_txt("#{int}/ht", ht_i)
+else 
+    puts "lalalala"
 end 
 
-short_child_chr_vcf = []
-child_chr_vcf.each do |line|
-    position = line.split("\t")[1].to_i
-    if short_vcfs_pos_c.include?(position) 
-        short_child_chr_vcf << line
-    end 
-end 
+
+
+######
 
 
 
-int = "OF/Interesting_#{chromosome}"
-Dir.mkdir(int)
 
-File.open("#{int}/chromosome#{chromosome}_interesting.vcf", "w+") do |f|
-  short_child_chr_vcf.each { |element| f.puts(element) }
-end
-
-interesting = "#{int}/chromosome#{chromosome}_interesting.vcf"
-
-int_chr_vcf, vcfs_chrom_i, vcfs_pos_i, vcfs_info_i = Vcf.open_vcf(interesting, chromosome)
-snps_i, hm_i, ht_i = Vcf.type_per_pos(vcfs_info_i, vcfs_pos_i)
-
-WriteIt::write_txt("#{int}/hm", hm_i) 
-WriteIt::write_txt("#{int}/ht", ht_i)
 
