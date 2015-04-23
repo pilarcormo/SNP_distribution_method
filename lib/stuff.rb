@@ -48,14 +48,18 @@ class Stuff
     	hash.each_with_object( {} ) { |(key, value), out| ( out[value] ||= [] ) << key }
  	end
 
-	def self.dic_id_pos(h, snp_list)
+	def self.dic_id_pos(h_ids, snp_list)
 		dic_pos = {}
 	  	x = 0 
 	  	Array(0..snp_list.length - 1).each do |o|
-	    	dic_pos.store(snp_list[x], h[x])
-	   	 	x += 1 
+	  		if dic_pos.has_key?(h_ids[x])
+	  			dic_pos[h_ids[x]] << snp_list[x]
+	  		else 
+	  			dic_pos[h_ids[x]] = []
+	  			dic_pos[h_ids[x]] << snp_list[x]
+	  		end 
+	    	x += 1 
 	 	end
-	 	dic_pos = Stuff::safe_invert(dic_pos)
 	  	return dic_pos
 	end 
 
@@ -145,9 +149,9 @@ class Stuff
 		return dic
 	end
 
-	def self.important_ratios(snps_hm, snps_ht, ids, id_len, threshold, adjust) 
+	def self.important_ratios(snps_hm, snps_ht, ids, threshold, adjust) 
 		x = 0
-		dic_ratios, ratios, ids_s, ratios_by_len = {}, [], [], []
+		dic_ratios, ratios, ids_s = {}, [], []
 		dic_ratios_by_length = {}
 		snps_hm.length.times do
 			ratio = (snps_hm[x]+adjust.to_f)/(snps_ht[x]+adjust.to_f)
@@ -161,15 +165,15 @@ class Stuff
 		ids_s << dic_ratios.keys
 		ratios.flatten!
 		x = 0 
-		id_len.each do |id, len|
-			if dic_ratios.has_key?(id)
-				ratio_by_len = ratios[x].to_f/len.to_i
-				ratios_by_len << ratio_by_len
-				dic_ratios_by_length.store(id, ratio_by_len)
-			end 
-			x += 1
-		end 
-		return dic_ratios, ratios, ids_s, ratios_by_len, dic_ratios_by_length
+		# id_len.each do |id, len|
+		# 	if dic_ratios.has_key?(id)
+		# 		ratio_by_len = ratios[x].to_f/len.to_f
+		# 		ratios_by_len << ratio_by_len
+		# 		dic_ratios_by_length.store(id, ratio_by_len)
+		# 	end 
+		# 	x += 1
+		# end 
+		return dic_ratios, ratios, ids_s
 	end
 
 	def self.important_ids(ids_short, ids)
