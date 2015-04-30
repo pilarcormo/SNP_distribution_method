@@ -2,55 +2,41 @@
 
 class SDM
 	def self.sorting(dic_hm_inv)
-		list1_hm, list2_hm, left_hm, right_hm = [], [], [], []
-		keys_hm = dic_hm_inv.keys.to_a
-		Array(1..keys_hm.length/2).each do |i|
-      min1 = keys_hm.min
-      list1_hm << dic_hm_inv.values_at(min1)
-      list1_hm.flatten!
-      keys_hm.delete(min1)
-      if list1_hm.length.to_i % 2 == 0
-        lu = list1_hm.each_slice(list1_hm.length/2.to_i).to_a
-        right_hm << lu[0]
-        left_hm << lu[1]
+    def self.divide_array(dic_hm_inv, right, left, keys_hm, dest)
+      contigs_at_min = []
+      minimum = keys_hm.min
+      contigs_at_min << dic_hm_inv.values_at(minimum)
+      contigs_at_min.flatten!
+      keys_hm.delete(minimum)
+      if contigs_at_min.length.to_i % 2 == 0
+        half = contigs_at_min.each_slice(contigs_at_min.length/2.to_i).to_a
+        right << half[0]
+        left << half[1]
       else
-        if list1_hm.length.to_i > 2
-          object = list1_hm.shift
-          lu2 = list1_hm.each_slice(list1_hm.length/2.to_i).to_a
-          right_hm << lu2[0]
-          left_hm << lu2[1]
-          right_hm << object
-        else
-          right_hm << list1_hm
+        if contigs_at_min.length.to_i > 2
+          object = contigs_at_min.shift
+          other_half = contigs_at_min.each_slice(contigs_at_min.length/2.to_i).to_a
+          right << other_half[0]
+          left << other_half[1]
+          right << object
+        else 
+          if dest == 0
+            right << contigs_at_min
+          elsif dest == 1
+            left << contigs_at_min
+          end
         end
       end
-      min2 = keys_hm.min
-      keys_hm.delete(min2)
-      list2_hm << dic_hm_inv.values_at(min2)
-      list2_hm.flatten!
-      if list2_hm.length.to_i % 2 == 0
-        lu = list2_hm.each_slice(list2_hm.length/2.to_i).to_a
-        right_hm << lu[0]
-        left_hm << lu[1]
-      else
-        if list2_hm.length.to_i > 2
-          object = list2_hm.shift
-          lu2 = list2_hm.each_slice(list2_hm.length/2.to_i).to_a
-          right_hm << lu2[0]
-          left_hm << lu2[1]
-          left_hm << object
-        else
-          left_hm << list2_hm
-        end
-      end
-      list1_hm = []
-      list2_hm = []
+      return right, left, keys_hm
     end
-		right_hm = right_hm.flatten
-		left_hm = left_hm.flatten.compact
-		left_hm = left_hm.reverse #we need to reverse the left array to build the distribution properly
-		perm_hm = right_hm << left_hm #combine together both sides of the distribution
-		perm_hm.flatten!
-		return perm_hm
+    left, right = [], []  
+		keys= dic_hm_inv.keys.to_a
+		Array(1..keys.length/2).each do |i|
+      right, left, keys = SDM.divide_array(dic_hm_inv, right, left, keys, 0)
+      right, left, keys = SDM.divide_array(dic_hm_inv, right, left, keys, 1)
+    end 
+		perm = right.flatten << left.flatten.compact.reverse #combine together both sides of the distribution
+		perm.flatten!
+		return perm
 	end
 end
