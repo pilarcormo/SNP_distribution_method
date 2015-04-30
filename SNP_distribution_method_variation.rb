@@ -36,13 +36,16 @@ ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.tx
 ##############################################################
 
 #Create arrays of ids of those fragments that contain  SNPs in the vcf file and hashes with the id and position eh
-snp_data, hm, ht = Stuff.snps_in_vcf(vcf_file)
+snp_data, hm, ht, frag_pos = Stuff.snps_in_vcf(vcf_file)
 
-#Create hashes for fragments ids and SNP position
+frag_pos_hm = frag_pos[:hom]
+
+#Create hashes for fragments ids and SNP position for the correct genome - reference 
 
 dic_pos_hm =  Stuff.dic_id_pos(hm, hm_list)
 dic_pos_ht =  Stuff.dic_id_pos(ht, ht_list)
- 
+ ########
+
 ##Create dictionaries with the id of the fragment as the key and the NUMBER of SNPs as value
 dic_hm = Stuff.create_hash_number(hm)
 dic_ht = Stuff.create_hash_number(ht)
@@ -65,11 +68,8 @@ ok_hm, snps_hm = Stuff.define_snps(ids_ok, dic_hm)
 ok_ht, snps_ht = Stuff.define_snps(ids_ok, dic_ht)
 
 #ratios
-dic_ratios, ratios, ids_short, ratios_by_len, dic_ratios_by_len = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust)
+dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust)
 
-
-csv = "arabidopsis_datasets/#{dataset}/ratio_positions#{threshold}_#{adjust}.csv"
-Stuff::csv_pos_ratio(csv, dic_pos_hm, dic_ratios)
 
 s_hm, s_snps_hm = Stuff.define_snps(ids_short, dic_hm)
 s_ht, s_snps_ht = Stuff.define_snps(ids_short, dic_ht)
@@ -107,11 +107,16 @@ dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
 
 ###Calculate ratios and delete those equal to or lower than 1 so only the important contigs remain.
 #dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
-dic_expected_ratios, expected_ratios, ids_short, exp_rat_by_len, dic_exp_ratios_bylen = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
+dic_expected_ratios, expected_ratios, ids_short = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
 
+csv = "arabidopsis_datasets/#{dataset}/ratio_positions#{threshold}_#{adjust}.csv"
+csv_perm = "arabidopsis_datasets/#{dataset}/ratio_positions_perm_#{threshold}_#{adjust}.csv"
+pos_ratios = Stuff.csv_pos_ratio(csv, dic_pos_hm, dic_ratios)
+pos_ratios_perm = Stuff.csv_pos_ratio(csv_perm, dic_pos_hm, dic_expected_ratios)
 #Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
+
 
 #Create new fasta file with the ordered elements
 File.open("arabidopsis_datasets/#{dataset}/frags_ordered#{threshold}.fasta", "w+") do |f|
@@ -120,6 +125,16 @@ end
 
 fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered#{threshold}.fasta"
 frags_ordered = ReformRatio.fasta_array(fasta_ordered)
+ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
+
+
+dic_global_pos, hm_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_hm, id_len_or) 
+#dic_global_pos, hm_global_positions = Stuff.define_global_pos(ids_short, frag_pos_hm, id_len_ok) 
+
+WriteIt::write_txt("arabidopsis_datasets/#{dataset}/global_perm_hm#{threshold}", hm_global_positions_perm)
+#WriteIt::write_txt("arabidopsis_datasets/#{dataset}/global_hm", hm_global_positions)
+
+exit 
 
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
@@ -134,7 +149,7 @@ het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
 
 "Defining the mutation..."
 
-causal, candidate, percent = Mutation.define(hm_sh, ht_sh, hom_snps, het_snps, genome_length, ratios, expected_ratios)
+causal, candidate, percent = Mutation.define(hm_sh, ht_sh, hom_snps, het_snps, genome_length, ratios, expected_ratios, pos_ratios, pos_ratios_perm)
 puts "\n"
 puts "Writing the output..."
 Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
@@ -151,6 +166,6 @@ Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
 	end
 end
 
-distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm)
+distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm, pos_ratios_perm)
 
 
