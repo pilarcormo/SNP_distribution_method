@@ -41,7 +41,7 @@ class Stuff
 		vcfs_chrom.each {|v| num_snps_frag_hash[v] +=1 } # we have the number of snps on each frag, by counting the repeats of each frag in the vcf
 		# # the frag_id(.chrom) is the key, the number of snps for that frag is the value. putting the number of snps for each frag into hash
 		snp_data = vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info
-		return snp_data, hm, ht
+		return snp_data, hm, ht, frag_pos
 	end
 
 	def self.safe_invert(hash)
@@ -77,7 +77,7 @@ class Stuff
 	##If a fragment does not have SNPs, the value assigned will be 0.
 	##Output1: New hash with the number of SNPs assigned to the unordered fragments
 	##Output2: Array with the number of SNPs 
-  def self.define_snps(ids, dic_snps)
+  	def self.define_snps(ids, dic_snps)
 		shuf = {}
 		snps = []
 		ids.each { |frag|
@@ -91,6 +91,44 @@ class Stuff
 		return shuf, snps
 	end
 
+	def self.define_global_pos(ids, dic_pos, id_length)
+		global_array, lens = [], []
+	  	or_pos, temporal_pos, dic_global_pos, idlen_s = {}, {}, {}, {}
+		ids.each { |frag|
+		    if dic_pos.has_key?(frag)
+		      or_pos.store(frag, dic_pos[frag])
+		    end
+	  	}
+	  	keys = or_pos.keys
+	  	temporal_pos.store(keys[0], or_pos[keys[0]])
+	  	or_pos.delete_if { |frag, pos|  temporal_pos.has_key?(frag)}
+	  	id_length.each do |frag, length|
+	  		if or_pos.has_key?(frag)
+	  			idlen_s.store(frag, length)
+	  			lens << length
+	  		end 
+	  	end 
+	  	x = 1 
+	  	lens.length.times do |i|
+	  		lens[x] = lens[x-1].to_i + lens[x].to_i 
+	  		x += 1
+	  	end 
+	  	x = 0 
+    	or_pos.each do |frag, array|
+	  		array.each do |pos|
+	  			pp lens[x]
+	  			pos2 = (pos.to_i+lens[x].to_i)
+	  			global_array << pos2
+	  		end  
+	  		x += 1
+	  		dic_global_pos.store(frag, global_array)
+  			global_array = []
+  		end 
+	  	dic_global_pos = temporal_pos.merge(dic_global_pos)
+	  	all_global_positions = dic_global_pos.values
+	  	all_global_positions.flatten!
+		return dic_global_pos, all_global_positions
+	end
 	##Inputs: hashes with IDs as keys and the SNP density as value
 	##Divide absolute number of SNPs by the length of the given fragment. 
 	##Output: hashes with IDs as keys and the normalised SNP density as value
@@ -164,7 +202,7 @@ class Stuff
 		ratios << dic_ratios.values
 		ids_s << dic_ratios.keys
 		ratios.flatten!
-		x = 0 
+		# x = 0 
 		# id_len.each do |id, len|
 		# 	if dic_ratios.has_key?(id)
 		# 		ratio_by_len = ratios[x].to_f/len.to_f
@@ -204,10 +242,10 @@ class Stuff
 	#Input2 hash with the id and positions for the hm SNPs
 	#Input3 hash with the id and ratio for each fragment
 	def self.csv_pos_ratio(csv, pos, ratios)
+		pos_ratio = {}
 		CSV.open(csv, "wb") do |csv|
 		  csv << ["Position", "Ratio"]
 		end
-		short = {}
 		short = pos
 		short.each do |id, array|
 		  if ratios.has_key?(id)
@@ -219,8 +257,11 @@ class Stuff
 			array.each do |elem| 
 		    	CSV.open(csv, "ab") do |csv|
 		      		csv << [elem, ratios[id]] 
+		      		pos_ratio.store(elem, ratios[id])
 		      	end 
 		    end 
-		end 
+		end
+		return pos_ratio 
 	end 
+
 end
