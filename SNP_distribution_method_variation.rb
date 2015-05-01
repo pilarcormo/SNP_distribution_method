@@ -5,6 +5,7 @@ require_relative 'lib/stuff'
 require_relative 'lib/mutation'
 require_relative 'lib/SDM'
 require_relative 'lib/snp_dist'
+require_relative 'lib/plot'
 
 require 'pp'
 require 'benchmark'
@@ -16,22 +17,31 @@ if ARGV.empty?
 else 
 	dataset = ARGV[0] 
 	perm = ARGV[1]
-	threshold = ARGV[2]
+	threshold = ARGV[2].to_i
 	adjust = ARGV[3]
 	puts "Looking for SNPs in #{dataset}"
 	puts "Output will be in #{dataset}/#{perm}"
 	puts "A factor of #{adjust} will be used to calculate the ratio"
-	puts "All the contigs with a ratio lower than #{threshold} will not be considered in the analysis"
+	if threshold == 1
+		puts "Filtering step on"
+	elsif threshold == 0
+		puts "Filtering step off"
+	else 
+		puts "Not valid filtering value, plese specify 0 to skip filtering and 1 to allow it"
+		exit
+	end 
+	#puts "All the contigs with a ratio lower than #{threshold} will not be considered in the analysis"
 end 
 
 ###############################################################
 ######Files
-vcf_file = "arabidopsis_datasets/#{dataset}/snps.vcf"
-fasta_file = "arabidopsis_datasets/#{dataset}/frags.fasta"
-fasta_shuffle = "arabidopsis_datasets/#{dataset}/frags_shuffled.fasta"
+loc = "arabidopsis_datasets/#{dataset}"
+vcf_file = "#{loc}/snps.vcf"
+fasta_file = "#{loc}/frags.fasta"
+fasta_shuffle = "#{loc}/frags_shuffled.fasta"
 
-hm_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/hm_snps.txt") # Get SNP distributions
-ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.txt")
+hm_list = WriteIt.file_to_ints_array("#{loc}/hm_snps.txt") # Get SNP distributions
+ht_list = WriteIt.file_to_ints_array("#{loc}/ht_snps.txt")
 ##############################################################
 ##############################################################
 
@@ -39,6 +49,7 @@ ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.tx
 snp_data, hm, ht, frag_pos = Stuff.snps_in_vcf(vcf_file)
 
 frag_pos_hm = frag_pos[:hom]
+frag_pos_ht = frag_pos[:het]
 
 #Create hashes for fragments ids and SNP position for the correct genome - reference 
 
@@ -68,6 +79,7 @@ ok_hm, snps_hm = Stuff.define_snps(ids_ok, dic_hm)
 ok_ht, snps_ht = Stuff.define_snps(ids_ok, dic_ht)
 
 #ratios
+
 dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust)
 
 
@@ -92,7 +104,13 @@ dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
 #with this value in a list. Then, the list is cut by half and each half is added to a new array (right, that will be used 
 #to reconstruct the right side of the distribution, and left, for the left side)
 puts "\n"
-perm_hm = SDM.sorting(dic_shuf_hm_norm)
+perm_hm, mut = SDM.sorting(dic_shuf_hm_norm)
+
+perm_hm
+
+# snps_around_mutation = Stuff.important_pos(mut, dic_pos_hm)
+
+# pp snps_around_mutation
 
 ##Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
 puts "Time spent sorting the contigs:"
@@ -109,17 +127,16 @@ dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
 #dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
 dic_expected_ratios, expected_ratios, ids_short = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
 
-csv = "arabidopsis_datasets/#{dataset}/ratio_positions#{threshold}_#{adjust}.csv"
-csv_perm = "arabidopsis_datasets/#{dataset}/ratio_positions_perm_#{threshold}_#{adjust}.csv"
+csv = "#{loc}/ratio_positions#{threshold}_#{adjust}.csv"
+csv_perm = "#{loc}/ratio_positions_perm_#{threshold}_#{adjust}.csv"
 pos_ratios = Stuff.csv_pos_ratio(csv, dic_pos_hm, dic_ratios)
 pos_ratios_perm = Stuff.csv_pos_ratio(csv_perm, dic_pos_hm, dic_expected_ratios)
 #Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
 
-
 #Create new fasta file with the ordered elements
-File.open("arabidopsis_datasets/#{dataset}/frags_ordered#{threshold}.fasta", "w+") do |f|
+File.open("#{loc}/frags_ordered_thres#{threshold}.fasta", "w+") do |f|
   fasta_perm.each { |element| f.puts(element) }
 end
 
@@ -129,12 +146,15 @@ ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
 
 
 dic_global_pos, hm_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_hm, id_len_or) 
-#dic_global_pos, hm_global_positions = Stuff.define_global_pos(ids_short, frag_pos_hm, id_len_ok) 
+dic_global_pos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_ok) 
 
-WriteIt::write_txt("arabidopsis_datasets/#{dataset}/global_perm_hm#{threshold}", hm_global_positions_perm)
-#WriteIt::write_txt("arabidopsis_datasets/#{dataset}/global_hm", hm_global_positions)
 
+WriteIt::write_txt("arabidopsis_datasets/#{dataset}/global_perm_hm", hm_global_positions_perm)
+expected = WriteIt.file_to_ints_array("Reads/Aw_sup1-2/Variant_calling/sup1_2_1/hm_nocen.txt")
+Plot::exp_vs_hyp_densities(expected, hm_global_positions_perm, loc)
+Plot::densities(hm_global_positions_perm, ht_global_positions_perm, pos_ratios_perm, genome_length, loc)
 exit 
+
 
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)

@@ -196,7 +196,8 @@ class Stuff
 			dic_ratios.store(ids[x], ratio.to_f) 
 			x += 1
 		end
-		if threshold.to_i > 0 
+		if threshold == 1
+			threshold = ratio.max.to_f/100
 			dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
 		end 
 		ratios << dic_ratios.values
