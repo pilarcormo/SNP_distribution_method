@@ -1,4 +1,0 @@
-The length of the group of contigs that form the peak of the distribution is 19684500 bp
-Location of causal mutation in correctly ordered genome: 16119094
-Candidate SNP position in permutation: 9838493
-Shift 31.883992564024215 %
