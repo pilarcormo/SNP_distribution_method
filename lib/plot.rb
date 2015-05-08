@@ -4,10 +4,9 @@ require_relative 'write_it'
 require 'rinruby'
 
 class Plot
-  def self.exp_vs_hyp_densities(expected, hypothetical, location)
+  def self.exp_vs_hyp_densities(hypothetical, location)
     myr = RinRuby.new(echo = false)
     myr.assign "hypothetical", hypothetical
-    myr.assign "expected", expected
     myr.assign "location", location
     myr.eval 'png(paste(location,"/", "qqplot_exp_hyp",".png", sep=""), width=500,height=500)
     qqline2 <- function(x, y, probs = c(0.25, 0.75), qtype = 7, ...)
@@ -29,8 +28,8 @@ class Plot
                                         r2 = format(summary(k)$r.squared, digits = 3))))
       }
 
-    y <- expected
-    x <- hypothetical
+    x <- expected
+    y <- rnorm(length(x), mean(x), 5000000)
     df <- data.frame(x, y)
     V = qqplot(x, y, main="Q-Q Plot", ylab="Expected SNP density", xlab = "Hypothetical SNP density after SDM")
     l <- qqline2(x, y, col = 6) 
@@ -49,9 +48,9 @@ class Plot
     myr.location = location 
     myr.eval 'png(paste(location,"/", "Hypothetical densities",".png", sep=""), width=800,height=500)
     options(scipen = 10) 
-    d1 <-density(hm, adjust = 2, kernel = c("gaussian"))
-    d2 <- density(ht, adjust = 2, kernel = c("gaussian"))
-    d3 <- density(ratio, adjust =0.5 , kernel = c("gaussian"))
+    d1 <-density(hm, adjust = 1, kernel = c("gaussian"))
+    d2 <- density(ht, adjust = 1, kernel = c("gaussian"))
+    d3 <- density(ratio, adjust =1 , kernel = c("gaussian"))
     p1 <- plot(range(d1$x, d2$x, d3$x), range(d1$y, d2$y, d3$y), type = "n", main = "Densities", xlim =c(0,length), xlab = " ", ylab = " ")
     lines(d1, col = "magenta2") ##Homozygous 
     lines(d2, col = "royalblue2", lty=2)
@@ -61,21 +60,35 @@ class Plot
     myr.quit
   end
 
-  # def self.ratio(expected, hypothetical, length, location)
-  #   myr = RinRuby.new(echo = false)
-  #   myr.ratio = hypothetical
-  #   myr.expected =  expected
-  #   myr.length = length
-  #   myr.location = location 
-  #   myr.eval 'png(paste(location,"/", "ratios",".png", sep=""))
-  #   d2 <- density(expected, adjust = 1, kernel = c("gaussian"))
-  #   d3 <- density(ratio, adjust =1 , kernel = c("gaussian"))
-  #   p1 <- plot(range(d2$x, d3$x), range(d2$y, d3$y), type = "n", main = "Densities", xlim =c(0,length), xlab = " ", ylab = " ")
-  #   lines(d2, col = "royalblue2", lty=2)
-  #   lines(d3, col = "gray46", lwd =5)
-  #   legend("topright",col=c("royalblue2", "grey46"),lwd=1,lty=1:2,
-  #      legend=c("Expected ratio", "Hypothetical ratio"), bty="n")'
-  #   myr.quit
-  # end
+  def self.get_ylim(density, genome_length)
+      myr = RinRuby.new(echo = false)
+      myr.assign 'density', density
+      myr.assign 'genome_length', genome_length
+      myr.eval 'plot((1:512)*(genome_length/512), density(density)$y)'
+      ylim = myr.pull 'par("yaxp")[2] + par("yaxp")[2]/par("yaxp")[3]'
+      myr.quit
+  return ylim
+  end 
+
+  def self.comparison(expected, hypothetical, length, location, ylim)
+    myr = RinRuby.new(echo = false)
+    myr.hypothetical = hypothetical
+    myr.expected =  expected
+    myr.length = length
+    myr.location = location 
+    myr.ylim = ylim
+    myr.eval 'png(paste(location,"/", "ratios",".png", sep=""), width=500,height=500)
+    options(scipen = 10) 
+    d1 <-density(hypothetical, adjust = 1, kernel = c("gaussian"))
+    d2 <-density(expected, adjust = 1, kernel = c("gaussian"))
+    p1 <- plot(range(d1$x, d2$x), range(d1$y, d2$y), type = "n", main = "Ratios", xlim =c(0,length), xlab = " ", ylab = " ")
+    lines(d1, col = "slategray4", lwd =3)  
+    lines(d2, col = "steelblue3", lwd =3, lty=2)
+    legend("topright",col=c("slategray4", "steelblue3"),lwd=3, lty=1:2,
+        legend=c("Hypothetical ratio","Expected ratio"), bty="n")'
+    myr.quit
+  end
+
+
 end 
 
