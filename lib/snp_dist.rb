@@ -32,4 +32,34 @@ class SNPdist
 		return densities_in_pos
 	end 
 
+	def self.get_ylim(array, genome_length, plot_type)
+		myr = RinRuby.new(echo = false)
+		myr.assign 'array', array
+		myr.assign 'genome_length', genome_length
+		if plot_type == 'density'
+			myr.eval 'plot((1:512)*(genome_length/512), density(array)$y)'
+		end
+		ylim = myr.pull 'par("yaxp")[2] + par("yaxp")[2]/par("yaxp")[3]'
+		myr.quit
+		return ylim
+	end
+
+
+	def self.plot_snps(snp_pos, correct_snps, location, genome_length, title, ylim)
+		myr = RinRuby.new(echo = false)
+		myr.snp_pos = snp_pos
+		myr.correct_snps = correct_snps
+		myr.genome_length = genome_length
+		myr.location = location
+		myr.title = title
+		myr.ylim = ylim
+		myr.eval 'png(paste(location,"/", "ratios",".png", sep=""))
+		plot((1:512)*(genome_length/512), density(snp_pos)$y, xlim=c(0,genome_length), ylim=c(0,ylim), xlab="Genome length",
+			ylab="Density", main=title)
+		lines((1:512)*(genome_length/512), density(correct_snps)$y, lwd=3, col="#000099")
+		dev.off()'
+		myr.quit
+	end
+
+
 end
