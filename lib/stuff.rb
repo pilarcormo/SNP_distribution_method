@@ -91,44 +91,43 @@ class Stuff
 		return shuf, snps
 	end
 
-	def self.define_global_pos(ids, dic_pos, id_length)
-		global_array, lens = [], []
-	  	or_pos, temporal_pos, dic_global_pos, idlen_s = {}, {}, {}, {}
-		ids.each { |frag|
-		    if dic_pos.has_key?(frag)
-		      or_pos.store(frag, dic_pos[frag])
-		    end
-	  	}
-	  	keys = or_pos.keys
-	  	temporal_pos.store(keys[0], or_pos[keys[0]])
-	  	or_pos.delete_if { |frag, pos|  temporal_pos.has_key?(frag)}
-	  	id_length.each do |frag, length|
-	  		if or_pos.has_key?(frag)
-	  			idlen_s.store(frag, length)
-	  			lens << length
-	  		end 
-	  	end 
-	  	x = 1 
-	  	lens.length.times do |i|
-	  		lens[x] = lens[x-1].to_i + lens[x].to_i 
-	  		x += 1
-	  	end 
-	  	x = 0 
-    	or_pos.each do |frag, array|
-	  		array.each do |pos|
-	  			pp lens[x]
-	  			pos2 = (pos.to_i+lens[x].to_i)
-	  			global_array << pos2
-	  		end  
-	  		x += 1
-	  		dic_global_pos.store(frag, global_array)
-  			global_array = []
-  		end 
-	  	dic_global_pos = temporal_pos.merge(dic_global_pos)
-	  	all_global_positions = dic_global_pos.values
-	  	all_global_positions.flatten!
-		return dic_global_pos, all_global_positions
-	end
+	# def self.define_global_pos(ids, dic_pos, id_length)
+	# 	global_array, lens = [], []
+	#   	or_pos, temporal_pos, dic_global_pos, idlen_s = {}, {}, {}, {}
+	# 	ids.each { |frag|
+	# 	    if dic_pos.has_key?(frag)
+	# 	      or_pos.store(frag, dic_pos[frag])
+	# 	    end
+	#   	}
+	#   	keys = or_pos.keys
+	#   	temporal_pos.store(keys[0], or_pos[keys[0]])
+	#   	or_pos.delete_if { |frag, pos|  temporal_pos.has_key?(frag)}
+	#   	id_length.each do |frag, length|
+	#   		if or_pos.has_key?(frag)
+	#   			idlen_s.store(frag, length)
+	#   			lens << length
+	#   		end 
+	#   	end 
+	#   	x = 1 
+	#   	lens.length.times do |i|
+	#   		lens[x] = lens[x-1].to_i + lens[x].to_i 
+	#   		x += 1
+	#   	end 
+	#   	x = 0 
+ #    	or_pos.each do |frag, array|
+	#   		array.each do |pos|
+	#   			pos2 = (pos.to_i+lens[x].to_i)
+	#   			global_array << pos2
+	#   		end  
+	#   		x += 1
+	#   		dic_global_pos.store(frag, global_array)
+ #  			global_array = []
+ #  		end 
+	#   	dic_global_pos = temporal_pos.merge(dic_global_pos)
+	#   	all_global_positions = dic_global_pos.values
+	#   	all_global_positions.flatten!
+	# 	return dic_global_pos, all_global_positions
+	# end
 	##Inputs: hashes with IDs as keys and the SNP density as value
 	##Divide absolute number of SNPs by the length of the given fragment. 
 	##Output: hashes with IDs as keys and the normalised SNP density as value
@@ -197,12 +196,13 @@ class Stuff
 			x += 1
 		end
 		if threshold == 1
-			threshold = ratio.max.to_f/100
+			threshold = (dic_ratios.values.max.to_f)/4
+			puts "Threshold  = #{threshold}"
 			dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
 		end 
 		ratios << dic_ratios.values
-		ids_s << dic_ratios.keys
 		ratios.flatten!
+		ids_s = dic_ratios.keys
 		# x = 0 
 		# id_len.each do |id, len|
 		# 	if dic_ratios.has_key?(id)
@@ -264,5 +264,6 @@ class Stuff
 		end
 		return pos_ratio 
 	end 
+
 
 end

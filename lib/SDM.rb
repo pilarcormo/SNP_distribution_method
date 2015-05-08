@@ -35,8 +35,10 @@ class SDM
       right, left, keys = SDM.divide_array(dic_hm_inv, right, left, keys, 0)
       right, left, keys = SDM.divide_array(dic_hm_inv, right, left, keys, 1)
     end 
-		perm = right.flatten << left.flatten.compact.reverse #combine together both sides of the distribution
-		perm.flatten!
+    right.flatten
+    left.flatten.compact!
+    perm = right << left.reverse #combine together both sides of the distribution
+    perm.flatten!
 		return perm
 	end
 end

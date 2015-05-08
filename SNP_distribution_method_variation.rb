@@ -16,11 +16,11 @@ if ARGV.empty?
 	puts "Please specify a (1) dataset, a (2) name for the output folder, a (3) threshold to discard the contigs which a ratio below it and a (4) factor to calculate the ratio (1, 0.1, 0.01...) "
 else 
 	dataset = ARGV[0] 
-	perm = ARGV[1]
+	file = ARGV[1]
 	threshold = ARGV[2].to_i
 	adjust = ARGV[3]
 	puts "Looking for SNPs in #{dataset}"
-	puts "Output will be in #{dataset}/#{perm}"
+	puts "Output will be in #{dataset}/#{file}"
 	puts "A factor of #{adjust} will be used to calculate the ratio"
 	if threshold == 1
 		puts "Filtering step on"
@@ -36,6 +36,7 @@ end
 ###############################################################
 ######Files
 loc = "arabidopsis_datasets/#{dataset}"
+file = "#{loc}/#{file}"
 vcf_file = "#{loc}/snps.vcf"
 fasta_file = "#{loc}/frags.fasta"
 fasta_shuffle = "#{loc}/frags_shuffled.fasta"
@@ -78,10 +79,7 @@ genome_length = ReformRatio.genome_length(fasta_file)
 ok_hm, snps_hm = Stuff.define_snps(ids_ok, dic_hm)
 ok_ht, snps_ht = Stuff.define_snps(ids_ok, dic_ht)
 
-#ratios
-
-dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust)
-
+dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
 
 s_hm, s_snps_hm = Stuff.define_snps(ids_short, dic_hm)
 s_ht, s_snps_ht = Stuff.define_snps(ids_short, dic_ht)
@@ -104,14 +102,15 @@ dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
 #with this value in a list. Then, the list is cut by half and each half is added to a new array (right, that will be used 
 #to reconstruct the right side of the distribution, and left, for the left side)
 puts "\n"
-perm_hm, mut = SDM.sorting(dic_shuf_hm_norm)
+perm_hm  = SDM.sorting(dic_shuf_hm_norm)
 
-perm_hm
+mut = []
+half = perm_hm.each_slice(perm_hm.length/2).to_a
+mut << half[0][-2, 2]
+mut << half[1][0, 2]
+mut.flatten!
 
-# snps_around_mutation = Stuff.important_pos(mut, dic_pos_hm)
-
-# pp snps_around_mutation
-
+# 
 ##Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
 puts "Time spent sorting the contigs:"
 Benchmark.bm do |b|
@@ -127,65 +126,42 @@ dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
 #dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
 dic_expected_ratios, expected_ratios, ids_short = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
 
-csv = "#{loc}/ratio_positions#{threshold}_#{adjust}.csv"
-csv_perm = "#{loc}/ratio_positions_perm_#{threshold}_#{adjust}.csv"
-pos_ratios = Stuff.csv_pos_ratio(csv, dic_pos_hm, dic_ratios)
-pos_ratios_perm = Stuff.csv_pos_ratio(csv_perm, dic_pos_hm, dic_expected_ratios)
+
 #Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
+
 
 #Create new fasta file with the ordered elements
 File.open("#{loc}/frags_ordered_thres#{threshold}.fasta", "w+") do |f|
   fasta_perm.each { |element| f.puts(element) }
 end
 
-fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered#{threshold}.fasta"
+fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered_thres#{threshold}.fasta"
 frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
 
+###Calculate size of the group of fragments that have a high hm/ht ratio
+contig_size = (genome_length/ids_ok.length).to_f
+center = contig_size*(perm_hm.length) 
+puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
+puts "..."
 
-dic_global_pos, hm_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_hm, id_len_or) 
-dic_global_pos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_ok) 
+# dic_global_hmpos, hm_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_hm, id_len_or) 
+# dic_global_htpos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_or) 
 
-
-WriteIt::write_txt("arabidopsis_datasets/#{dataset}/global_perm_hm", hm_global_positions_perm)
-expected = WriteIt.file_to_ints_array("Reads/Aw_sup1-2/Variant_calling/sup1_2_1/hm_nocen.txt")
-Plot::exp_vs_hyp_densities(expected, hm_global_positions_perm, loc)
-Plot::densities(hm_global_positions_perm, ht_global_positions_perm, pos_ratios_perm, genome_length, loc)
-exit 
+Dir.mkdir("#{file}")
 
 
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
-puts "\n"
-###Calculate size of the group of fragments that have a high hm/ht ratio
-contig_size = (genome_length/ids_ok.length).to_f
-center = contig_size*(perm_hm.length)
-puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
-puts "..."
-het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
+WriteIt::write_txt("#{file}/perm_hm", hom_snps) 
+WriteIt::write_txt("#{file}/perm_ht", het_snps)
+WriteIt::write_txt("#{file}/hm_snps_short", hm_sh) # save the SNP distributions for the best permutation in the generation
+WriteIt::write_txt("#{file}/ht_snps_short", ht_sh)
 
 
-"Defining the mutation..."
+Mutation::density_plots(contig_size, ratios, expected_ratios, hom_snps, het_snps, center, file, mut, frag_pos_hm) 
 
-causal, candidate, percent = Mutation.define(hm_sh, ht_sh, hom_snps, het_snps, genome_length, ratios, expected_ratios, pos_ratios, pos_ratios_perm)
-puts "\n"
-puts "Writing the output..."
-Dir.mkdir("arabidopsis_datasets/#{dataset}/#{perm}")
-Dir.chdir("arabidopsis_datasets/#{dataset}/#{perm}") do
-	WriteIt::write_txt("perm_hm", hom_snps) # save the SNP distributions for the best permutation in the generation
-	WriteIt::write_txt("perm_ht", het_snps)
-  WriteIt::write_txt("hm_snps_short", hm_sh) # save the SNP distributions for the best permutation in the generation
-  WriteIt::write_txt("ht_snps_short", ht_sh)
-	File.open("mutation.txt", "w+") do |f|
-		f.puts "The length of the group of contigs that form the peak of the distribution is #{center.to_i} bp"
-		f.puts "Location of causal mutation in correctly ordered genome: #{causal}"
-		f.puts "Candidate SNP position in permutation: #{candidate}"
-		f.puts "Shift #{percent} %"
-	end
-end
-
-distribution_plots = Mutation.distribution_plot(center, ratios, expected_ratios, dataset, perm, pos_ratios_perm)
 
 
