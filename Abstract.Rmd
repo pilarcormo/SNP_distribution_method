@@ -1,0 +1,15 @@
+---
+title: "Reference-free identification of genomic regions carrying a causal mutation."
+author: "Pilar Corredor-Moreno"
+fontsize: 12pt
+output: pdf_document
+bibliography: library.bib
+---
+
+<p style='text-align: justify;'> Whole genome sequencing using Next-Generation Sequencing (NGS) technologies offers a unique opportunity to study genetic variations. However, mapping the mutations responsible for phenotypes is generally a tedious and time-consuming process. In the last few years, researchers have developed user-friendly tools for mapping-by-sequencing, yet they are not applicable to organisms with non-sequenced genomes.</p>  
+
+<p style='text-align: justify;'>We introduced SDM (SNP Distribution Method), a reference-free algorithm for rapid discovery of mutagen-induced homozygous mutations in forward genetics screens. For our purpose, a mutant individual is crossed to a non-mutant line followed by one generation of backcrossing of the heterozygous F1 samples.The offspring of this second cross gives rise to a recombinant population that will segregate for the mutant phenotype. SDM relies on the normal distribution of homozygous SNPs that are linked to the phenotype-altering SNP in a non-recombinant region. Consequently, the homozygous/heterozygous SNP ratio will be higher in this area where the SNP of interest is located.</p>
+
+<p style='text-align: justify;'>First, to emulate real data, I created a model genome with the expected SNP density based on *Arabidopsis thaliana* chromosome I. I split it into fragments that imitate contigs assembled from NGS reads. SDM groups the contigs by their normalised homozygous SNP density and then arranges them so that they follow the expected SNP distribution. Then, as a proof-of-concept, I analysed the SNP distribution in recent outcross [@Galvao:2012; @Uchida:2014] and backcross experiments [@Allen:2013; @Monaghan:2014] in *Arabidopsis thaliana* backgrounds. I proved that homozygous SNPs in forward genetics secreens are normally distributed with a constant standard deviation as hypothesized. Finally, I used the real SNP densities obtained from these experiments to verify the efficiency and accuracy of SDM. It succesfully identified the genomic regions (10-100 kb) containing the causative mutations. We now aim to apply this method in a species without a reference genome available.</p>
+
+####References
