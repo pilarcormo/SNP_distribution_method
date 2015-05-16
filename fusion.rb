@@ -40,9 +40,6 @@ chr12 = chr1 + chr2
 chr123 = chr12 + chr3
 chr1234 = chr123 + chr4
 
-chrtotal = chr1234 + chr5
-puts chrtotal
-exit 
 
 
 hm_nocen2 = Genome.create_whole(hm_list2, chr1)
