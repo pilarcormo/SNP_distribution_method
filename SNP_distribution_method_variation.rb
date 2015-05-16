@@ -126,11 +126,9 @@ dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
 #dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
 dic_expected_ratios, expected_ratios, ids_short = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
 
-
 #Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
-
 
 #Create new fasta file with the ordered elements
 File.open("#{loc}/frags_ordered_thres#{threshold}.fasta", "w+") do |f|
@@ -151,7 +149,6 @@ puts "..."
 # dic_global_htpos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_or) 
 
 Dir.mkdir("#{file}")
-
 
 #Create arrays with the lists of SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
