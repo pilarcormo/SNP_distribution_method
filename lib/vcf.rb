@@ -1,6 +1,27 @@
 
 #encoding: utf-8
 class Vcf 
+	require 'bio'
+	require 'bio-samtools'
+
+    def self.open_vcf(vcf_file, chromosome)
+	    vcfs_chrom, vcfspos, vcfsinfo = [], [], [] 
+	    new_vcf = []
+	    File.open(vcf_file, 'r').each do |line|
+	    	next if line =~ /^#/
+	        v = Bio::DB::Vcf.new(line)
+	        vcfs_chrom << v.chrom
+	        vcfspos << v.pos
+	        vcfsinfo << v.info 
+	        # snp_type = v.info["HOM"].to_f
+	        a = line.split("\t")
+	        if v.chrom == "#{chromosome}"
+	        	new_vcf << line 
+	        end
+	    end 
+		return new_vcf, vcfs_chrom, vcfspos, vcfsinfo
+	end 
+
 	def self.type_per_pos (vcfs_info, vcfs_pos)
 	    snps = {}
 	    x = 0
@@ -22,23 +43,7 @@ class Vcf
 	    end 
 	    return snps, hm, ht
 	end  
-    def self.open_vcf(vcf_file, chromosome)
-	    vcfs_chrom, vcfs_pos, vcfs_info = [], [], [] 
-	    new_vcf = []
-	    File.open(vcf_file, 'r').each do |line|
-	    	next if line =~ /^#/
-	        v = Bio::DB::Vcf.new(line)
-	        vcfs_chrom << v.chrom
-	        vcfs_pos << v.pos
-	        vcfs_info << v.info 
-	        # snp_type = v.info["HOM"].to_f
-	        a = line.split("\t")
-	        if v.chrom == "#{chromosome}"
-	        	new_vcf << line 
-	        end
-	    end 
-		return new_vcf, vcfs_chrom, vcfs_pos, vcfs_info
-	end 
+
 	def self.filtering(vcfs_pos_c, snps_p, snps_c, child_chr_vcf)
 		short_vcfs_pos_c = vcfs_pos_c
 		short_vcfs_pos_c.flatten!

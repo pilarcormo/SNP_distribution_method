@@ -128,6 +128,7 @@ class Stuff
 	#   	all_global_positions.flatten!
 	# 	return dic_global_pos, all_global_positions
 	# end
+
 	##Inputs: hashes with IDs as keys and the SNP density as value
 	##Divide absolute number of SNPs by the length of the given fragment. 
 	##Output: hashes with IDs as keys and the normalised SNP density as value
@@ -196,7 +197,7 @@ class Stuff
 			x += 1
 		end
 		if threshold == 1
-			threshold = (dic_ratios.values.max.to_f)/4
+			threshold = 2
 			puts "Threshold  = #{threshold}"
 			dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
 		end 

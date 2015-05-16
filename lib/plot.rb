@@ -4,9 +4,12 @@ require_relative 'write_it'
 require 'rinruby'
 
 class Plot
-  def self.exp_vs_hyp_densities(hypothetical, location)
+  def self.qqplot(hypothetical, location, title, ylabel, xlabel)
     myr = RinRuby.new(echo = false)
     myr.assign "hypothetical", hypothetical
+    myr.assign 'title', title
+    myr.assign 'xlabel', xlabel
+    myr.assign 'ylabel', ylabel
     myr.assign "location", location
     myr.eval 'png(paste(location,"/", "qqplot_exp_hyp",".png", sep=""), width=500,height=500)
     qqline2 <- function(x, y, probs = c(0.25, 0.75), qtype = 7, ...)
@@ -28,10 +31,10 @@ class Plot
                                         r2 = format(summary(k)$r.squared, digits = 3))))
       }
 
-    x <- expected
+    x <- hypothetical
     y <- rnorm(length(x), mean(x), 5000000)
     df <- data.frame(x, y)
-    V = qqplot(x, y, main="Q-Q Plot", ylab="Expected SNP density", xlab = "Hypothetical SNP density after SDM")
+    V = qqplot(x, y, main="Q-Q Plot", ylab=ylabel, xlab =xlabel)
     l <- qqline2(x, y, col = 6) 
     fg <- data.frame(V$x, V$y)
     k <- lm(V$y ~ V$x)
