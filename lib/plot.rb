@@ -53,7 +53,7 @@ class Plot
     options(scipen = 10) 
     d1 <-density(hm, adjust = 1, kernel = c("gaussian"))
     d2 <- density(ht, adjust = 1, kernel = c("gaussian"))
-    d3 <- density(ratio, adjust =1 , kernel = c("gaussian"))
+    d3 <- density(ratio, adjust =0.25 , kernel = c("gaussian"))
     p1 <- plot(range(d1$x, d2$x, d3$x), range(d1$y, d2$y, d3$y), type = "n", main = "Densities", xlim =c(0,length), xlab = " ", ylab = " ")
     lines(d1, col = "magenta2") ##Homozygous 
     lines(d2, col = "royalblue2", lty=2)

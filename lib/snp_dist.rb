@@ -1,6 +1,7 @@
 #encoding: utf-8
 
 class SNPdist
+	require 'rinruby'
 	### Hypothetical SNP positions ###
 	# Input 0: The contig size
 	# Input 1: Array of ratios for homozygous to heterozygous SNPs at each contig. 

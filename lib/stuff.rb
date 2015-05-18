@@ -197,7 +197,7 @@ class Stuff
 			x += 1
 		end
 		if threshold == 1
-			threshold = 2
+			threshold = (dic_ratios.values.max.to_f)/4
 			puts "Threshold  = #{threshold}"
 			dic_ratios.delete_if { |id, ratio|  ratio <= threshold.to_f}
 		end 
@@ -213,7 +213,8 @@ class Stuff
 		# 	end 
 		# 	x += 1
 		# end 
-		return dic_ratios, ratios, ids_s
+		dic_ratios_inv = Stuff::safe_invert(dic_ratios)
+		return dic_ratios, ratios, ids_s, dic_ratios_inv
 	end
 
 	def self.important_ids(ids_short, ids)
