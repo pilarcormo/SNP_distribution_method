@@ -70,6 +70,7 @@ frags_shuffled = ReformRatio.fasta_array(fasta_shuffle)
 ids_ok, lengths_ok, id_len_ok = ReformRatio.fasta_id_n_lengths(frags)
 ids, lengths, id_len = ReformRatio.fasta_id_n_lengths(frags_shuffled)
 
+
 genome_length = ReformRatio.genome_length(fasta_file)
 
 ##Define snps in hashes (fragment id as key and snp density as value). Create also lists 
@@ -78,8 +79,11 @@ genome_length = ReformRatio.genome_length(fasta_file)
 ##If a fragment does not have SNPs, the value assigned will be 0.
 ok_hm, snps_hm = Stuff.define_snps(ids_ok, dic_hm)
 ok_ht, snps_ht = Stuff.define_snps(ids_ok, dic_ht)
+shuf_hm, shuf_snps_hm = Stuff.define_snps(ids, dic_hm)
+shuf_ht, shuf_snps_ht = Stuff.define_snps(ids, dic_ht)
 
-dic_ratios, ratios, ids_short = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
+dic_ratios, ratios, ids_short, dic_ratios_inv = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
+dic_ratios_shuf, ratios_shuf, ids_short_shuf, dic_ratios_inv_shuf = Stuff.important_ratios(shuf_snps_hm, shuf_snps_ht, ids, threshold, adjust) 
 
 s_hm, s_snps_hm = Stuff.define_snps(ids_short, dic_hm)
 s_ht, s_snps_ht = Stuff.define_snps(ids_short, dic_ht)
@@ -91,9 +95,6 @@ hm_sh = Stuff.important_pos(ids_short, dic_pos_hm)
 ht_sh = Stuff.important_pos(ids_short, dic_pos_ht)
 
 
-shuf_hm, shu_snps_hm = Stuff.define_snps(shuf_short_ids, dic_hm)
-
-
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
 
 dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
@@ -102,19 +103,20 @@ dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
 #with this value in a list. Then, the list is cut by half and each half is added to a new array (right, that will be used 
 #to reconstruct the right side of the distribution, and left, for the left side)
 puts "\n"
-perm_hm  = SDM.sorting(dic_shuf_hm_norm)
 
-mut = []
-half = perm_hm.each_slice(perm_hm.length/2).to_a
-mut << half[0][-2, 2]
-mut << half[1][0, 2]
+perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm)
+perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf)
+
+mut << mut_ratio
+mut.uniq!
 mut.flatten!
+pp mut 
 
-# 
-##Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
+
+#Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
 puts "Time spent sorting the contigs:"
 Benchmark.bm do |b|
-    b.report {10.times do ; perm_hm = SDM.sorting(dic_shuf_hm_norm);  end}
+    b.report {10.times do ; p, m = SDM.sorting(dic_shuf_hm_norm);  end}
 end
 puts "done"
 
@@ -130,6 +132,8 @@ dic_expected_ratios, expected_ratios, ids_short = Stuff.important_ratios(snps_hm
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
 
+
+
 #Create new fasta file with the ordered elements
 File.open("#{loc}/frags_ordered_thres#{threshold}.fasta", "w+") do |f|
   fasta_perm.each { |element| f.puts(element) }
@@ -139,11 +143,13 @@ fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered_thres#{threshold}
 frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
 
+
 ###Calculate size of the group of fragments that have a high hm/ht ratio
 contig_size = (genome_length/ids_ok.length).to_f
 center = contig_size*(perm_hm.length) 
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
 puts "..."
+
 
 # dic_global_hmpos, hm_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_hm, id_len_or) 
 # dic_global_htpos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_or) 
@@ -156,6 +162,7 @@ WriteIt::write_txt("#{file}/perm_hm", hom_snps)
 WriteIt::write_txt("#{file}/perm_ht", het_snps)
 WriteIt::write_txt("#{file}/hm_snps_short", hm_sh) # save the SNP distributions for the best permutation in the generation
 WriteIt::write_txt("#{file}/ht_snps_short", ht_sh)
+
 
 
 Mutation::density_plots(contig_size, ratios, expected_ratios, hom_snps, het_snps, center, file, mut, frag_pos_hm) 
