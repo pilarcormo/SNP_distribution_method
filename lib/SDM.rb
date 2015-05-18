@@ -1,5 +1,6 @@
 #encoding: utf-8
 
+
 class SDM
 	def self.sorting(dic_hm_inv)
     def self.divide_array(dic_hm_inv, right, left, keys_hm, dest)
@@ -35,10 +36,12 @@ class SDM
       right, left, keys = SDM.divide_array(dic_hm_inv, right, left, keys, 0)
       right, left, keys = SDM.divide_array(dic_hm_inv, right, left, keys, 1)
     end 
-    right.flatten
-    left.flatten.compact!
-    perm = right << left.reverse #combine together both sides of the distribution
+    perm = right.flatten << left.compact.flatten.reverse #combine together both sides of the distribution
     perm.flatten!
-		return perm
+    mut = []
+    mut << right.flatten[-2, 2]
+    mut << left.flatten[-2, 2].reverse
+    mut.flatten!
+    return perm, mut
 	end
 end
