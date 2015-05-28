@@ -58,6 +58,7 @@ dic_pos_hm =  Stuff.dic_id_pos(hm, hm_list)
 dic_pos_ht =  Stuff.dic_id_pos(ht, ht_list)
  ########
 
+
 ##Create dictionaries with the id of the fragment as the key and the NUMBER of SNPs as value
 dic_hm = Stuff.create_hash_number(hm)
 dic_ht = Stuff.create_hash_number(ht)
@@ -82,7 +83,7 @@ ok_ht, snps_ht = Stuff.define_snps(ids_ok, dic_ht)
 shuf_hm, shuf_snps_hm = Stuff.define_snps(ids, dic_hm)
 shuf_ht, shuf_snps_ht = Stuff.define_snps(ids, dic_ht)
 
-dic_ratios, ratios, ids_short, dic_ratios_inv = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
+dic_ratios, ratios, ids_short, dic_ratios_inv  = Stuff.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
 dic_ratios_shuf, ratios_shuf, ids_short_shuf, dic_ratios_inv_shuf = Stuff.important_ratios(shuf_snps_hm, shuf_snps_ht, ids, threshold, adjust) 
 
 s_hm, s_snps_hm = Stuff.define_snps(ids_short, dic_hm)
@@ -94,6 +95,7 @@ shuf_short_ids = Stuff.important_ids(ids_short, ids)
 hm_sh = Stuff.important_pos(ids_short, dic_pos_hm)
 ht_sh = Stuff.important_pos(ids_short, dic_pos_ht)
 
+ shuf_hm, shu_snps_hm = Stuff.define_snps(shuf_short_ids, dic_hm)
 
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
 
@@ -107,26 +109,31 @@ puts "\n"
 perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm)
 perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf)
 
+
+
+
 mut << mut_ratio
 mut.uniq!
 mut.flatten!
-pp mut 
 
 
-#Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
-puts "Time spent sorting the contigs:"
-Benchmark.bm do |b|
-    b.report {10.times do ; p, m = SDM.sorting(dic_shuf_hm_norm);  end}
-end
-puts "done"
+
+# #Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
+# puts "Time spent sorting the contigs:"
+# Benchmark.bm do |b|
+#     b.report {10.times do ; p, m = SDM.sorting(dic_shuf_hm_norm);  end}
+# end
+# puts "done"
 
 #Define SNPs in the recently ordered array of fragments.
 dic_or_hm, snps_hm_or = Stuff.define_snps(perm_hm, dic_hm)
 dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
 
+
+
 ###Calculate ratios and delete those equal to or lower than 1 so only the important contigs remain.
 #dic_ratios, ratios = Stuff.important_ratios(snps_hm, snps_ht, ids_ok)
-dic_expected_ratios, expected_ratios, ids_short = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
+dic_expected_ratios, expected_ratios, exp_ids_short, exp_inv_ratios = Stuff.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
 
 #Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
@@ -150,9 +157,25 @@ center = contig_size*(perm_hm.length)
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
 puts "..."
 
+# dic_global_hmpos, hm_global_positions_perm = Stuff.define_global_pos(ids_ok, frag_pos_hm, id_len_ok) 
 
-# dic_global_hmpos, hm_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_hm, id_len_or) 
-# dic_global_htpos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_or) 
+or_pos = {}
+mut.each { |frag|
+    if dic_pos_hm.has_key?(frag)
+      or_pos.store(frag, dic_pos_hm[frag])
+    end
+	}
+
+
+# #dic_global_htpos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_or) 
+
+pp perm_hm
+
+
+
+hyp = or_pos.values.sort.flatten!
+
+pp hyp 
 
 Dir.mkdir("#{file}")
 
