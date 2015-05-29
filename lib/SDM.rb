@@ -2,7 +2,7 @@
 
 
 class SDM
-	def self.sorting(dic_hm_inv)
+	def self.sorting(dic_hm_inv, cross)
     def self.divide_array(dic_hm_inv, right, left, keys_hm, dest)
       contigs_at_min = []
       minimum = keys_hm.min
@@ -39,9 +39,44 @@ class SDM
     perm = right.flatten << left.compact.flatten.reverse #combine together both sides of the distribution
     perm.flatten!
     mut = []
-    mut << right.flatten[-2, 2]
-    mut << left.flatten[-2, 2].reverse
-    mut.flatten!
+    if cross == "back"
+      mut << right.flatten[-1, 1]
+      mut << left.flatten[-1, 1].reverse
+      mut.flatten!
+    elsif cross == "out" 
+      mut << right.flatten[-10, 10]
+      mut << left.flatten[-10, 10].reverse
+      mut.flatten!
+    end 
     return perm, mut
 	end
+  
+  def self.calling_SDM (dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
+    mut, number_of_snps = [], []
+    perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm, cross)
+    perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf, cross)
+    mut << mut_ratio
+    mut.uniq!
+    mut.flatten!
+    or_pos = {}
+    mut.each { |frag|
+        if dic_pos_hm.has_key?(frag)
+          or_pos.store(frag, dic_pos_hm[frag])
+        end
+      }
+    if cross == "out"
+      mut.each { |frag|
+        if dic_pos_hm.has_key?(frag)
+          or_pos.store(frag, dic_pos_hm[frag])
+        end
+      }
+      or_pos.each do |frag, array|
+        number_of_snps << array.length
+      end
+      pp number_of_snps
+      or_pos.delete_if { |id, array|  array.length < (number_of_snps.max - 1) }  
+    end 
+    hyp = or_pos.values.sort.flatten!
+    return perm_hm, perm_ratio, mut, hyp 
+  end 
 end
