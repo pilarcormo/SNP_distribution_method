@@ -13,12 +13,13 @@ require 'csv'
 
 
 if ARGV.empty?
-	puts "Please specify a (1) dataset, a (2) name for the output folder, a (3) threshold to discard the contigs which a ratio below it and a (4) factor to calculate the ratio (1, 0.1, 0.01...) "
+	puts "Please specify a (1) dataset, a (2) name for the output folder, a (3) threshold to discard the contigs which a ratio below it and a (4) factor to calculate the ratio (1, 0.1, 0.01...) (5) kind of cross: back or out"
 else 
 	dataset = ARGV[0] 
 	file = ARGV[1]
 	threshold = ARGV[2].to_i
 	adjust = ARGV[3]
+	cross = ARGV[4]
 	puts "Looking for SNPs in #{dataset}"
 	puts "Output will be in #{dataset}/#{file}"
 	puts "A factor of #{adjust} will be used to calculate the ratio"
@@ -106,22 +107,49 @@ dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
 #to reconstruct the right side of the distribution, and left, for the left side)
 puts "\n"
 
-perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm)
-perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf)
+# perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm, cross)
+# perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf, cross)
+
+# mut << mut_ratio
+# mut.uniq!
+# mut.flatten!
+
+# or_pos = {}
+# mut.each { |frag|
+#     if dic_pos_hm.has_key?(frag)
+#       or_pos.store(frag, dic_pos_hm[frag])
+#     end
+# 	}
+
+# list = []
+# if cross == "out"
+# 	mut.each { |frag|
+#     if dic_pos_hm.has_key?(frag)
+#       or_pos.store(frag, dic_pos_hm[frag])
+#     end
+# 	}
+# 	or_pos.each do |frag, array|
+# 		list << array.length
+# 	end
+# 	or_pos.delete_if { |id, array|  array.length < (list.max - 1) }	 
+# end 
 
 
+# hyp = or_pos.values.sort.flatten!
+
+# pp hyp 
 
 
-mut << mut_ratio
-mut.uniq!
-mut.flatten!
+perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
 
+pp hyp_positions
+pp hyp_positions.length
 
-
-# #Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
+ 
+# Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
 # puts "Time spent sorting the contigs:"
 # Benchmark.bm do |b|
-#     b.report {10.times do ; p, m = SDM.sorting(dic_shuf_hm_norm);  end}
+#     b.report {10.times do ; p, pr, m, h = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm);  end}
 # end
 # puts "done"
 
@@ -156,26 +184,8 @@ contig_size = (genome_length/ids_ok.length).to_f
 center = contig_size*(perm_hm.length) 
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
 puts "..."
+ 
 
-# dic_global_hmpos, hm_global_positions_perm = Stuff.define_global_pos(ids_ok, frag_pos_hm, id_len_ok) 
-
-or_pos = {}
-mut.each { |frag|
-    if dic_pos_hm.has_key?(frag)
-      or_pos.store(frag, dic_pos_hm[frag])
-    end
-	}
-
-
-# #dic_global_htpos, ht_global_positions_perm = Stuff.define_global_pos(perm_hm, frag_pos_ht, id_len_or) 
-
-pp perm_hm
-
-
-
-hyp = or_pos.values.sort.flatten!
-
-pp hyp 
 
 Dir.mkdir("#{file}")
 
