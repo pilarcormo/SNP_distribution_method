@@ -107,38 +107,6 @@ dic_shuf_hm_norm = Stuff.normalise_by_length(lengths, shuf_hm)
 #to reconstruct the right side of the distribution, and left, for the left side)
 puts "\n"
 
-# perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm, cross)
-# perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf, cross)
-
-# mut << mut_ratio
-# mut.uniq!
-# mut.flatten!
-
-# or_pos = {}
-# mut.each { |frag|
-#     if dic_pos_hm.has_key?(frag)
-#       or_pos.store(frag, dic_pos_hm[frag])
-#     end
-# 	}
-
-# list = []
-# if cross == "out"
-# 	mut.each { |frag|
-#     if dic_pos_hm.has_key?(frag)
-#       or_pos.store(frag, dic_pos_hm[frag])
-#     end
-# 	}
-# 	or_pos.each do |frag, array|
-# 		list << array.length
-# 	end
-# 	or_pos.delete_if { |id, array|  array.length < (list.max - 1) }	 
-# end 
-
-
-# hyp = or_pos.values.sort.flatten!
-
-# pp hyp 
-
 
 perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
 
@@ -185,7 +153,6 @@ center = contig_size*(perm_hm.length)
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
 puts "..."
  
-
 
 Dir.mkdir("#{file}")
 
