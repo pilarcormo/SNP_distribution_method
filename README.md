@@ -12,14 +12,14 @@ If we have have a fasta file with the unordered contigs and a VCF file with the 
 
 ###Creating a model genome
 
-Running ```ruby create_model_genome.rb dataset_name genome_length contig_size``` will generate a new model genome in SNP_distribution_method/arabidopsis_datasets/dataset_name. This includes a FASTA file with the sequences of each fragment, and a VCF file with the SNPs on each fragment. In the INFO field of the VCF, each SNP has been given an allele frequency (AF). Heterozygous SNPs will generally have AF = ~0.5, and homozygous AF = ~1.0, but this will vary with pooled data. In the model, each SNP has been given an allele frequency of exactly 0.5 or 1.0. The variables hm_r and ht_r contain the R code needed to create the model homozygous and heterozygous SNP distributions respectively. The variable contig_size provides the minimum size for contigs, where the maximum size is double this value, and each contig's size is randomly chosen within this range [https://github.com/edwardchalstrey1/fragmented_genome_with_snps](https://github.com/edwardchalstrey1/fragmented_genome_with_snps)
+Running ```ruby create_model_genome.rb dataset_name genome_length contig_size``` will generate a new model genome in SNP_distribution_method/arabidopsis_datasets/dataset_name. This includes a FASTA file with the sequences of each fragment, and a VCF file with the SNPs on each fragment. In the INFO field of the VCF, each SNP has been given an allele frequency (AF). Heterozygous SNPs will generally have AF = ~0.5, and homozygous AF = ~1.0, but this will vary with pooled data. In the model, each SNP has been given an allele frequency of exactly 0.5 or 1.0. The variables hm_r and ht_r contain the R code needed to create the model homozygous and heterozygous SNP distributions respectively. The variable contig_size provides the minimum size for contigs, where the maximum size is double this value, and each contig's size is randomly chosen within this range. Information obtained from [https://github.com/edwardchalstrey1/fragmented_genome_with_snps](https://github.com/edwardchalstrey1/fragmented_genome_with_snps)
 
 To create model genomes with real SNP densities obtaind from variant calling with NGS reads, we can run ```ruby model_genome_real_hpc.rb dataset_name contig_size folder_containing_SNPs_files chromosome```
 
 
 ###Filtering background SNPs 
 
-Run ```ruby manage_vcf.rb (1) (2) (3) (4) -(5)-``
+Run ``ruby manage_vcf.rb (1) (2) (3) (4) -(5)-``
 
 1. location folder
 2. Variants in VCF 4.1 file
@@ -35,7 +35,7 @@ to facilitate the modelling of SDM. It will also create text files for homozygou
 
 
 ###Removing the centromeres 
-Run ```ruby remove_cent.rb chromosome folder_containing_SNPs_files``` take the SNP lists and remove the SNP positions that are caused by the high variability in the centromeric regions. It is defined for *Arabidopsis thaliana only*.
+Run ```ruby remove_cent.rb chromosome folder_containing_SNPs_files```. It takes the SNP lists and remove the SNP positions that are caused by the high variability in the centromeric regions. For now, it is defined for *Arabidopsis thaliana* only.
 
 ###Runing SDM
 
