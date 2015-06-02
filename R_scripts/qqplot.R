@@ -30,7 +30,10 @@ k <- lm(V$y ~ V$x)
 len <- leg_r2(k)
 
 ##Standard deviation, kurtosis and skewness of the distribution
-leng  
+library(moments)
+sd(y)
+kurtosis(y)
+skewness(y)
 
 ##QQnorm
 n <- qqnorm(y); qqline(y, col = 6)   
