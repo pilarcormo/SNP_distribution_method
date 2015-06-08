@@ -62,7 +62,7 @@ The output after running SDM will be a new FASTA file with the suggested order o
 
 ###R scripts 
 
-All the density plots, QQplots and histograms are described in the R scripts at [https://github.com/pilarcormo/SNP_distribution_method/R_scripts](https://github.com/pilarcormo/SNP_distribution_method/R_scripts)
+All the density plots, QQplots and histograms are described in the R scripts at [https://github.com/pilarcormo/SNP_distribution_method/R_scripts](https://github.com/pilarcormo/SNP_distribution_method/tree/master/R_scripts)
 
 ###Project dependencies
 

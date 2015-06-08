@@ -19,7 +19,24 @@
 
 
 # ruby SNP_distribution_method_variation.rb No_centromere/A_nocen_chr2_100kb New_plots_off2 0 1 m_mutants/A_chromosome2/interesting_2
-ruby SNP_distribution_method_variation.rb No_centromere/A_nocen_chr2_100kb New_plots_on2 1 1 m_mutants/A_chromosome2/interesting_2
+
+ruby SNP_distribution_method_variation.rb B_nocen_whole_100kb New_plots_on 1 1
+
+ruby SNP_distribution_method_variation.rb C_nocen_whole_100kb New_plots_off 0 1
+ruby SNP_distribution_method_variation.rb C_nocen_whole_100kb New_plots_on 1 1
+
+ruby SNP_distribution_method_variation.rb F_nocen_whole_100kb New_plots_off 0 1
+ruby SNP_distribution_method_variation.rb F_nocen_whole_100kb New_plots_on 1 1
+
+ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_off 0 1
+ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_on 1 1
+
+ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_off 0 1
+ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_on 1 1
+
+
+
+
 # ruby SNP_distribution_method_variation.rb No_centromere/B_nocen_chr2_100kb New_plots_off 0 1 m_mutants/B_chromosome5/interesting_5
 ruby SNP_distribution_method_variation.rb No_centromere/B_nocen_chr2_100kb New_plots_on2 1 1 m_mutants/B_chromosome5/interesting_5
 

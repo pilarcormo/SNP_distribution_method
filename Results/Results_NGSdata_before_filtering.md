@@ -11,7 +11,7 @@ Results before parental filtering
 
 
 #####Chromosome 2 
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/BCF2/BCF2_chromosome2/Rplot.hmhtdensities_magblu.png?raw=true)
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/BCF2/BCF2_chromosome2/Rplot.hmht.png?raw=true)
 
 ![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/BCF2/BCF2_chromosome2/Rplot.hist%26den.png?raw=true)
 

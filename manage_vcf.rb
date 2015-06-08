@@ -6,12 +6,12 @@ require 'pp'
 if ARGV.empty?
     puts "Please specify (1) a location folder,  (2) a vcf file, (3) the chromosome we want to 
     analyse (1, 2, 3, 4, 5..) and (4) a method for managing the vcf file: 
-    use either 'background_vcf' or 'filter_vcf'. If the second option is used we also need (5) a parental vcf file"
+    use either 'cutting_vcf' or 'filter_vcf'. If the second option is used we also need (5) a parental vcf file"
 else 
     file = ARGV[0] #location folder where the vcf file is and where the output vcf files will be created.
     vcf = ARGV[1] #starting vcf file 
     chromosome = ARGV[2].to_i #chromosome we want to analyse
-    filtering = ARGV[3] #either background_vcf (to divide the original vcf file by chromosome in individual vcf files and create hm.txt and ht.txt) 
+    filtering = ARGV[3] #either cutting_vcf (to divide the original vcf file by chromosome in individual vcf files and create hm.txt and ht.txt) 
     #or filter_vcf (use the first file as child vcf and the parent provided after as filter to eliminate brackground SNPs)       
     parent = ARGV[4]
 end 
@@ -20,7 +20,7 @@ location = "#{file}"
 
 case filtering
 
-when 'background_vcf'
+when 'cutting_vcf'
     puts "Opening the vcf file"
     vcf, vcfs_chrom, vcfs_pos, vcfs_info = Vcf.open_vcf("#{file}/#{vcf}.vcf", chromosome)
     

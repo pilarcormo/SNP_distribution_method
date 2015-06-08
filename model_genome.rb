@@ -4,7 +4,7 @@ require_relative 'lib/write_it'
 require 'pp'
 
 name = ARGV[0]
-size = ARGV[1]*1000000
+size = ARGV[1]
 contig_size = ARGV[2]
 snp = (size/1000)*2
 
@@ -29,7 +29,7 @@ ht = WriteIt::file_to_ints_array("chromosome1/ht.txt")
 snp_pos = [hm, ht].flatten
 
 
-arabidopsis_c1 = ModelGenome::fasta_to_char_array("TAIR10_chr4.fasta")
+arabidopsis_c1 = ModelGenome::fasta_to_char_array("TAIR10_chr1.fasta")
 puts "Creating the genome..."
 small_genome = arabidopsis_c1[-size..-1] # Genome length of 100 kb
 
