@@ -39,14 +39,22 @@ class SDM
     perm = right.flatten << left.compact.flatten.reverse #combine together both sides of the distribution
     perm.flatten!
     mut = []
+    pl = perm.length
     if cross == "back"
       mut << right.flatten[-1, 1]
       mut << left.flatten[-1, 1].reverse
       mut.flatten!
     elsif cross == "out" 
-      mut << right.flatten[-10, 10]
-      mut << left.flatten[-10, 10].reverse
-      mut.flatten!
+      if pl > 10
+        mut << right.flatten[-10, 10]
+        mut << left.flatten[-10, 10].reverse
+        mut.flatten!
+      else 
+        mut << right.flatten[-pl/2, pl/2]
+        mut << left.flatten[-pl/2, pl/2].reverse
+        mut.flatten!
+      end 
+
     end 
     return perm, mut
 	end
@@ -56,26 +64,18 @@ class SDM
     perm_hm, mut  = SDM.sorting(dic_shuf_hm_norm, cross)
     perm_ratio, mut_ratio = SDM.sorting(dic_ratios_inv_shuf, cross)
     mut << mut_ratio
-    mut.uniq!
     mut.flatten!
+    mut = mut.uniq!
     or_pos = {}
     mut.each { |frag|
         if dic_pos_hm.has_key?(frag)
           or_pos.store(frag, dic_pos_hm[frag])
         end
       }
-    if cross == "out"
-      mut.each { |frag|
-        if dic_pos_hm.has_key?(frag)
-          or_pos.store(frag, dic_pos_hm[frag])
-        end
-      }
-      or_pos.each do |frag, array|
+    or_pos.each do |frag, array|
         number_of_snps << array.length
-      end
-      pp number_of_snps
-      or_pos.delete_if { |id, array|  array.length < (number_of_snps.max - 1) }  
-    end 
+    end
+    or_pos.delete_if { |id, array|  array.length < (number_of_snps.max - 1) }  
     hyp = or_pos.values.sort.flatten!
     return perm_hm, perm_ratio, mut, hyp 
   end 

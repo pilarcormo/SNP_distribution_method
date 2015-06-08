@@ -60,6 +60,7 @@ dic_pos_ht =  Stuff.dic_id_pos(ht, ht_list)
  ########
 
 
+
 ##Create dictionaries with the id of the fragment as the key and the NUMBER of SNPs as value
 dic_hm = Stuff.create_hash_number(hm)
 dic_ht = Stuff.create_hash_number(ht)
@@ -110,16 +111,9 @@ puts "\n"
 
 perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
 
-pp hyp_positions
-pp hyp_positions.length
+puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
 
- 
-# Measuree time of SDM. Eventually add time needed for the remaining steps until we define the mutation
-# puts "Time spent sorting the contigs:"
-# Benchmark.bm do |b|
-#     b.report {10.times do ; p, pr, m, h = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm);  end}
-# end
-# puts "done"
+
 
 #Define SNPs in the recently ordered array of fragments.
 dic_or_hm, snps_hm_or = Stuff.define_snps(perm_hm, dic_hm)
@@ -134,7 +128,6 @@ dic_expected_ratios, expected_ratios, exp_ids_short, exp_inv_ratios = Stuff.impo
 #Take IDs, lenght and sequence from the shuffled fasta file and add them to the permutation array 
 
 fasta_perm = Stuff.create_perm_fasta(perm_hm, frags_shuffled, ids)
-
 
 
 #Create new fasta file with the ordered elements
