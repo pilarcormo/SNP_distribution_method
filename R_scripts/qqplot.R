@@ -18,16 +18,38 @@ leg_r2 <- function(k)
                                   r2 = format(summary(k)$r.squared, digits = 3))))
 }
 
-hm <- read.table("~/SNP_distribution_method/Reads/m_mutants/_chromosome2/interesting_2/hm_nocen.txt", quote="\"")
-hm2 <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
-y <- c(hm2$V1)
-x <- rnorm(length(y), mean(y), sd(y))
-df <- data.frame(x, y)
-V = qqplot(x, y, main="Q-Q Plot", ylab="hm SNP density in chromosome 2", xlab = "Theoretical normal disitribution")
-l <- qqline2(x, y, col = 6) 
-fg <- data.frame(V$x, V$y)
-k <- lm(V$y ~ V$x)
-len <- leg_r2(k)
+hm <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
+hm2 <- read.table("~/SNP_distribution_method/Reads/m_mutants/B_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
+hm3 <- read.table("~/SNP_distribution_method/Reads/BCF2/Interesting_3/hm_nocen.txt", quote="\"")
+hm4 <- read.table("~/SNP_distribution_method/Reads/OCF2/Interesting_3/hm_nocen.txt", quote="\"")
+hm5 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/Variant_calling/sup1_2_4/hm_nocen.txt", quote="\"")
+
+
+y1 <- c(hm$V1)
+y2 <- c(hm2$V1)
+y3 <- c(hm3$V1)
+y4 <- c(hm4$V1)
+y5 <- c(hm5$V1)
+
+qqplot_line <- function(y, title)
+{
+  x <- rnorm(length(y), mean(y), sd(y))
+  df <- data.frame(x, y)
+  V = qqplot(x, y, main = title, ylab="Real homozygous SNP density", xlab = "Theoretical normal disitribution")
+  l <- qqline2(x, y, col = 'brown3') 
+  fg <- data.frame(V$x, V$y)
+  k <- lm(V$y ~ V$x)
+  len <- leg_r2(k)
+} 
+
+q1 <- list(qqplot_line(y1, "mob 2"))
+q2 <- list(qqplot_line(y2, "mob 1"))
+q3 <- qqplot_line(y3, "BCF2")
+q4 <- qqplot_line(y4, "OCF2")
+q5 <- qqplot_line(y5, "sup#1")
+
+q1
+grid.arrange(arrangeGrob(q1, q2), ncol = 2)
 
 ##Standard deviation, kurtosis and skewness of the distribution
 library(moments)
