@@ -12,7 +12,7 @@ Contig assembly analysis
 
 
 Species|Genome_length|Number_of_contigs|N50|Coverage|Technology
------|-----|-----|-----|-----:
+-----|-----|-----|-----|-----|-----:
 Actinidia chinensis|604,217,145|26,721 | 58,864| 150.0x|Illumina
 Selaginella kraussiana | 114,502,747 | 105,943 | 2,414  | 150.0x | Illumina-HiSeq
 Sesamum indicum | 340,463,922 |87,064 | 11,517 | 85.0x | Illumina; 454; Illumina MiSeq
