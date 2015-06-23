@@ -11,9 +11,9 @@ Contig assembly analysis
 
 
 
-Species | Total sequence length | Number of contigs| Contig N50 |Genome coverage |Sequencing technology
+Species|Genome_length|Number_of_contigs|N50|Coverage|Technology
 -----|-----|-----|-----|-----:
-Actinidia chinensis | 604,217,145 | 26,721 | 58,864  | 150.0x | Illumina
+Actinidia chinensis|604,217,145|26,721 | 58,864| 150.0x|Illumina
 Selaginella kraussiana | 114,502,747 | 105,943 | 2,414  | 150.0x | Illumina-HiSeq
 Sesamum indicum | 340,463,922 |87,064 | 11,517 | 85.0x | Illumina; 454; Illumina MiSeq
 Eragrostis tef | 607,317,615 |112,599 | 7,532  | 54.0x | Illumina HiSeq; 454
@@ -22,7 +22,7 @@ Catharanthus roseus| 522,653,749 |147,992 |14,288| 50.0x | Illumina HiSeq
 Triticum aestivum| 65,111,056 |22,149 | 3,124 | 4.0x | 454
 Raphanus sativus|341,476,849|20,507 | 24,475 |267.0x| 454; PacBio; Illumina HiSeq; ABI3730
 Primula veris|309,692,940 |40,851 | 13,157 | 116.0x | Illumina HiSeq; Illumina MiSeq; PacBio
-Conyza canadensis |326,165,195 |20,075 | 20,748 | 350.0x | 454; Illumina HiSeq; PacBio
+Conyza canadensis |326,165,195 |20,075 | 20,748| 350.0x|454; Illumina HiSeq;PacBio
 Diospyros lotus |1,104,189 |797 | 1,864| 23.0x| Illumina HiSeq
 Arabidopsis thaliana (Ler-0) |127,419,454|378 |11,163,166| 140.0x| PacBio
 Vigna radiata |463,085,359 |23,499 | 48,831 | 300.0x | Illumina HiSeq
