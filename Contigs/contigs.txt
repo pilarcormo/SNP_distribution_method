@@ -1,0 +1,31 @@
+Species|Totalsequencelength|Numberofcontigs|ContigN50|Genomecoverage|Sequencingtechnology
+Actinidia chinensis | 604217145 | 26721 | 58864  | 150.0x | Illumina
+Selaginella kraussiana | 114502747 | 105943 | 2414  | 150.0x | Illumina HiSeq
+Sesamum indicum | 340463922 |87064 | 11517 | 85.0x | Illumina; 454; Illumina MiSeq
+Eragrostis tef | 607317615 |112599 | 7532  | 54.0x | Illumina HiSeq; 454
+Thlaspi arvense| 343012389 |31889 | 28155 | 80.0x | Illumina HiSeq; Illumina MiSeq; PacBio
+Catharanthus roseus| 522653749 |147992 |14288| 50.0x | Illumina HiSeq
+Triticum aestivum| 65111056 |22149 | 3124 | 4.0x | 454
+Raphanus sativus|341476849|20507 | 24475 |267.0x| 454; PacBio; Illumina HiSeq; ABI3730
+Primula veris|309692940 |40851 | 13157 | 116.0x | Illumina HiSeq; Illumina MiSeq; PacBio
+Conyza canadensis |326165195 |20075 | 20748 | 350.0x | 454; Illumina HiSeq; PacBio
+Diospyros lotus |1104189 |797 | 1864| 23.0x| Illumina HiSeq
+Arabidopsis thaliana (Ler-0) |127419454|378 |11163166| 140.0x| Illumina HiSeq
+Vigna radiata |463085359 |23499 | 48831 | 300.0x | Illumina HiSeq
+Vaccinium macrocarpon |414621889 |200946 | 4278 | 20.0x | Illumina GAIIx
+Raphanus raphanistrum  |253833977 |64732 | 10186 | 47.0x | Illumina GAIIx; 454
+Nicotiana otophora |2474110067 |1121520 | 11316 | 66.0x| Illumina HiSeq
+Glycine soja |806921190|128699 | 24258 | 63.1.0x| Illumina GAIIx
+Oryza sativa |309525339 |99099 | 7471 | 27.0x| Illumina HiSeq
+Azadirachta indica |261121960 |125535| 3497 | 21.0x| Illumina HiSeq
+Nicotiana tabacum |3553959712 |797404| 21713 | 29.0x| Illumina HiSeq
+Nicotiana tabacum |3613159037 |478137| 39411 | 49.0x| Illumina HiSeq
+Gossypium arboreum |1560831891 |121184| 71965 | 110x| Illumina HiSeq2000
+Trifolium pratense|304979311 |267382| 2431 | 58x| Illumina HiSeq
+Arabidopsis lyrata |202972003 |369168| 2321 | 279.3x| Illumina HiSeq2000
+Arabidopsis halleri |221139660 |411213| 2864 | 167.9x| Illumina HiSeq2000
+Spirodela polyrhiza|132009443 |16051|14533 | 22.0x| 454; ABI3730
+Camelina sativa|547649377 |55170|15644 | 160.0x| 454; Illumina
+Azadirachta indica|200258601 |158611|2138 | 12.0x| Illumina HiSeq
+Pinus taeda|265480119|90954|16205 | 50x| Illumina GAIIx
+Cicer arietinum|446428800|215549|8993 | 13x| 454; Illumina GAIIx
