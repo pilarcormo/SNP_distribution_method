@@ -9,6 +9,8 @@ Contig assembly analysis
 - Sequence technology and N50 contig provided
 
 
+
+
 Species | Total sequence length | Number of contigs| Contig N50 |Genome coverage |Sequencing technology
 -----|-----|-----|-----|-----:
 Actinidia chinensis | 604,217,145 | 26,721 | 58,864  | 150.0x | Illumina
@@ -41,6 +43,8 @@ Camelina sativa|547,649,377 |55,170|15,644 | 160.0x| 454; Illumina
 Azadirachta indica|200,258,601 |158,611|2,138 | 12.0x| Illumina HiSeq
 Pinus taeda|265,480,119|90,954|16,205 | 50x| Illumina GAIIx
 Cicer arietinum|446,428,800|215,549|8,993 | 13x| 454; Illumina GAIIx
+
+
 
 I compared the different assemblies by looking at how the technology used, genome length or genome coverage affected the N50 contig length. I also calculated the average contig length, by dividing the genome size by the number of contigs obtained for each assembly. 
 
