@@ -1,5 +1,4 @@
 Species,Sequence_lengths,Number_of_contigs,N50_contig,Average_contig_size,Average_N50,Coverage,Technology_used
-Actinidia chinensis , 604217145 , 26721 , 58864  ,22612,10264, 150.0 , Illumina
 Sesamum indicum , 340463922 ,87064 , 11517 ,3910,29561, 85.0 , Illumina+ 454+ Illumina MiSeq
 Eragrostis tef , 607317615 ,112599 , 7532  ,5393,80631, 54.0 , Illumina HiSeq+ 454
 Thlaspi arvense, 343012389 ,31889 , 28155 ,10756,12183, 80.0 , Illumina HiSeq+ Illumina MiSeq+ PacBio
