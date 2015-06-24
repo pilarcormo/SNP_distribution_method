@@ -66,8 +66,6 @@ I compared the different assemblies by looking at how the technology used, genom
 
 ![image](Jitter_plots/N50_genome_size.png)
 
-
-
 ######Only 4 genome assemblies larger than 1 Gb
 
 ![image](Jitter_plots/N50_1Gb.png)
