@@ -53,7 +53,7 @@ I compared the different assemblies by looking at how the technology used, genom
 
 - 50% of the contig assemblies used Illumina HiSeq. 
 - Only PacBio generates substantially larger contigs when used as the only sequencing technology in A. thaliana (1000 larger than the median value obtained with the remaining 29 assemblies). 
-- Due to the effect of outlier values (a few extremely large values), the median is a better measurement of the central tendency than the mean. 
+- Due to the effect of outliers (a few extremely large values), the median is a better measurement of the central tendency than the mean. 
 - Considering all the assemblies, the median of the N50 contig length (50% of the contigs are equal or larger than this value) is 11,517 bp
 - The data is positively skewed (longer tail on the right). 
 - 19 assemblies had a genome coverage below 100x (that would be the general case in mutant screens). 
