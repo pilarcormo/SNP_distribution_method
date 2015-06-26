@@ -1,0 +1,29 @@
+Species,Sequence_lengths,Ner_of_contigs,N50_contig,Average_contig_size,Average_N50,Coverage,Technology_used
+Actinidia chinensis ,600-700, 26721 , 58864  ,22612,10264, 150.0 , Illumina HiSeq
+Selaginella kraussiana ,100-200, 105943 , 2414  ,1080,47432, 150.0 , Illumina HiSeq
+Sesamum indicum ,300-400,87064 , 11517 ,3910,29561, 85.0 , Illumina + 454 + Illumina MiSeq
+Eragrostis tef ,600-700,112599 , 7532  ,5393,80631, 54.0 , Illumina HiSeq + 454
+Thlaspi arvense,300-400,31889 , 28155 ,10756,12183, 80.0 , Illumina HiSeq + Illumina MiSeq + PacBio
+Catharanthus roseus,500-600,147992 ,14288,3531,36579, 50.0 , Illumina HiSeq
+Raphanus sativus,300-400,20507 , 24475 ,16651,13952,267.0, 454 + PacBio + Illumina HiSeq + ABI3730
+Primula veris,300-400,40851 , 13157 ,7581,23538, 116.0 , Illumina HiSeq+ Illumina MiSeq+ PacBio
+Conyza canadensis ,300-400,20075 , 20748 ,16247,15720, 350.0 , 454 + Illumina HiSeq+ PacBio
+Diospyros lotus ,..100,797 , 1864,1385,592, 23.0, Illumina HiSeq
+Vigna radiata ,400-500,23499 , 48831 ,19706,9483, 300.0 , Illumina HiSeq
+Vaccinium macrocarpon ,400-500,200946 , 4278 ,2063,96919, 20.0 , Illumina GAIIx
+Raphanus raphanistrum,200-300,64732 , 10186 ,3921,24919, 47.0 , Illumina GAIIx+ 454
+Nicotiana otophora ,700..,1121520 , 11316 ,2206,218638, 66.0, Illumina HiSeq
+Glycine soja ,700..,128699 , 24258 ,6269,33264, 63.1, Illumina GAIIx
+Oryza sativa ,300-400,99099 , 7471 ,3123,41430, 27.0, Illumina HiSeq
+Azadirachta indica,200-300,125535, 3497 ,2080,74670, 21.0, Illumina HiSeq
+Nicotiana tabacum,300-400,797404, 21713 ,4456,163678, 29.0, Illumina HiSeq
+Nicotiana tabacum,300-400,478137, 39411 ,7556,91678, 49.0, Illumina HiSeq
+Gossypium arboreum ,700..,121184, 71965 ,12879,21688, 110, Illumina HiSeq
+Trifolium pratense,300-400,267382, 2431 ,1140,125454, 58, Illumina HiSeq
+Arabidopsis lyrata ,200-300,369168, 2321 ,549,87450, 279.3, Illumina HiSeq
+Arabidopsis halleri ,200-300,411213, 2864 ,537,77213, 167.9, Illumina HiSeq
+Spirodela polyrhiza,100-200,16051,14533 ,8224,9083, 22.0, 454 + ABI3730
+Camelina sativa,500-600,55170,15644 ,9926,35006, 160.0, 454 + Illumina
+Azadirachta indica,200-300,158611,2138 ,1262,93666, 12.0, Illumina HiSeq
+Pinus taeda,200-300,90954,16205 ,2918,16382, 50, Illumina GAIIx
+Cicer arietinum,400-500,215549,8993 ,2071,49641, 13, 454 + Illumina GAIIx

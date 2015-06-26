@@ -2,7 +2,6 @@ Species,Sequence_lengths,Number_of_contigs,N50_contig,Average_contig_size,Averag
 Sesamum indicum , 340463922 ,87064 , 11517 ,3910,29561, 85.0 , Illumina+ 454+ Illumina MiSeq
 Eragrostis tef , 607317615 ,112599 , 7532  ,5393,80631, 54.0 , Illumina HiSeq+ 454
 Thlaspi arvense, 343012389 ,31889 , 28155 ,10756,12183, 80.0 , Illumina HiSeq+ Illumina MiSeq+ PacBio
-Triticum aestivum, 65111056 ,22149 , 3124 ,2939,20842, 4.0 , 454
 Raphanus sativus,341476849,20507 , 24475 ,16651,13952,267.0, 454+ PacBio+ Illumina HiSeq+ ABI3730
 Primula veris,309692940 ,40851 , 13157 ,7581,23538, 116.0 , Illumina HiSeq+ Illumina MiSeq+ PacBio
 Conyza canadensis ,326165195 ,20075 , 20748 ,16247,15720, 350.0 , 454+ Illumina HiSeq+ PacBio

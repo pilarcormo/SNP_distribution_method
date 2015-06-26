@@ -17,7 +17,6 @@ Sesamum indicum | 340,463,922 |87,064 | 11,517 | 85.0x | 454; Illumina; Illumina
 Eragrostis tef | 607,317,615 |112,599 | 7,532  | 54.0x |454; Illumina HiSeq
 Thlaspi arvense| 343,012,389 |31,889 | 28,155 | 80.0x | Illumina HiSeq; Illumina MiSeq; PacBio
 Catharanthus roseus| 522,653,749 |147,992 |14,288| 50.0x | Illumina HiSeq
-Triticum aestivum| 65,111,056 |22,149 | 3,124 | 4.0x | 454
 Raphanus sativus|341,476,849|20,507 | 24,475 |267.0x| 454; PacBio; Illumina HiSeq; ABI3730
 Primula veris|309,692,940 |40,851 | 13,157 | 116.0x | Illumina HiSeq; Illumina MiSeq; PacBio
 Conyza canadensis |326,165,195 |20,075 | 20,748| 350.0x|454; Illumina HiSeq;PacBio
@@ -41,11 +40,6 @@ Camelina sativa|547,649,377 |55,170|15,644 | 160.0x| 454; Illumina
 Azadirachta indica|200,258,601 |158,611|2,138 | 12.0x| Illumina HiSeq
 Pinus taeda|265,480,119|90,954|16,205 | 50x| Illumina GAIIx
 Cicer arietinum|446,428,800|215,549|8,993 | 13x| 454; Illumina GAIIx
-
-
-
-
-
 
 I compared the different assemblies by looking at how the technology used, genome length or genome coverage affected the N50 contig length. I also calculated the average contig length, by dividing the genome size by the number of contigs obtained for each assembly. 
 
