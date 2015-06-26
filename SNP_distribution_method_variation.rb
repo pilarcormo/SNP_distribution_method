@@ -17,13 +17,14 @@ if ARGV.empty?
 else 
 	dataset = ARGV[0] 
 	file = ARGV[1]
-	threshold = ARGV[2].to_i
+	threshold = ARGV[2].to_i #degree of filtering:  100, 50, 10, 5
 	adjust = ARGV[3]
 	cross = ARGV[4]
 	puts "Looking for SNPs in #{dataset}"
 	puts "Output will be in #{dataset}/#{file}"
 	puts "A factor of #{adjust} will be used to calculate the ratio"
-	if threshold == 1
+	puts "#{cross}-cross"
+	if threshold > 0
 		puts "Filtering step on"
 	elsif threshold == 0
 		puts "Filtering step off"
@@ -97,6 +98,11 @@ shuf_short_ids = Stuff.important_ids(ids_short, ids)
 hm_sh = Stuff.important_pos(ids_short, dic_pos_hm)
 ht_sh = Stuff.important_pos(ids_short, dic_pos_ht)
 
+
+contigs_discarded = ids.length - ids_short.length
+puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
+
+
  shuf_hm, shu_snps_hm = Stuff.define_snps(shuf_short_ids, dic_hm)
 
 #Define SNPs per fragment in the shuffled fasta array and then normalise the value of SNP density per fragment length
@@ -111,6 +117,7 @@ puts "\n"
 
 perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
 
+
 puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
 
 
@@ -118,7 +125,6 @@ puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
 #Define SNPs in the recently ordered array of fragments.
 dic_or_hm, snps_hm_or = Stuff.define_snps(perm_hm, dic_hm)
 dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
-
 
 
 ###Calculate ratios and delete those equal to or lower than 1 so only the important contigs remain.
@@ -144,7 +150,7 @@ ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
 contig_size = (genome_length/ids_ok.length).to_f
 center = contig_size*(perm_hm.length) 
 puts "The length of the group of contigs that have a high hm/ht ratio is #{center.to_i} bp"
-puts "..."
+puts "______________________"
  
 
 Dir.mkdir("#{file}")

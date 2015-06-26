@@ -195,11 +195,12 @@ class Stuff
 			dic_ratios.store(ids[x], ratio.to_f) 
 			x += 1
 		end
-		pp dic_ratios.values.max.to_f
-		if threshold == 1
-			thres= (dic_ratios.values.max.to_f)/4
-			puts "Threshold  = #{thres}"
-			dic_ratios.delete_if { |id, ratio|  ratio <= thres.to_f}
+		if threshold > 0
+			thres = 100/threshold
+			pp thres 
+			filter = (dic_ratios.values.max.to_f)/thres
+			puts "All the contigs with a ratio value below #{filter} will be discarded"
+			dic_ratios.delete_if { |id, ratio|  ratio <= filter.to_f}
 		end 
 		ratios << dic_ratios.values
 		ratios.flatten!

@@ -59,7 +59,7 @@ class Plot
     lines(d2, col = "royalblue2", lty=2)
     lines(d3, col = "gray46", lwd =5)
     legend("topright",col=c("magenta2", "royalblue2", "grey46"),lwd=1,lty=1:2,
-        legend=c("Homozygous SNP density","Heterozygous SNP density", "hom/het ratio"), bty="n")'
+        legend=c("Homozygous SNP density","Heterozygous SNP density", "Hom/het ratio"), bty="n")'
     myr.quit
   end
 
@@ -88,7 +88,7 @@ class Plot
     lines(d1, col = "slategray4", lwd =3)  
     lines(d2, col = "steelblue3", lwd =3, lty=2)
     legend("topright",col=c("slategray4", "steelblue3"),lwd=3, lty=1:2,
-        legend=c("Hypothetical ratio","Expected ratio"), bty="n")'
+        legend=c("SDM ratio","Expected ratio"), bty="n")'
     myr.quit
   end
 

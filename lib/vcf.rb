@@ -4,7 +4,7 @@ class Vcf
 	require 'bio'
 	require 'bio-samtools'
 
-    def self.open_vcf(vcf_file, chromosome)
+	 def self.open_vcf(vcf_file, chromosome)
 	    vcfs_chrom, vcfspos, vcfsinfo = [], [], [] 
 	    new_vcf = []
 	    File.open(vcf_file, 'r').each do |line|
@@ -13,7 +13,6 @@ class Vcf
 	        vcfs_chrom << v.chrom
 	        vcfspos << v.pos
 	        vcfsinfo << v.info 
-	        # snp_type = v.info["HOM"].to_f
 	        a = line.split("\t")
 	        if v.chrom == "#{chromosome}"
 	        	new_vcf << line 
@@ -53,10 +52,11 @@ class Vcf
 		        short_vcfs_pos_c.delete(pos)
 		    end 
 		end 
-
+		pp child_chr_vcf
 		short_child_chr_vcf = []
 		child_chr_vcf.each do |line|
 		    position = line.split("\t")[1].to_i
+		    pp position
 		    if short_vcfs_pos_c.include?(position) 
 		        short_child_chr_vcf << line
 		    end 
