@@ -39,12 +39,12 @@ EMS mutagenesis. sup#1 and sup#2 mutants. Arabidopsis Wassilewskija (Ws) and Col
 #####mob1
 **Chromosome 5**
 
-![Image](m_mutants/B_chromosome5/Interesting_5/Rplot.withratio.png)
+![Image](m_mutants/B_chromosome5/interesting_5/Rplot.withratio.png)
 
 #####mob2
 **Chromosome 5**
 
-![Image](m_mutants/C_chromosome5/Interesting_5/Rplot.withratio.png)
+![Image](m_mutants/C_chromosome5/interesting_5/Rplot.withratio.png)
 
 
 
