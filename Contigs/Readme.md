@@ -1,6 +1,8 @@
 Contig assembly analysis
 ===
 
+I compared different assemblies by looking at how the technology used, the genome size or genome coverage affected the N50 contig length. I also calculated the average contig length, by dividing the genome size by the number of contigs obtained for each assembly and the average N50 by dividing the genome size by the N50 contig length.
+
 ### Selection criteria
 - Genome assembly at contig level available at NCBI
 - January 2013-now
@@ -41,7 +43,7 @@ Azadirachta indica|200,258,601 |158,611|2,138 | 12.0x| Illumina HiSeq
 Pinus taeda|265,480,119|90,954|16,205 | 50x| Illumina GAIIx
 Cicer arietinum|446,428,800|215,549|8,993 | 13x| 454; Illumina GAIIx
 
-I compared the different assemblies by looking at how the technology used, genome length or genome coverage affected the N50 contig length. I also calculated the average contig length, by dividing the genome size by the number of contigs obtained for each assembly. 
+
 
 ###Conclusions
 
@@ -52,23 +54,51 @@ I compared the different assemblies by looking at how the technology used, genom
 - The data is positively skewed (longer tail on the right). 
 - 19 assemblies had a genome coverage below 100x (that would be the general case in mutant screens). 
 
+
 ###Statistical summary
+
+```
+contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs.csv"
+summary(contigs)
+```
+
 ![image](Summaries/all_contigs.png)
 
 
 ###Influence of genome length and technology on N50 contig
+```
+library(ggplot2)
+options(scipen = 10)
+contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs.csv")
 
+g <- ggplot(contigs, aes(x = Sequence_lengths, y =  N50_contig, colour = Technology_used)) + geom_jitter(size = 3) + scale_colour_manual(values=Palette) +labs(x = "Genome size (bp)", y = "N50 contig") + theme_bw() 
+```
 ![image](Jitter_plots/N50_genome_size.png)
 
 ######Only 4 genome assemblies larger than 1 Gb
+To previous plot add ```xlim(0,1000000000)```
 
 ![image](Jitter_plots/N50_1Gb.png)
 
 ###N50 distribution
-
-
 ######All the assemblies
-![image](Distributions/median_mean.png)
+
+```
+density_N50 <- density(contigs$N50_contig)
+p <- plot(range(density_N50$x), range(density_N50$y), type = "n", main = "N50 length distribution", xlab = "N50 contig length", ylab = " ")
+lines(den_con, col = "royalblue2")
+abline(v = mean(contigs$N50_contig),
+       col = "royalblue2",
+       lty=2)
+abline(v = mean(contigs$N50_contig), 
+       col = "firebrick1", 
+       lty=2)
+legend(x = "topright", lwd=1,
+       c("Mean", "Median"),
+       col = c("black", "red"),
+       lty = c(2, 2), bty="n"
+ ```![image](Distributions/median_mean.png)
+
 ######Assemblies using Illumina HiSeq
 ![image](Distributions/median_mean_illumina.png)
 
