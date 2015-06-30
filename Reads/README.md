@@ -64,9 +64,10 @@ VCF files obtained are in [https://github.com/pilarcormo/SNP_distribution_method
 
 ###Filtering background SNPs 
 
-In order to 
 
-Run ``ruby manage_vcf.rb (1) (2) (3) (4) -(5)-``
+Run [manage_vcf.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/manage_vcf.rb)
+
+ ``ruby manage_vcf.rb (1) (2) (3) (4) -(5)-``
 
 1. location folder
 2. Variants in VCF 4.1 file
@@ -75,20 +76,26 @@ Run ``ruby manage_vcf.rb (1) (2) (3) (4) -(5)-``
 If the second option is used we also need 
 5. a parental (or long distant ecotype) variants in VCF 4.1 file. 
 
-The **cutting_vcf** option will create in individual VCF file for each chromosome. The **filter_vcf** option removes the SNPs from the output VCF file if they are also present in the parental VCF provided.
+The **cutting_vcf** option will create in individual VCF file for each chromosome. The **filter_vcf** option removes the SNPs from the mutant VCF file if they are also present in the parental VCF provided.
 
-The output VCF files will be more simple.  In the INFO field each heterozygous SNP will have AF = 0.5, and homozygous will have AF = 1.0
-to facilitate the modelling of SDM. It will also create text files for homozygouys and heterozygous SNP positions.
+Also, it simplifies the output VDF. In the INFO field each heterozygous SNP will have AF = 0.5, while homozygous SNPs will have AF = 1.0 to facilitate the modelling of SDM. It will also create text files for homozygouys and heterozygous SNP positions.
 
 
 ###Removing the centromeres 
-Run ```ruby remove_cent.rb chromosome folder_containing_SNPs_files```. It takes the SNP lists and remove the SNP positions that are caused by the high variability in the centromeric regions. For now, it is defined for *Arabidopsis thaliana* only.
-[https://github.com/pilarcormo/SNP_distribution_method/blob/master/remove_cent.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/remove_cent.rb)
+Run [remove_cent.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/remove_cent.rb)
 
+ ```ruby remove_cent.rb chromosome folder_containing_SNPs_files``` 
+ 
+It takes the SNP lists obtained from the VCF file and remove the SNP positions that are caused by the high variability in the centromeric regions. For now, it is defined for *Arabidopsis thaliana* only.
+
+```
+centromere = {"chr1" => [15086545-3950000, 15086545+3950000],"chr2" => [3608429- 1500000, 3608429+ 1500000], "chr3" => [14209452- 1500000, 14209452+1500000], "chr4" => [3956521- 1400000, 3956521+1400000], "chr5" => [11725524-500000, 11725524+500000]}
+
+```
 
 ###Creating model genomes based on real SNP densities from reverse genetic screens 
 
-To create model genomes with real SNP densities obtained from variant calling with NGS reads, we can run:
+To create model genomes with real SNP densities obtained from variant calling with NGS reads, we can run [model_genome_real_hpc.rb](https://github.com/pilarcormo/SNP_distribution_method/model_genome_real_hpc.rb)
 
 ```ruby model_genome_real_hpc.rb dataset_name contig_size folder_containing_SNPs_files chromosome```
 
@@ -97,14 +104,13 @@ Example:
 ```
 ruby model_genome_real_hpc.rb B_nocen_chr5_10kb 10000  /Users/morenop/SNP_distribution_method/Reads/m_mutants/B_chromosome5/interesting_5/ 5
 ```
-hm_nocen.txt and ht_nocen.txt inside the directory will be the SNP arrays.
 
 Instead of using an ideal normal distribution for the homozygous SNPs and a uniform distribution for the heterozygous SNPs, the SNPs present in the VCF files after the SNP calling are used as input. In each case, the chromosome where the mutation is described is divided in contigs of size expecified.
 
 The model genomes created before removing the centromere are available at 
-(https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/No_centromere)[https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/No_centromere].  The "_1kb", "_10kb", etc in the name indicates the minimum contig size used (contig size will oscilate between this value and its double).
+[https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/No_centromere](https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/No_centromere).  The "_1kb", "_10kb", etc in the name indicates the minimum contig size used (contig size will oscilate between this value and its double).
 
-The model genomes created after removing the centromere are available at (https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere)[https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere].
+The model genomes created after removing the centromere are available at [https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere](https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere).
 
 ###Project dependencies
 
