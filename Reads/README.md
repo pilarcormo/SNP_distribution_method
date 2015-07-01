@@ -112,6 +112,12 @@ The model genomes created before removing the centromere are available at
 
 The model genomes created after removing the centromere are available at [https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere](https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere).
 
+##Probability plots 
+To check if the homozygous SNP distributions obtained from SNP calling in back-cross and out-cross experiments correlate to a normal distribution, we used QQ-plots. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md)
+
+Then, the correlation (r2), standard deviation, kurtosis and skewness of the homozygous SNP density was measured. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/kurtosis.md)
+
+
 ###Project dependencies
 
 1. Ruby >= 2
