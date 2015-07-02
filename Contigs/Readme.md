@@ -70,7 +70,6 @@ summary(contigs)
 library(ggplot2)
 options(scipen = 10)
 contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs.csv")
-
 g <- ggplot(contigs, aes(x = Sequence_lengths, y =  N50_contig, colour = Technology_used)) + geom_jitter(size = 3) + scale_colour_manual(values=Palette) +labs(x = "Genome size (bp)", y = "N50 contig") + theme_bw() 
 ```
 ![image](Jitter_plots/N50_genome_size.png)
