@@ -82,7 +82,7 @@ h <- ggplot(deviations_30, aes(x = Genome_size, y = Deviation, shape = Contigs, 
 gh <- grid.arrange(g , h, ncol=2, heights=c(1, 10), widths =c(2,1), as.table =TRUE)
 ```
 
-![Image](Rplot.jitter_order.png)
+![Image](Rplot.deviations.png)
 
 ###Project dependencies
 
