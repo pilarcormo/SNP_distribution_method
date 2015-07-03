@@ -14,8 +14,8 @@ To create these model genomes (1-15Mb), a SNP density of 1 SNP/500 bp was used u
 
 ```
 # Create the lists of homozygous and heterozygous SNPs
-hm_r = "hm <- rnorm(#{snp}, #{size/2}, #{snp*2})" # Causative SNP at/near 10000
-ht_r = "ht <- runif(#{snp}, 1, #{size})"   # Genome length of 10000
+hm_r = "hm <- rnorm(#{snp}, #{size/2}, #{snp*2})" 
+ht_r = "ht <- runif(#{snp}, 1, #{size})"   
 ```
 where size is the genome size in bp and snp is ```snp = (genome_size/1000)*2```
 
