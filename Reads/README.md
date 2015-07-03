@@ -29,6 +29,12 @@ java -jar Trimmomatic-0.33/trimmomatic-0.33.jar PE reads_R1.fq reads_R2.fq paire
 
 ####Command line parameters used for paired-end read mapping and SNP calling
 
+- bwa v0.7.5a
+- samtools v1.0
+- java v7u21
+- VarScan v2.3.7
+
+
 The reference genome was indexed before running the alingment and SNP calling pipeline. 
 
 ```
@@ -62,7 +68,8 @@ end
 
 VCF files obtained are in [https://github.com/pilarcormo/SNP_distribution_method/tree/master/Reads](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Reads)
 
-###Filtering background SNPs 
+##Filtering
+####Filtering background SNPs 
 
 
 Run [manage_vcf.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/manage_vcf.rb)
@@ -81,19 +88,34 @@ The **cutting_vcf** option will create in individual VCF file for each chromosom
 Also, it simplifies the output VDF. In the INFO field each heterozygous SNP will have AF = 0.5, while homozygous SNPs will have AF = 1.0 to facilitate the modelling of SDM. It will also create text files for homozygouys and heterozygous SNP positions.
 
 
-###Removing the centromeres 
+####Removing the centromeres 
 Run [remove_cent.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/remove_cent.rb)
 
  ```ruby remove_cent.rb chromosome folder_containing_SNPs_files``` 
  
 It takes the SNP lists obtained from the VCF file and remove the SNP positions that are caused by the high variability in the centromeric regions. For now, it is defined for *Arabidopsis thaliana* only.
+The centromeric positions in *A.thaliana* for each chromosome are:
+
+- chr1 => 15086545
+- chr2 => 3608429
+- chr3 => 14209452
+- chr4 => 3956521
+- chr5 => 11725524
+
+
+The length of the centromeric regions used for the filtering were: 
+
 
 ```
 centromere = {"chr1" => [15086545-3950000, 15086545+3950000],"chr2" => [3608429- 1500000, 3608429+ 1500000], "chr3" => [14209452- 1500000, 14209452+1500000], "chr4" => [3956521- 1400000, 3956521+1400000], "chr5" => [11725524-500000, 11725524+500000]}
-
 ```
 
-###Creating model genomes based on real SNP densities from reverse genetic screens 
+##Probability plots 
+To check if the homozygous SNP distributions obtained from SNP calling in back-cross and out-cross experiments correlate to a normal distribution, we used QQ-plots. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md)
+
+Then, the correlation (r2), standard deviation, kurtosis and skewness of the homozygous SNP density was measured. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/kurtosis.md)
+
+##Creating model genomes based on real SNP densities from forward genetic screens 
 
 To create model genomes with real SNP densities obtained from variant calling with NGS reads, we can run [model_genome_real_hpc.rb](https://github.com/pilarcormo/SNP_distribution_method/model_genome_real_hpc.rb)
 
@@ -112,22 +134,7 @@ The model genomes created before removing the centromere are available at
 
 The model genomes created after removing the centromere are available at [https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere](https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/Centromere).
 
-##Probability plots 
-To check if the homozygous SNP distributions obtained from SNP calling in back-cross and out-cross experiments correlate to a normal distribution, we used QQ-plots. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md)
-
-Then, the correlation (r2), standard deviation, kurtosis and skewness of the homozygous SNP density was measured. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/kurtosis.md)
 
 
-###Project dependencies
-
-1. Ruby >= 2
-
-2. Ruby gems:
-
-	- bio >= 1.4.3.0001
-	- bio-samtools >= 2.2.0
-	- rinruby >= 2.0.3
-
-3. R >= 3.1.1
 
 
