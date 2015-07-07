@@ -6,11 +6,24 @@
 
 For our purpose, a mutant individual should be crossed to a non-mutant parenta line (either the same ecotype -backcross- or a distant ecotype -outcross-). The offspring of this cross would give rise to a recombinant population which will segregate for the mutant phenotype. Due to linkage to the phenotype altering SNP, the remaining linked homozygous SNPs will be distributed around it generating a high homozygous SNP density in this non-recombinant genomic region. Consequently, the homozygous/heterozygous SNP ratio will be higher in the area where the SNP of interest is located.
 
-To identify the causal mutation in the model genomes, we used idealised SNP distributions. We observed that Homozygous SNPs frequency around the causative mutation followed a normal distribution, with the causal mutation  in the middle of the distribution.  Heterozygous SNPs followed a uniform distribution, with no specific contribution to the general SNP density.
+To identify the causal mutation in the model genomes, we used idealised SNP distributions. We observed that homozygous SNPs around the causative mutation followed a normal distribution, with the causal mutation in the middle of the distribution in the non-recominant region.  For our model, we assumed that heterozygous SNPs followed a uniform distribution, with no specific contribution to the general SNP density.
 
-Running ```ruby create_model_genome.rb dataset_name genome_length contig_size``` will generate a new model genome in SNP_distribution_method/arabidopsis_datasets/{dataset_name}. This includes a FASTA file with the sequences of each fragment, and a VCF file with the SNPs on each fragment. In the INFO field of the VCF, each SNP has been given an allele frequency (AF). Heterozygous SNPs will generally have AF = ~0.5, and homozygous AF = ~1.0, but this will vary with pooled data. In the model, each SNP has been given an allele frequency of exactly 0.5 or 1.0. The variables hm_r and ht_r contain the R code needed to create the model homozygous and heterozygous SNP distributions respectively. The variable contig_size provides the minimum size for contigs, where the maximum size is double this value, and each contig's size is randomly chosen within this range. Information obtained from [https://github.com/edwardchalstrey1/fragmented_genome_with_snps](https://github.com/edwardchalstrey1/fragmented_genome_with_snps). 
+Running ```ruby model_genome.rb {dataset_name} {genome_length} {contig_size}``` will generate a new model genome based on *A. thaliana* chromosome I using the TAIR10 chromosome I as input. The FASTA sequence for this chromosome  can be found at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/TAIR10_chr1.fasta](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/TAIR10_chr1.fasta)
 
-To create these model genomes (1-15Mb), a SNP density of 1 SNP/500 bp was used using the following R code:
+The model genome will be created at  SNP_distribution_method/arabidopsis_datasets/{dataset_name} and will include:
+- a FASTA file (frags.fasta) with the sequences of each fragment
+- a FASTA file with the shuffled fragments (frags_shuffled.fasta)
+-  a VCF file with the SNPs on each fragment
+-  a text file (info.txt) containing the homozygous and heterozygous SNPs densities used to create the genome and the contig size used.
+-  2 text files (hm_snps.txt and ht_snps.txt) with the homozygous and heterozygous SNP positions in the model genome. 
+
+In the INFO field of the VCF, each SNP has been given an allele frequency (AF). Heterozygous SNPs will generally have AF = ~0.5, and homozygous AF = ~1.0, but this will vary with pooled data. In the model, each SNP has been given an allele frequency of exactly 0.5 or 1.0. The variables hm_r and ht_r contain the R code needed to create the model homozygous and heterozygous SNP distributions respectively. The variable contig_size provides the minimum size for contigs, where the maximum size is double this value, and each contig's size is randomly chosen within this range. Information obtained from [https://github.com/edwardchalstrey1/fragmented_genome_with_snps](https://github.com/edwardchalstrey1/fragmented_genome_with_snps). 
+
+As input, [https://github.com/pilarcormo?Small_genomes/arabidopsis_datasets/1-15Mb](https://github.com/pilarcormo/Small_genomes/arabidopsis_datasets/1-15Mb). 
+
+######1-15 Mb genomes
+
+We created model genomes of different sizes between 1 and 15 Mb. A SNP density of 1 SNP/500 bp was used using the following R code:
 
 ```
 # Create the lists of homozygous and heterozygous SNPs
@@ -19,37 +32,79 @@ ht_r = "ht <- runif(#{snp}, 1, #{size})"
 ```
 where size is the genome size in bp and snp is ```snp = (genome_size/1000)*2```
 
-The folders without letter contain genomes divided in 700 contigs and the folders with an "A" contain genomes with 1300 contigs. 5 replicates were created for each genome size and contig size (1-5). They can be found at [https://github.com/pilarcormo?Small_genomes/arabidopsis_datasets/1-15Mb](https://github.com/pilarcormo/Small_genomes/arabidopsis_datasets/1-15Mb). The info.txt file contains the homozygous and heterozygous SNPs densities used to create the genome and the contig size used in each case. 
+The shell script used to create the 5 replicates for each genome size was as follows:
 
-Then, I also created [https://github.com/pilarcormo?Small_genomes/arabidopsis_datasets/30Mb](https://github.com/pilarcormo/Small_genomes/arabidopsis_datasets/30Mb)
+```
+for i in {1..5} 
+do
+	ruby small_model_genome.rb 1Mb_$i 1000000 1000
+	ruby small_model_genome.rb 1Mb_A_$i 1000000 500
+	ruby small_model_genome.rb 3Mb_$i 3000000 3000
+	ruby small_model_genome.rb 3Mb_A_$i 3000000 1500
+	ruby small_model_genome.rb 5Mb_$i 5000000 5000
+	ruby small_model_genome.rb 5Mb_A_$i 5000000 2500
+	ruby small_model_genome.rb 7Mb_$i 7000000 7000
+	ruby small_model_genome.rb 7Mb_A_$i 7000000 3500
+	ruby small_model_genome.rb 9Mb_$i 9000000 9000
+	ruby small_model_genome.rb 9Mb_A_$i 9000000 4500
+	ruby small_model_genome.rb 11Mb_$i 11000000 11000
+	ruby small_model_genome.rb 11Mb_A_$i 11000000 5500
+	ruby small_model_genome.rb 13Mb_$i 13000000 13000
+	ruby small_model_genome.rb 13Mb_A_$i 13000000 6500
+	ruby small_model_genome.rb 15Mb_$i 15000000 15000
+	ruby small_model_genome.rb 15Mb_A_$i 15000000 7500
+done 
+```
+
+Therefore, the folders without letter contain genomes with an approximate number of 700 contigs and the folders with an "A" contain genomes with 1300 contigs, approximately. They can be found at The resulting model genomes generated were deposited in a Github repository at [https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes/arabidopsis_datasets/1-15Mb](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes/arabidopsis_datasets/1-15Mb). 
+
+######30 Mb genomes
+
+We created model genomes based on the whole chromosome I from *A.thaliana* with different contig sizes. Instead of providing a genome length, the whole chromosome size is considered. For this, run ```chr1_model_genome.rb {dataset_name} {contig_size}```
+
+The shell script used to create the 5 replicates for each genome size was as follows:
+
+```
+for i in {1..5} 
+do
+	ruby model_genome.rb chr1_1_$i 20000
+	ruby model_genome.rb chr1_A_$i 10000
+	ruby model_genome.rb chr1_B_$i 5000
+done
+```
+
+The genomes generated are avialable at 
+[https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes/arabidopsis_datasets/30Mb](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes/arabidopsis_datasets/30Mb)
 
 
-###Causal mutation not located in the mean
+######Causal mutation not located in the mean
+```
+for i in {1..5} 
+do
+	ruby model_genome.rb chr1_C_$i 10000
+	ruby model_genome.rb chr1_E_$i 10000
+done
+```
 The 30 Mb genomes under the name _C and _E were created with the homozygous SNP mutation moved to the right tail and the left tail (respectively). Instead of defining the mean of the rnorm distribution in the middle of the distribution, this value was shifted around a 20% to the right and left.
 
-```
-# Create the lists of homozygous and heterozygous SNPs
-hm_r = "hm <- rnorm(#{snp}, mean, #{snp*2})" # Causative SNP at/near 10000
-ht_r = "ht <- runif(#{snp}, 1, #{size})"   # Genome length of 10000
-```
-i = 1..5
+
 <table>
  <tr><th>Name <th>Contig length</th> <th>Mean of rnorm distribution</th>
  <tr><th>arabidopsis_datastets/30Mb/chr1_C_i <th>10000 </th> <th>20000000</th>
  <tr><th>arabidopsis_datastets/30Mb/chr1_E_i <th>10000 </th> <th>10000000</th>
 </table>
 
-A [pre-filtering step](https://github.com/pilarcormo/Small_genomes/arabidopsis_datasets/Analyse_effect_ratio) based on the homozygous to heterozygous SNPs ratio was incorporated to SDM to remove the contigs that are surrounding the causal mutation (those located in the tails of the normal distribution of homozogyoys SNPs). This filtering step removes the contigs with a hom/het ratio below a given percentage of the maximum ratio in the assembly.
+A [pre-filtering step](https://github.com/pilarcormo/Small_genomes/arabidopsis_datasets/Analyse_effect_ratio) based on the homozygous to heterozygous SNPs ratio was incorporated to SDM to remove the contigs that are surrounding the causal mutation (those located in the tails of the normal distribution of homozygous SNPs). This filtering step removes the contigs with a hom/het ratio below a given percentage of the maximum ratio in the assembly.
 
 
-###Runing SDM
+###Runing SDM with the model genomes
 
 
 Look at SDM.sh for the shell script used to run SDM on the model genomes with different sizes and contig lenghts. 
 
 Run ```ruby SNP_distribution_method_variation.rb (1) (2) (3)```
 
-1. **Input dataset folder** containing the input files -Contigs in FASTA file and SNPs in a VCF file-
+1. **Input dataset folder** containing the input files 
 2. name for the **output folder**
 3. **Threshold = provide one of the following 0, 1, 5, 10, 20.**
 	- 0 -> filtering step off. 
@@ -83,17 +138,5 @@ gh <- grid.arrange(g , h, ncol=2, heights=c(1, 10), widths =c(2,1), as.table =TR
 ```
 
 ![Image](Rplot.deviations.png)
-
-###Project dependencies
-
-1. Ruby >= 2.0.0
-
-2. Ruby gems:
-
-	- bio >= 1.4.3.0001
-	- bio-samtools >= 2.2.0
-	- rinruby >= 2.0.3
-
-3. R >= 3.1.1
 
 
