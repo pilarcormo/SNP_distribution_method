@@ -19,7 +19,6 @@ The model genome will be created at  SNP_distribution_method/arabidopsis_dataset
 
 In the INFO field of the VCF, each SNP has been given an allele frequency (AF). Heterozygous SNPs will generally have AF = ~0.5, and homozygous AF = ~1.0, but this will vary with pooled data. In the model, each SNP has been given an allele frequency of exactly 0.5 or 1.0. The variables hm_r and ht_r contain the R code needed to create the model homozygous and heterozygous SNP distributions respectively. The variable contig_size provides the minimum size for contigs, where the maximum size is double this value, and each contig's size is randomly chosen within this range. Information obtained from [https://github.com/edwardchalstrey1/fragmented_genome_with_snps](https://github.com/edwardchalstrey1/fragmented_genome_with_snps). 
 
-As input, [https://github.com/pilarcormo?Small_genomes/arabidopsis_datasets/1-15Mb](https://github.com/pilarcormo/Small_genomes/arabidopsis_datasets/1-15Mb). 
 
 ######1-15 Mb genomes
 
@@ -138,5 +137,4 @@ gh <- grid.arrange(g , h, ncol=2, heights=c(1, 10), widths =c(2,1), as.table =TR
 ```
 
 ![Image](Rplot.deviations.png)
-
 
