@@ -1,56 +1,54 @@
-SNP Distribution Method
-======
 
-Whole genome sequencing using Next-Generation Sequencing (NGS) technologies offers a unique opportunity to study genetic variations. However, mapping the mutations responsible for phenotypes is generally a tedious and time-consuming process. In the last few years, researchers have developed user-friendly tools to identify mutations, yet they are not applicable to organisms with non-sequenced genomes. 
-We aim to develop a new tool that can locate causative SNP mutations in backcrossing experiments without a reference genome. Forward genetic screens offer the opportunity to experimentally induce a phenotype of interest in a target organism. 
-For our purpose, a mutant individual is crossed to a non-mutant line followed by one generation of backcrossing of the heterozygous F1 samples. The offspring of this second cross gives rise to a recombinant population which will segregate for the mutant phenotype. Due to linkage to the phenotype altering SNP, the remaining linked homozygous SNPs will be distributed around it generating a high homozygous SNP density in this non-recombinant genomic region. Consequently, the homozygous/heterozygous SNP ratio will be higher in the area where the SNP of interest is located.
-To emulate real data, I created a model genome with the expected SNP density. Then, I split it into fragments that will imitate the contigs assembled from NGS reads. My tool will need to rearrange these contigs based on their SNP density in order to find the causative mutation. The method I have developed, called SNP Distibution Method (SDM), first groups the contigs by their normalised SNP density and then it arranges them following the ideal distribution. As it was expected, we had to eliminate the contigs with a low homozygous SNP density from the analysis since they distorted the accuracy of the approach. This method was able to effectively identify the artificially created causative mutation when using the chromosome 1 from A. thaliana as model genome. 
+#Identification of genomic regions carrying a causal mutation in unordered genomes.
 
-######How does it work?
+Whole genome sequencing using high-throughput sequencing (HTS) technologies offers powerful opportunities to study genetic variations. Mapping the mutations responsible for phenotypes is generally an involved and time-consuming process so researchers have developed user-friendly tools for mapping-by-sequencing, yet they are not applicable to organisms with non-sequenced genomes.
 
-If we have have a fasta file with the unordered contigs and a VCF file with the number of hm and ht SNPs per contig and we know the SNPs are clustered together around the causative mutation, then we can order the contigs in the first file by taking the 2 lowest values of SNP frecuency and putting them at both ends of the distribution. By repeting this step, we will potentially get to the highest value = causative mutation = peak of the distribution. As contigs do not have a constant length, for the method to be effective, instead of using the absolute number of SNPs, I use a relative number by dividing the SNP density per contig by the number of nucleotides (length).
-
-###Creating a model genome
-
-Running ```ruby create_model_genome.rb dataset_name genome_length contig_size``` will generate a new model genome in SNP_distribution_method/arabidopsis_datasets/dataset_name. This includes a FASTA file with the sequences of each fragment, and a VCF file with the SNPs on each fragment. In the INFO field of the VCF, each SNP has been given an allele frequency (AF). Heterozygous SNPs will generally have AF = ~0.5, and homozygous AF = ~1.0, but this will vary with pooled data. In the model, each SNP has been given an allele frequency of exactly 0.5 or 1.0. The variables hm_r and ht_r contain the R code needed to create the model homozygous and heterozygous SNP distributions respectively. The variable contig_size provides the minimum size for contigs, where the maximum size is double this value, and each contig's size is randomly chosen within this range. Information obtained from [https://github.com/edwardchalstrey1/fragmented_genome_with_snps](https://github.com/edwardchalstrey1/fragmented_genome_with_snps)
-
-To create model genomes with real SNP densities obtaind from variant calling with NGS reads, we can run ```ruby model_genome_real_hpc.rb dataset_name contig_size folder_containing_SNPs_files chromosome```
+We introduce SDM (SNP Distribution Method), a reference independent method for rapid discovery of mutagen-induced mutations in typical forward genetics screens. SDM aims to order a disordered collection of HTS reads or contigs so that the fragment carrying the causative mutations can be identified. SDM uses typical distributions of homozygous SNPs that are linked to a phenotype-altering SNP in a non-recombinant region as a model to order the fragments. To implement and test SDM, we created model genomes with SNP density based on *Arabidopsis thaliana* chromosome and analysed fragments with size distribution similar to reads or contigs assembled from HTS sequencing experiments. SDM groups the contigs by their normalised SNP density and arranges them to maximise the fit to the expected SNP distribution. We analysed the procedure in existing data sets by examining SNP distribution in recent out-cross (Galvão et al. 2012; Uchida et al. 2014) and back-cross experiments (Allen et al. 2013; Monaghan et al. 2014) in *Arabidopsis thaliana* backgrounds. In all the examples we analysed, homozygous SNPs were normally distributed around the causal mutation. We used the real SNP densities obtained from these experiments to prove the efficiency and accuracy of SDM. The algorithm succeed in the identification of the genomic regions of small size (10-100 kb) containing the causative mutations.
+#SNP Distribution Method
 
 
-###Filtering background SNPs 
+First, we used [model genomes](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes) composed by a set of unordered contigs and an ideal SNP density as starting point. [SDM](https://github.com/pilarcormo/SNP_distribution_method/blob/master/lib/SDM.rb) sorts the fragments by their SNP density values so that they follow a normal distribution. 
 
-Run ``ruby manage_vcf.rb (1) (2) (3) (4) -(5)-``
+The SDM pipeline calculates the ratio hom/het for each contig and then uses this value as a threshold to discard the contigs located far from the causal mutation. We analysed the effect of [different thresholds](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/Pre_filtering.md)
 
-1. location folder
-2. Variants in VCF 4.1 file
-3. the chromosome we want to analyse (1, 2, 3, 4, 5) 
-4.  a method for managing the vcf file: use either 'cutting_vcf' or 'filter_vcf'. 
-If the second option is used we also need 
-5. a parental (or long distant ecotype) variants in VCF 4.1 file. 
+We know the SNPs are clustered together around the causative mutation, then we can order the contigs by taking the 2 lowest values of SNP frecuency and moving them to the ends of the distribution. By repeting this step, we will potentially get to the highest SNP density values in those contigs were the causative mutation is more likely to be located. As contigs do not have a constant length, for the method to be effective, instead of using the absolute number of SNPs, I use a relative number by dividing the SNP density per contig by the number of nucleotides (length). 
 
-The **cutting_vcf** option will create in individual VCF file for each chromosome. The **filter_vcf** option removes the SNPs from the output VCF file if they are also present in the parental VCF provided.
+Then, we tried SDM in in different [forward genetics screens](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Reads) and analysed their [homozygous SNP distribution](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md). We defined 2 filtering steps to unmask the SNP density peak based on the [background SNPs](https://github.com/pilarcormo/SNP_distribution_method/blob/master/manage_vcf.rb) and [the elimination of the centromeres](https://github.com/pilarcormo/SNP_distribution_method/blob/master/remove_cent.rb). 
 
-The output VCF files will be more simple.  In the INFO field each heterozygous SNP will have AF = 0.5, and homozygous will have AF = 1.0
-to facilitate the modelling of SDM. It will also create text files for homozygouys and heterozygous SNP positions.
+In order to choose the optimal contig size for the model genomes, we analysed the [N50 contig length in genome assemblies from 2013 until now](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Contigs) 
 
+We created [model genomes](https://github.com/pilarcormo/SNP_distribution_method/tree/master/arabidopsis_datasets/No_centromere) with the optimal contig size and the SNP density obtained from real forward genetic screens and ran [SDM on them](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Results/SDM.md)
 
-###Removing the centromeres 
-Run ```ruby remove_cent.rb chromosome folder_containing_SNPs_files```. It takes the SNP lists and remove the SNP positions that are caused by the high variability in the centromeric regions. For now, it is defined for *Arabidopsis thaliana* only.
 
 ###Runing SDM
 
+![workflow](Results/workflow_shadw.png)
+
 Run ```ruby SNP_distribution_method_variation.rb (1) (2) (3) (4) (5)```
 
-1. dataset_name
-2. name for the output folder
-3.  Integer 1/0 = filtering step on/off. If it's on, contigs which a ratio below the threshold will be discarded.
-4.  Float (1, 0.1, 0.01...). Factor to calculate the ratio.
-5.   back/out (kind of cross)
+1. **Input dataset folder** containing the input files -Contigs in FASTA file and SNPs in a VCF file-
+2. name for the **output folder**
+3. **Threshold = provide one of the following 0, 1, 5, 10, 20.**
+	- 0 -> filtering step off. 
+	- larger than 0 -> filtering step on.  If the filtering step is required, the threshold astringency is provided as an integer (1, 5, 10, 20). Each integer represents the percentage of the maximum ratio below which a contig will be discarded. In example, if 1 is specified, SDM will discard those contigs with a ratio falling below 1% of the maximum ratio while a value of 20 is more astringent  will discard those contigs with a ratio falling below 20% of the maximum ratio. 
+4.  **Factor to calculate the ratio.** Float (1, 0.1, 0.01...). 
+5.  **Type of cross** (two options: back or out). 
 
-The dataset folder is obtained by running the model_genome explained above. It will generate a FASTA file with the correctly ordered fragments, another FASTA file the shuffled fragments, text files with the list of homozygous and heterozygus SNPs and a VCF file with the SNPs. 
+Example:
 
-The output after running SDM will be a new FASTA file with the suggested order of contigs, and inside the output folder we will have: 
+```
+Looking for SNPs in (1)
+Output will be in (2)
+A factor of (4) will be used to calculate the ratio
+(5)-cros selected
+Filtering step on: (3)% selected
+```
 
+To test SDM, the input dataset folder (1) can be obtained by running [small_model_genome](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/small_model_genome.rb) as detailed in this [README file](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/README.md). It will generate a FASTA file with the correctly ordered fragments, another FASTA file the shuffled fragments, text files with the list of homozygous and heterozygus SNPs and a VCF file with the SNPs. The model genomes generated to test SDM are in 
+[Small_genomes/arabidopsis_datasets](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes/arabidopsis_datasets)
+
+The output after running SDM will be a new FASTA file with the suggested order of contigs, and inside the output folder we will find :
+ 
 - Text files for homozygous and heterozygous SNPs after sorting step (perm_hm and perm_ht) and for the hypothetical ratio (hyp_ratio). 
 - Text files for homozygous and heterozygous SNPs after pre-filtering step (hm_snps_short, ht_snps_short) in the correctly ordered genome and  for the ratios in the correctly ordered fragments (ratio).
 - A plot for the hypothetical SNP densities and ratio
@@ -59,10 +57,12 @@ The output after running SDM will be a new FASTA file with the suggested order o
 - A text file (mutation) with the following information:
 	 - Length of the group of contigs that form the peak of the distribution
 	 - Contigs and positions where the mutation is likely to be found 	 
+	 
 
 ###R scripts 
 
 All the density plots, QQplots and histograms are described in the R scripts at [https://github.com/pilarcormo/SNP_distribution_method/R_scripts](https://github.com/pilarcormo/SNP_distribution_method/tree/master/R_scripts)
+
 
 ###Project dependencies
 
