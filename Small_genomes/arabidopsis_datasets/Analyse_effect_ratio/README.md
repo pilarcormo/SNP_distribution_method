@@ -20,6 +20,14 @@ If the filtering step is required, the threshold astringency is provided as an i
 </table>
 
 
+```
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_1_1 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_5_1 2 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_10_1 10 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_20_1 20 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_0_1 0 1 back
+```
+
 ![Image](chr1_left/Ratio_0_1/ratios.png)
 ###1% of the maximum ratio
 ![Image](chr1_left/Ratio_1_1/ratios.png)

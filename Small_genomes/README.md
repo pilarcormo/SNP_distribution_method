@@ -4,11 +4,11 @@
 
 ###Creating a model genome
 
-For our purpose, a mutant individual should be crossed to a non-mutant parenta line (either the same ecotype -backcross- or a distant ecotype -outcross-). The offspring of this cross would give rise to a recombinant population which will segregate for the mutant phenotype. Due to linkage to the phenotype altering SNP, the remaining linked homozygous SNPs will be distributed around it generating a high homozygous SNP density in this non-recombinant genomic region. Consequently, the homozygous/heterozygous SNP ratio will be higher in the area where the SNP of interest is located.
+For our purpose, a mutant individual should be crossed to a non-mutant parental line (either the same ecotype -backcross- or a distant ecotype -outcross-). The offspring of this cross would give rise to a recombinant population which will segregate for the mutant phenotype. Due to linkage to the phenotype altering SNP, the remaining linked homozygous SNPs will be distributed around it generating a high homozygous SNP density in this non-recombinant genomic region. Consequently, the homozygous/heterozygous SNP ratio will be higher in the area where the SNP of interest is located.
 
 To identify the causal mutation in the model genomes, we used idealised SNP distributions. We observed that homozygous SNPs around the causative mutation followed a normal distribution, with the causal mutation in the middle of the distribution in the non-recominant region.  For our model, we assumed that heterozygous SNPs followed a uniform distribution, with no specific contribution to the general SNP density.
 
-Running ```ruby model_genome.rb {dataset_name} {genome_length} {contig_size}``` will generate a new model genome based on *A. thaliana* chromosome I using the TAIR10 chromosome I as input. The FASTA sequence for this chromosome  can be found at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/TAIR10_chr1.fasta](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/TAIR10_chr1.fasta)
+Running ```ruby small_model_genome.rb {dataset_name} {genome_length} {contig_size}``` will generate a new model genome based on *A. thaliana* chromosome I using the TAIR10 chromosome I as input. The FASTA sequence for this chromosome  can be found at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/TAIR10_chr1.fasta](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/TAIR10_chr1.fasta)
 
 The model genome will be created at  SNP_distribution_method/arabidopsis_datasets/{dataset_name} and will include:
 - a FASTA file (frags.fasta) with the sequences of each fragment
@@ -131,10 +131,10 @@ deviations_30$Contigs <- factor(deviations_30$Contigs, labels = c("4000", "2000"
 ```
 Palette <- c('brown3',"royalblue2")
 Palette2 <- c('green4',"green3", "greenyellow")
-g <- ggplot(deviations, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) + geom_point(width = .2) + ylim(0, 3.2) + labs(x = "Genome size (Mb)",  y = "% of deviation") + theme_bw() + scale_colour_manual(values=Palette) + theme_bw()
-h <- ggplot(deviations_30, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) +  geom_point(width = .2) + ylim(0, 3.2) + labs(x = "Genome size (Mb)",  y = "% of deviation") + theme_bw() + scale_colour_manual(values=Palette2) + theme_bw()
+g <- ggplot(deviations, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) + geom_jitter(size = 3) + ylim(0, 3.2) + labs(x = "Genome size (Mb)",  y = "% of deviation") + theme_bw() + scale_colour_manual(values=Palette) + theme(text = element_text(size=20))
+h <- ggplot(deviations_30, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) +  geom_jitter(size = 3) + ylim(0, 3.2) + labs(x = "Genome size (Mb)",  y = "% of deviation") + theme_bw() + scale_colour_manual(values=Palette2) + theme(text = element_text(size=20))
 gh <- grid.arrange(g , h, ncol=2, heights=c(1, 10), widths =c(2,1), as.table =TRUE)
 ```
 
-![Image](Rplot.deviations.png)
+![Image](deviations.png)
 
