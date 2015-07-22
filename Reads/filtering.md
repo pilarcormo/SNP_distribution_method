@@ -42,6 +42,7 @@ length <- 23459830 #chromosome 3 length
 EMS mutagenesis. OCF2 reads and  mir159a parent as background. 
 
 **Chromosome 2**
+
 ```
 hm_ocf2 <- read.table("~/SNP_distribution_method/BCF2/OCF2_chromosome2/Interesting_2/hm_nocen.txt", quote="\"")
 ht_ocf2 <- read.table("~/NP_distribution_method/BCF2/OCF2_chromosome2/Interesting_2/ht_nocen.txt", quote="\"")
@@ -61,6 +62,7 @@ length <- 19698289 #chromosome 2 length
 EMS mutagenesis. sup#1 and sup#2 mutants. Arabidopsis Wassilewskija (Ws) and Col-Tasaka (Col-T) background. 
 
 **Chromosome 4**
+
 ```
 hm_sup1 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm_nocen.txt", quote="\"")
 ht_sup1 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/ht_nocen.txt", quote="\"")
@@ -72,7 +74,7 @@ ratio <- c(ratio_sup1$V1)
 length <- 18585056 #chromosome 4 length
 ```
 
-![Image](Aw_sup1-2/Variant_calling/sup1_2_4/Rplot.withratio.png)
+![Image](Aw_sup1-2/filter2_chromosome4/Rplot.densities.png)
 
 ###bak1-5 mutants
 
