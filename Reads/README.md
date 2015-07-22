@@ -35,11 +35,14 @@ java -jar Trimmomatic-0.33/trimmomatic-0.33.jar PE reads_R1.fq reads_R2.fq paire
 - VarScan v2.3.7
 
 
-The reference genome was indexed before running the alingment and SNP calling pipeline. 
+
+1. Index reference sequence 
 
 ```
 bwa index TAIR10.fa
 ```
+
+2. Map the reads to reference genome with BWA
 
 ```
 desc "Align using bwa"
@@ -47,30 +50,41 @@ task :bwa  do
       sh 'bwa mem TAIR10.fa paired_R1.fq paired_R2.fq > alignment.sam'
 end
 ```
+
+3. Convert the respective SAM file to BAM file and sort the BAM file using samtools
+
 ```
 desc "Convert sam to bam file"
 task :bam => ["bwa"] do
     sh 'samtools view -bS alignment.sam | samtools sort -m 30000000000 - alignment'
 end
 ```
+
+4. Generate pileup from BAM file
+
 ```
 desc "Write pileup file"
 task :pileup => ["bam"] do
         sh 'samtools mpileup -B -f TAIR10.fa alignment.bam > SNPs.pileup'
 end
 ```
+
+5. Call SNPs using VarScan and record them in a VCF4.1 file 
+
 ```
 desc "run VarScan"
 task :varscan  => ["pileup"] do 
-        sh 'java -jar VarScan.v2.3.7.jar mpileup2snp SNPs.pileup --output-vcf 1 > SNPs.vcf'
+        sh 'java -jar VarScan.v2.3.7.jar mpileup2snp SNPs.pileup --output-vcf 1 
+        > SNPs.vcf'
 end
 ```
 
+
 VCF files obtained are in [https://github.com/pilarcormo/SNP_distribution_method/tree/master/Reads](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Reads)
 
-##Filtering
+Filtering
+===
 ####Filtering background SNPs 
-
 
 Run [manage_vcf.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/manage_vcf.rb)
 
@@ -85,30 +99,53 @@ If the second option is used we also need
 
 The **cutting_vcf** option will create in individual VCF file for each chromosome. The **filter_vcf** option removes the SNPs from the mutant VCF file if they are also present in the parental VCF provided.
 
-Also, it simplifies the output VDF. In the INFO field each heterozygous SNP will have AF = 0.5, while homozygous SNPs will have AF = 1.0 to facilitate the modelling of SDM. It will also create text files for homozygouys and heterozygous SNP positions.
-
+Also, it simplifies the output VCF file. In the INFO field each heterozygous SNP will have AF = 0.5, while homozygous SNPs will have AF = 1.0 to facilitate the modelling of SDM. It will also create text files for homozygouys and heterozygous SNP positions.
 
 ####Removing the centromeres 
 Run [remove_cent.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/remove_cent.rb)
 
  ```ruby remove_cent.rb chromosome folder_containing_SNPs_files``` 
  
+```
+for i in {1..5} 
+do
+	ruby remove_cent.rb $i Aw_sup1-2/filter2_chromosome$i
+	ruby remove_cent.rb $i BCF2/BCF2_chromosome$i
+	ruby remove_cent.rb $i OCF2/OCF2_chromosome$i
+	ruby remove_cent.rb $i B/B_chromosome$i
+	ruby remove_cent.rb $i C/C_chromosome$i
+done
+```
+ 
 It takes the SNP lists obtained from the VCF file and remove the SNP positions that are caused by the high variability in the centromeric regions. For now, it is defined for *Arabidopsis thaliana* only.
 The centromeric positions in *A.thaliana* for each chromosome are:
-
 - chr1 => 15086545
 - chr2 => 3608429
 - chr3 => 14209452
 - chr4 => 3956521
 - chr5 => 11725524
 
-
 The length of the centromeric regions used for the filtering were: 
-
 
 ```
 centromere = {"chr1" => [15086545-3950000, 15086545+3950000],"chr2" => [3608429- 1500000, 3608429+ 1500000], "chr3" => [14209452- 1500000, 14209452+1500000], "chr4" => [3956521- 1400000, 3956521+1400000], "chr5" => [11725524-500000, 11725524+500000]}
 ```
+####SNP density analysis
+
+The absolute number of homozygous SNPs before and after parental SNPs filtering and centromere filtering was taken from the files by running [SNP_density.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/snp_density.rb)
+
+```
+for i in {1..5}; do ruby snp_density.rb $i BCF2 BCF2_chromosome$i interesting_$i BCF2; done 
+for i in {1..5}; do ruby snp_density.rb $i OCF2 OCF2_chromosome$i Interesting_$i OCF2; done 
+for i in {1..5}; do ruby snp_density.rb $i m_mutants B_chromosome$i interesting_$i mob1; done 
+for i in {1..5}; do ruby snp_density.rb $i m_mutants C_chromosome$i interesting_$i mob2; done 
+for i in {1..5}; do ruby snp_density.rb $i Aw_sup1-2 sup1_chromosome$i ../filter2_chromosome$i sup1; done 
+```
+As an output, [density.csv](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/density.csv) is created. It shows the number of homozygous SNPs per chromosome. The total number of homozygous SNPs is obtained by summing those values and separate csv files for [back-cross](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/density_sum_back.csv) and [out-cross](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/density_sum_out.csv) experiments are created. 
+
+To plot the total number of homozygous SNPs in each screen, we used the R code at [SNP_filtering.R](https://github.com/pilarcormo/SNP_distribution_method/blob/master/R_scripts/SNP_filtering.R). 
+
+![Image](SNP_densities.png)
 
 ##Probability plots 
 To check if the homozygous SNP distributions obtained from SNP calling in back-cross and out-cross experiments correlate to a normal distribution, we used QQ-plots. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md)
