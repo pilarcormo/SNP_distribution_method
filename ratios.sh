@@ -1,64 +1,50 @@
 
-# ruby SNP_distribution_method_variation.rb OC_chr2_10kb Ratio0_new 0 2
+#####OCF2
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/ocf2_nocen_chr2_10kb SDM_0 0 1 out ###filtering step off
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/ocf2_nocen_chr2_10kb SDM_1 1 1 out
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/ocf2_nocen_chr2_10kb SDM_2 2 1 out
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/ocf2_nocen_chr2_10kb SDM_10 10 1 out
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/ocf2_nocen_chr2_10kb SDM_20 20 1 out
+########
 
+#####BCF2
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/bcf2_nocen_chr3_10kb SDM_0 0 1 back ###filtering step off
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/bcf2_nocen_chr3_10kb SDM_1 1 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/bcf2_nocen_chr3_10kb SDM_2 2 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/bcf2_nocen_chr3_10kb SDM_10 10 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/bcf2_nocen_chr3_10kb SDM_20 20 1 back
+########
 
-# ruby SNP_distribution_method_variation.rb mob1_chr5_10kb  Ratio0_01 0 0.1
-# ruby SNP_distribution_method_variation.rb mob1_chr5_10kb  New_plots 0 1
-# ruby SNP_distribution_method_variation.rb mob1_chr5_100kb  Ratio0_01 0 0.1
-# ruby SNP_distribution_method_variation.rb mob1_chr5_100kb  Ratio1_1 1 1
-# ruby SNP_distribution_method_variation.rb mob1_chr5_10kb  Ratio1_1 1 1
+#####mob1
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/B_nocen_chr5_10kb SDM_0 0 1 back ###filtering step off
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/B_nocen_chr5_10kb 0807_SDM_50 1 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/B_nocen_chr5_10kb 0807_SDM_50 2 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/B_nocen_chr5_10kb 0807_SDM_10 10 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/B_nocen_chr5_10kb 0807_SDM_5 20 1 back
+########
 
+#####mob2
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/C_nocen_chr5_10kb SDM_0 0 1 back ###filtering step off
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/C_nocen_chr5_10kb SDM_1 1 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/C_nocen_chr5_10kb SDM_2 2 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/C_nocen_chr5_10kb SDM_10 10 1 back
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/C_nocen_chr5_10kb SDM_20 20 1 back
+########
 
+#####sup1
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/sup1_nocen_chr4_10kb SDM_0 0 1 out ###filtering step off
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/sup1_nocen_chr4_10kb SDM_1 1 1 out
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/sup1_nocen_chr4_10kb SDM_2 2 1 out
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/sup1_nocen_chr4_10kb SDM_10 10 1 out
+ruby SNP_distribution_method_variation.rb arabidopsis_datasets/No_centromere/sup1_nocen_chr4_10kb SDM_20 20 1 out
+########
 
-# ruby SNP_distribution_method_variation.rb mob1_chr5_100kb  New_plots 0 1
-# ruby SNP_distribution_method_variation.rb mob2_chr5_100kb New_plots 0 1
-# ruby SNP_distribution_method_variation.rb mob2_chr5_100kb Ratio0_01 0 0.1
-# ruby SNP_distribution_method_variation.rb OC_chr2_10kb New_plots 0 1
-# ruby SNP_distribution_method_variation.rb OC_chr2_10kb Ratio0_001 0 0.01
+#####Analyse effect of ratio in model genome
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_0_1 0 1 back ##filtering step off
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_1_1 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_2_1 2 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_10_1 10 1 back
+ruby SNP_distribution_method_variation.rb Small_genomes/arabidopsis_datasets/Analyse_effect_ratio/chr1_left Ratio_20_1 20 1 back
+########
 
-
-
-# ruby SNP_distribution_method_variation.rb No_centromere/A_nocen_chr2_100kb New_plots_off2 0 1 m_mutants/A_chromosome2/interesting_2
-
-ruby SNP_distribution_method_variation.rb B_nocen_whole_100kb New_plots_on 1 1
-
-ruby SNP_distribution_method_variation.rb C_nocen_whole_100kb New_plots_off 0 1
-ruby SNP_distribution_method_variation.rb C_nocen_whole_100kb New_plots_on 1 1
-
-ruby SNP_distribution_method_variation.rb F_nocen_whole_100kb New_plots_off 0 1
-ruby SNP_distribution_method_variation.rb F_nocen_whole_100kb New_plots_on 1 1
-
-ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_off 0 1
-ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_on 1 1
-
-ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_off 0 1
-ruby SNP_distribution_method_variation.rb ocf2_nocen_whole_100kb New_plots_on 1 1
-
-
-
-
-# ruby SNP_distribution_method_variation.rb No_centromere/B_nocen_chr2_100kb New_plots_off 0 1 m_mutants/B_chromosome5/interesting_5
-ruby SNP_distribution_method_variation.rb No_centromere/B_nocen_chr2_100kb New_plots_on2 1 1 m_mutants/B_chromosome5/interesting_5
-
-# ruby SNP_distribution_method_variation.rb No_centromere/E_nocen_chr2_100kb New_plots_off 0 1 m_mutants/E_chromosome2/interesting_2
-ruby SNP_distribution_method_variation.rb No_centromere/E_nocen_chr2_100kb New_plots_on2 1 1 m_mutants/E_chromosome2/interesting_2
-
-
-# ruby SNP_distribution_method_variation.rb No_centromere/F_nocen_chr2_100kb New_plots_off 0 1 m_mutants/F_chromosome1/interesting_1
-ruby SNP_distribution_method_variation.rb No_centromere/F_nocen_chr2_100kb New_plots_on2 1 1 m_mutants/F_chromosome1/interesting_1
-
-
-# ruby SNP_distribution_method_variation.rb No_centromere/ocf2_nocen_chr2_100kb New_plots_off 0 1 OCF2/Interesting_2
-ruby SNP_distribution_method_variation.rb No_centromere/ocf2_nocen_chr2_100kb New_plots_on2 1 1 OCF2/Interesting_2
-
-# ruby SNP_distribution_method_variation.rb No_centromere/sup1_nocen_chr1_100kb New_plots_off 0 1 Aw_sup1-2/Variant_calling/sup1_2_1
-ruby SNP_distribution_method_variation.rb No_centromere/sup1_nocen_chr1_100kb New_plots_on2 1 1 Aw_sup1-2/Variant_calling/sup1_2_1
-# ruby SNP_distribution_method_variation.rb No_centromere/sup1_nocen_chr4_100kb New_plots_off 0 1 Aw_sup1-2/Variant_calling/sup1_2_4
-ruby SNP_distribution_method_variation.rb No_centromere/sup1_nocen_chr4_100kb New_plots_on 1 1 Aw_sup1-2/Variant_calling/sup1_2_4
-
-
-# ruby SNP_distribution_method_variation.rb BCF2_chr3_1kb New_plots 0 1
-# ruby SNP_distribution_method_variation.rb BCF2_chr3_1kb Ratio0_001 0 0.01
-# ruby SNP_distribution_method_variation.rb BCF2_chr3_1kb Ratio0_01 0 0.1
-# # ruby SNP_distribution_method_variation.rb BCF2_chr3_10kb Ratio0_001 0 0.01
 
