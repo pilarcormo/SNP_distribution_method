@@ -27,8 +27,8 @@ pp hm_noc.length
 pp ht_noc.length
 
 
-if File.exist?('density.csv') == true 
-  CSV.open("density.csv", "a+") do |csv|
+if File.exist?('Reads/density.csv') == true 
+  CSV.open("Reads/density.csv", "a+") do |csv|
     csv << ["#{name}", number, hm.length, hm_fil.length, hm_noc.length]
   end 
 else 
