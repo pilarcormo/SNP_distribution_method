@@ -147,6 +147,8 @@ To plot the total number of homozygous SNPs in each screen, we used the R code a
 
 ![Image](SNP_densities.png)
 
+After both filtering steps, the SNP densities and ratio were plotted together. R code and results are [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/filtering.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/filtering.md)
+
 ##Probability plots 
 To check if the homozygous SNP distributions obtained from SNP calling in back-cross and out-cross experiments correlate to a normal distribution, we used QQ-plots. Results and R code available at [https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/qqplot.md)
 

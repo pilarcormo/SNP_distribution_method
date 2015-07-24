@@ -59,7 +59,7 @@ y4 <- c(hm_OCF2$V1)
 q4 <- qqplot_line(y4, "OCF2")
 ```
 
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/OCF2/chromosome2/Interesting_2/Rplot.qqof.png?raw=true)
+![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/OCF2/OCF2_chromosome2/Interesting_2/Rplot.qqof.png?raw=true)
 
 
 ###mob mutants 
