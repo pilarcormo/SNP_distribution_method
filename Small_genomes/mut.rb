@@ -2,15 +2,14 @@ require_relative "lib/write_it"
 require 'pp'
 file = ARGV[0]
 
+mutation = WriteIt.file_to_array("arabidopsis_datasets/#{file}/mutation.txt")
 
-list = WriteIt.file_to_array("arabidopsis_datasets/#{file}/mutation.txt")
-
-a = list.last
-b = a.split(" ")
-puts b[1]
+deviation = mutation.last
+percentage = deviation.split(" ")
+puts percentage[1]
 
 File.open("arabidopsis_datasets/Genomes_SDM/30Mb/mutation.txt", "w+") do |f|
-	f << b[1]
+	f << percentage[1]
 end
 
 	
