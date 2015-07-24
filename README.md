@@ -44,7 +44,7 @@ A factor of (4) will be used to calculate the ratio
 Filtering step on: (3)% selected
 ```
 
-To test SDM, the input dataset folder (1) can be obtained by running [small_model_genome](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/small_model_genome.rb) as detailed in this [README file](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/README.md). It will generate a FASTA file with the correctly ordered fragments, another FASTA file the shuffled fragments, text files with the list of homozygous and heterozygus SNPs and a VCF file with the SNPs. The model genomes generated to test SDM are in 
+To test SDM, the input dataset folder (1) can be obtained by running [small_model_genome.rb](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/small_model_genome.rb) as detailed in this [README file](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Small_genomes/README.md). It will generate a FASTA file with the correctly ordered fragments, another FASTA file the shuffled fragments, text files with the list of homozygous and heterozygus SNPs and a VCF file with the SNPs. The model genomes generated to test SDM are in 
 [Small_genomes/arabidopsis_datasets](https://github.com/pilarcormo/SNP_distribution_method/tree/master/Small_genomes/arabidopsis_datasets)
 
 The output after running SDM will be a new FASTA file with the suggested order of contigs, and inside the output folder we will find :
