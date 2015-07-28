@@ -29,3 +29,5 @@ class TestRatio_filtering < Test::Unit::TestCase
 		assert_kind_of(Array, pos_short)
 		assert_equal([12, 13, 14, 25], pos_short)
 	end 
+
+end 

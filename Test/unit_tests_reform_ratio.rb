@@ -13,12 +13,10 @@ end
 class TestReform < Test::Unit::TestCase
 
 	def setup
-		vcf_file = "test/test/dummy.vcf"
-		fasta_file = "test/test/dummy.fasta"
-
+		vcf_file = "test/test.vcf"
+		fasta_file = "test/test.fasta"
 		snp_data = ReformRatio::get_snp_data(vcf_file)
 		fasta = ReformRatio::fasta_array(fasta_file)
-
 		snps_per_frag = ReformRatio::snps_per_fasta_frag(snp_data[2], fasta) # array of no. of snps per frag in same order as fasta
 		@pos_n_info = ReformRatio::get_positions(fasta, snp_data[0], snp_data[1], snps_per_frag, snp_data[3]) # get snp positions for each frag in array of arrays
 		@actual_pos = ReformRatio::total_pos(@pos_n_info[0], ReformRatio::fasta_id_n_lengths(fasta)[1])
@@ -67,11 +65,11 @@ class TestReform < Test::Unit::TestCase
 		assert_equal([[{'AF'=>'snp4'},{'AF'=>'snp5'}] ,[{'AF'=>'snp6'}], [{'AF'=>'snp1'},{'AF'=>'snp2'},{'AF'=>'snp3'}]], info)
 
 		assert_equal([[7,8],[2],[2]], @pos_n_info[0])
-		assert_equal([[{'AF'=>'1.0','NS'=>'5'},{'AF'=>'1.0'}], [{'AF'=>'0.5'}], [{'AF'=>'1.0'}]], @pos_n_info[1])
+		assert_equal([[{'AF'=>'1.0'},{'AF'=>'1.0'}], [{'AF'=>'0.5'}], [{'AF'=>'0.5'}]], @pos_n_info[1])
 	end
 
 	def test_fasta_array
-		fasta_array = ReformRatio::fasta_array('test/test/dummy.fasta')
+		fasta_array = ReformRatio::fasta_array('test/test.fasta')
 		assert_equal('frag1', fasta_array[0].entry_id)
 		assert_equal('AAAAAAAA', fasta_array[1].seq)
 		assert_equal(8, fasta_array[2].length)
@@ -81,26 +79,25 @@ class TestReform < Test::Unit::TestCase
 		vcfs_chrom = %w(frag1 frag1 frag2 frag3)
 		vcfs_pos = [7,8,2,2]
 		num_snps_frag_hash = {'frag1'=>2, 'frag2'=>1, 'frag3'=>1}
-		vcfs_info = [{'AF'=>'1.0','NS'=>'5'}, {'AF'=>'1.0'}, {'AF'=>'0.5'}, {'AF'=>'1.0'}]
+		vcfs_info = [{'AF'=>'1.0'}, {'AF'=>'1.0'}, {'AF'=>'0.5'}, {'AF'=>'0.5'}]
 		snp_data = [vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info]
-		assert_equal(snp_data, ReformRatio::get_snp_data('test/test/dummy.vcf'))
+		assert_equal(snp_data, ReformRatio::get_snp_data('test/test.vcf'))
 	end
 
 	def test_het_hom
-		vcfs_info = [{'AF'=>'1.0'}, {'AF'=>'1.0'}, {'AF'=>'0.5'}, {'AF'=>'0.5'}, {'AF'=>'1.0'}]
-		actual_pos = [2, 17, 56, 190, 191]
-		hom = [2, 17, 191]
+		vcfs_info = [{'AF'=>'1.0'}, {'AF'=>'1.0'}, {'AF'=>'0.5'}, {'AF'=>'0.5'}]
+		actual_pos = [2, 17, 56, 190]
+		hom = [2, 17]
 		het = [56, 190]
-		assert_equal([het,hom], ReformRatio::het_hom(actual_pos, vcfs_info))
-
-		assert_equal([13], @het_snps)
-		assert_equal([7,8,21], @hom_snps)
+		assert_equal([het, hom], ReformRatio::het_hom(actual_pos, vcfs_info))
+		assert_equal([13, 21], @het_snps)
+		assert_equal([7,8], @hom_snps)
 	end
 
 	def test_perm_pos
 		ht, hm = @perm_pos
-		assert_equal([13], ht)
-		assert_equal([7,8,21], hm)
+		assert_equal([13, 21], ht)
+		assert_equal([7,8], hm)
 	end
 end
 

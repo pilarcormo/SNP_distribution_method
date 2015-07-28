@@ -52,14 +52,7 @@ class TestSuff < Test::Unit::TestCase
 		assert_equal(shu_dic1, {"frag1"=>2.0, "frag3"=>0, "frag2"=>0})
 		assert_equal(snps_1, [2.0, 0.0, 0.0])
 	end 
-	def test_normalise_by_length ##problem with float, check original 
-		dic1 = {"frag1"=>2.0, "frag3"=>0, "frag2"=>0}
-		snps_1 = [2.0, 0.0, 0.0]
-		ids, lengths = ReformRatio.fasta_id_n_lengths(@f_array)
-		dic_norm1 = Stuff.normalise_by_length(lengths, dic1)
-		assert_equal(dic_norm1, {2.0/11.to_f =>["frag1"], 0/8.to_f =>["frag3","frag2"]})
 
-	end
 
 
 	def test_positions_by_fragment
