@@ -1,4 +1,5 @@
 #encoding: utf-8
+
 require_relative 'lib/reform_ratio'
 require_relative 'lib/write_it'
 require_relative 'lib/stuff'
@@ -7,6 +8,7 @@ require_relative 'lib/SDM'
 require_relative 'lib/snp_dist'
 require_relative 'lib/plot'
 require_relative 'lib/ratio_filtering'
+require_relative 'lib/output'
 
 require 'pp'
 require 'benchmark'
@@ -20,7 +22,6 @@ else
 	output_folder = ARGV[1]
 	threshold = ARGV[2].to_i #degree of filtering:  100, 50, 10, 5
 	adjust = ARGV[3]
-	cross = ARGV[4]
 	puts "Looking for SNPs in #{dataset}"
 	puts "Output will be in #{dataset}/#{output_folder}"
 	if threshold > 0
@@ -32,12 +33,11 @@ else
 		exit
 	end 
 	puts "A factor of #{adjust} will be used to calculate the ratio"
-	puts "#{cross}-cross selected"
 end 
 
 ########Files#####################################################
-loc = "arabidopsis_datasets/#{dataset}"
-file = "#{loc}/#{file}"
+loc = "#{dataset}"
+output_folder  = "#{loc}/#{output_folder}"
 vcf_file = "#{loc}/snps.vcf"
 fasta_file = "#{loc}/frags.fasta"
 fasta_shuffle = "#{loc}/frags_shuffled.fasta"
@@ -72,6 +72,7 @@ frags_shuffled = ReformRatio.fasta_array(fasta_shuffle)
 ##From the previous array take ids and lengths and put them in 2 separate new arrays
 ids_ok, lengths_ok, id_len_ok = ReformRatio.fasta_id_n_lengths(frags)
 ids, lengths, id_len = ReformRatio.fasta_id_n_lengths(frags_shuffled)
+
 genome_length = ReformRatio.genome_length(fasta_file)
 
 ##Assign the number of SNPs to each fragment in the shuffled list (hash)
@@ -114,7 +115,7 @@ dic_shuf_hm_norm = SDM.normalise_by_length(lengths, shuf_hm)
 
 perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
 
-puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
+#puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
 
 
 #Define SNPs in the r ordered array of fragments.
@@ -133,7 +134,7 @@ File.open("#{loc}/frags_ordered_thres#{threshold}.fasta", "w+") do |f|
   fasta_perm.each { |element| f.puts(element) }
 end
 
-fasta_ordered = "arabidopsis_datasets/#{dataset}/frags_ordered_thres#{threshold}.fasta"
+fasta_ordered = "#{loc}/frags_ordered_thres#{threshold}.fasta"
 frags_ordered = ReformRatio.fasta_array(fasta_ordered)
 ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
 
@@ -147,6 +148,7 @@ Dir.mkdir("#{output_folder}")
 
 #Create arrays with the  SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
+WriteIt::write_txt("#{output_folder}/hyp_positions", hyp_positions)
 WriteIt::write_txt("#{output_folder}/perm_hm", hom_snps) 
 WriteIt::write_txt("#{output_folder}/perm_ht", het_snps)
 WriteIt::write_txt("#{output_folder}/hm_snps_short", hm_sh) # save the SNP distributions for the best permutation in the generation
@@ -156,7 +158,7 @@ WriteIt::write_txt("#{output_folder}/ht_snps_short", ht_sh)
 
 ##Plot expected vs SDM ratios, QQplots
 
-Mutation::density_plots(contig_size, ratios, expected_ratios, hom_snps, het_snps, center, file, mut, frag_pos_hm) 
+Mutation::density_plots(contig_size, ratios, expected_ratios, hom_snps, het_snps, center, output_folder, mut, frag_pos_hm) 
 
 
 
