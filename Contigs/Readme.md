@@ -98,8 +98,15 @@ legend(x = "topright", lwd=1,
        lty = c(2, 2), bty="n"
  ```![image](Distributions/median_mean.png)
 
-######Assemblies using Illumina HiSeq
+######Assemblies using Illumina HiSeq only 
 ![image](Distributions/median_mean_illumina.png)
 
+
+
+
+###Update
+
+![image](Distributions/density_all.png)
+![image](Distributions/illumina_gam.png)
 
 
