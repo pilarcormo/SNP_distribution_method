@@ -107,6 +107,7 @@ legend(x = "topright", lwd=1,
 ###Update
 
 ![image](Distributions/density_all.png)
+![image](Distributions/Rplot.smooth.png)
 ![image](Distributions/illumina_gam.png)
 
 
