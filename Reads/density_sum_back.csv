@@ -2,9 +2,12 @@ cross,density,type
 BCF2,1678,Pre-filtering
 BCF2,192,Parental
 BCF2,47,Centromere
+BCF2,6,SDM-candidate
 mob1,1694,Pre-filtering
 mob1,200,Parental
 mob1,90,Centromere
+mob1,12,SDM-candidate
 mob2,1726,Pre-filtering
 mob2,193,Parental
 mob2,81,Centromere
+mob2,11,SDM-candidate
