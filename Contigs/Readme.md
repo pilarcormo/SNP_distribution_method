@@ -108,6 +108,38 @@ legend(x = "topright", lwd=1,
 
 ![image](Distributions/density_all.png)
 ![image](Distributions/Rplot.smooth.png)
+
+
+######Illumina Hiseq data only
+
+```
+df <- data.frame(x, y)
+library(mgcv)
+model <- gam(y ~ s(x))
+summary(model)
+coef(gam(y ~ s(x)))
+```
+
 ![image](Distributions/illumina_gam.png)
+
+```
+Family: gaussian 
+Link function: identity 
+Formula:
+y ~ s(x)
+Parametric coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   9.1766     0.1575   58.25 1.92e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Approximate significance of smooth terms:
+       edf Ref.df     F  p-value    
+s(x) 4.426  5.275 10.55 0.000909
+
+---
+R-sq.(adj) =  0.807   Deviance explained = 87.3%
+GCV = 0.56729  Scale est. = 0.34744   n = 14
+```
 
 
