@@ -1,3 +1,5 @@
+
+
 #encoding: utf-8
 require_relative 'stuff'
 require 'csv'
@@ -15,17 +17,30 @@ class Ratio_filtering
 		end
 		if threshold > 0
 			thres = 100/threshold
-			pp thres 
 			filter = (dic_ratios.values.max.to_f)/thres
-			puts "All the contigs with a ratio value below #{filter} will be discarded"
 			dic_ratios.delete_if { |id, ratio|  ratio <= filter.to_f}
+			ratios << dic_ratios.values
+			ratios.flatten!
+			ids_s = dic_ratios.keys
+			dic_ratios_inv = Stuff.safe_invert(dic_ratios)
+			contigs_discarded = ids.length - ids_s.length
+			puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
+			while ids_s.length > 30*contigs_discarded do
+				threshold = threshold + 2 
+				puts "threshold #{threshold}%"
+				dic_ratios, ratios, ids_s, dic_ratios_inv  = Ratio_filtering.important_ratios(snps_hm, snps_ht, ids, threshold, adjust)  
+				contigs_discarded = ids.length - ids_s.length
+			end 
+		else
+			contigs_discarded = ids.length - ids_s.length
+			ratios << dic_ratios.values
+			ratios.flatten!
+			ids_s = dic_ratios.keys
+			dic_ratios_inv = Stuff.safe_invert(dic_ratios)
 		end 
-		ratios << dic_ratios.values
-		ratios.flatten!
-		ids_s = dic_ratios.keys
-		dic_ratios_inv = Stuff.safe_invert(dic_ratios)
 		return dic_ratios, ratios, ids_s, dic_ratios_inv
 	end
+
 
 	def self.important_ids(ids_short, ids)
 		shuf_short_ids = []
@@ -76,3 +91,4 @@ class Ratio_filtering
 		end
 		return pos_ratio 
 	end 
+end 
