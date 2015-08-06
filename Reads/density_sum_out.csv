@@ -1,9 +1,9 @@
 cross,density,type
-OCF2,9208,Pre-filtering
-OCF2,3029,Parental
-OCF2,2489,Centromere
-OCF2,24,SDM-candidate
-sup1,27548,Pre-filtering
-sup1,9276,Parental
-sup1,7831,Centromere
-sup1,273,SDM-candidate
+OCF2,9208,Raw VCF
+OCF2,3029,Parental filtering
+OCF2,2489,Centromere removal
+OCF2,24,Candidate SNPs
+sup1,27548,Raw VCF
+sup1,9276,Parental filtering
+sup1,7831,Centromere removal
+sup1,273,Candidate SNPs
