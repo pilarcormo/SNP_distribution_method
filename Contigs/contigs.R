@@ -1,69 +1,84 @@
 library(ggplot2)
 options(scipen = 10)
+library(RColorBrewer)
+library(grid)
+library(gridExtra)
 
-
-contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs_2.csv")
-
-prob <- read.csv("~/SNP_distribution_method/Contigs/prob.csv")
-
-summary(prob)
-
+contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs.csv")
+summary(contigs)
 illumina <- read.csv("~/SNP_distribution_method/Contigs/illumina_hiseq.csv")
-
 summary(illumina)
-
 non_illumina <- read.csv("~/SNP_distribution_method/Contigs/non_illumina.csv")
-
 summary(non_illumina)
 
+##Effect of technology used on coverage and N50 contig 
+palette2 <- brewer.pal(9,"Set1")
+pal <- colorRampPalette(palette2)
+coverage <- ggplot(contigs, aes(x = Coverage, y = N50_contig, colour = Technology_used)) + geom_point(size = 3) + scale_colour_manual(values=palette2) +labs(x = "Coverage", y = "contig N50") + theme_bw() 
+color_technology <- ggplot(contigs, aes(x = Sequence_lengths, y = N50_contig, colour = Technology_used)) + geom_point(size = 3)  + scale_colour_manual(values=palette2, name = "Technology")  + labs(x = "Genome size (bp)", y = "N50 contig") + theme_bw()
+color_technology <- color_technology + theme_minimal(base_size = 15)
 
+
+##Probability of N50 contig vs Genome size 
+genome_length <- 1000000000
+#density <- density(contigs$N50_contig)$y
+density <- density(illumina$N50_contig)$y
+genome <- (1:512)*(genome_length/512)
+df <- data.frame(density, genome)
+density_plot <- ggplot(df, aes(x = genome, y = density))  + geom_point(colour ='#F781BF' ) + labs(x = "Genome size (bp)", y = "density of N50") + theme_bw()
+density_plot <- density_plot + theme_minimal(base_size = 15)
+####           
+
+            
+##log(N50) vs log(Genome size) and linear regression
+x <- log(illumina[illumina$Sequence_lengths > 20000000,]$Sequence_lengths)
+y <- log(illumina[illumina$Sequence_lengths > 20000000,]$N50_contig)
+colour <- contigs[contigs$Sequence_lengths > 20000000,]$Technology_used
+x <- log(contigs$Sequence_lengths)
 y <- log(contigs$N50_contig)
+df_logs <- data.frame(x, y)
+r <- ggplot(df_logs, aes(x = x, y = y))  + geom_jitter(size = 3, colour = "#F781BF") +labs(x = "log Genome size (bp)", y = "log N50 contig") + theme_bw() 
+coef(lm(y ~ x + x2))
+r <- r + geom_smooth(colour = "#F781BF", fill = "grey85") + theme_minimal(base_size = 15)
 
-Palette <- c('magenta1','royalblue2',"green3", "green4", "yellowgreen", 'black', 'darkorchid3', 'deepskyblue1', 'gold', 'firebrick1', 'grey', "orange", "skyblue4", "tomato4", 'yellow', 'aquamarine')
-
-g <- ggplot(contigs, aes(x = Coverage, y = N50_contig) + geom_smooth() + xlim(0, 100) + scale_colour_manual(values=Palette) +labs(x = "Coverage", y = "contig N5") + theme_bw() 
-
-g <- ggplot(contigs, aes(x = Sequence_lengths, y = N50_contig)) + geom_point()  + ylim(0, 30000) + labs(x = "Genome size (bp)", y = "N50 contig") + theme_bw()
+grid <- grid.arrange(r,color_technology,  ncol=1, as.table =TRUE)
 
 
-h <- ggplot(prob, aes(x = V1, y = V2)) + geom_point() +labs(x = " ", y = " ") + theme_bw()
+##GAM model
+x <- log(illumina[illumina$Sequence_lengths > 20000000,]$Sequence_lengths)
 
-h
-gh <- grid.arrange(arrangeGrob(g + theme(legend.position="none"), h + theme(legend.position="center")))
+y <- log(illumina[illumina$Sequence_lengths > 20000000,]$N50_contig)
+df <- data.frame(x, y)
+library(mgcv)
+model <- gam(y ~ s(x))
+summary(model)
+coef(gam(y ~ s(x)))
 
-                   
-den_con <- density(illumina$N50_contig)
-den_illu <- density(non_illumina$N50_contig)
+plot(model, residuals=T, pch=19,
+     scheme=1, col='#F781BF', shade=T, xlab ="log (Genome size (bp))", ylab = "log (N50 contig)")
+
+                 
+##N50 Densities, mean and median
+den_illu <- density(illumina$N50_contig)
+den_con <- density(non_illumina$N50_contig)
 p1 <- plot(range(den_con$x, den_illu$x), range(den_con$y, den_illu$y), type = "n", main = "N50 length distribution", xlab = "N50 contig length", ylab = " ")
-lines(den_con, col = "royalblue2")
-lines(den_illu, col = "firebrick1") 
+lines(den_con, col = "#377EB8")
+lines(den_illu, col = "#F781BF") 
 
-abline(v = mean(illumina$N50_contig),
-       col = "royalblue2",
+abline(v = median(illumina$N50_contig),
+       col = "#F781BF",
        lty=2)
-abline(v = mean(non_illumina$N50_contig), 
-       col = "firebrick1", 
+abline(v = median(non_illumina$N50_contig), 
+       col = "#377EB8", 
        lty=2)
 
 legend(x = "topright", lwd=1,
-       c("Mean", "Median"),
-       col = c("black", "red"),
+       c("Non-Illumina", "Illumina HiSeq"),
+       col = c("#377EB8", "#F781BF"),
        lty = c(2, 2), bty="n")
 
-legend("topright",col=c("firebrick1", "royalblue2"),lwd=1,
+legend("topright",col=c("#377EB8", "#F781BF"),lwd=1,
        legend=c("Other", "Illumina HiSeq"), bty="n")
+#########
 
-
-median(contigs$N50_contig)
-var(contigs$N50_contig)
-mean(contigs$N50_contig)
-
-qqnorm(contigs)
-qqline(contigs)
-
-library(hdrcde)
-
-plot(cde(contigs$Sequence_lengths, contigs$N50_contig, deg = 0, link = "identity"))
-
-hist(contigs[contigs$Sequence_lengths > 250000000 & contigs$Sequence_lengths < 350000000,]$N50_contig, xlab = "N50 length", main = "Genome length = 250-350 Mb")
 
