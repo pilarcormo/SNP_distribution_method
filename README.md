@@ -29,10 +29,11 @@ Run ```ruby SNP_distribution_method_variation.rb (1) (2) (3) (4) (5)```
 
 1. **Input dataset folder** containing the input files -Contigs in FASTA file and SNPs in a VCF file-
 2. name for the **output folder**
-3. **Threshold = provide one of the following 0, 1, 5, 10, 20.**
+3. **Threshold - % of maximum ratio to discard contigs.**
 	- 0 -> filtering step off. 
-	- larger than 0 -> filtering step on.  If the filtering step is required, the threshold astringency is provided as an integer (1, 5, 10, 20). Each integer represents the percentage of the maximum ratio below which a contig will be discarded. In example, if 1 is specified, SDM will discard those contigs with a ratio falling below 1% of the maximum ratio while a value of 20 is more astringent  will discard those contigs with a ratio falling below 20% of the maximum ratio. 
+	- larger than 0 -> filtering step on.  If the filtering step is required, the threshold astringency is provided as an integer (1, 5, 10, 20). Each integer represents the percentage of the maximum ratio below which a contig will be discarded. In example, if 1 is specified, SDM will discard those contigs with a ratio falling below 1% of the maximum ratio while a value of 20 is more astringent  will discard those contigs with a ratio falling below 20% of the maximum ratio. If 1% is provided, after filtering, it will check if the filtering was enough for the specific set of contigs, in case it wasn't, it will automatically increase by 2 points the threshold (2%) and will repeat the filtering step.
 4.  **Factor to calculate the ratio.** Float (1, 0.1, 0.01...). 
+5.  **Type of cross.** Back or out
 
 Example:
 
