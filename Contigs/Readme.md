@@ -60,17 +60,31 @@ Cicer arietinum|446,428,800|215,549|8,993 | 13x| 454; Illumina GAIIx
 ```
 contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs.csv"
 summary(contigs)
+illumina <- read.csv("~/SNP_distribution_method/Contigs/illumina_hiseq.csv")
+summary(illumina)
+non_illumina <- read.csv("~/SNP_distribution_method/Contigs/non_illumina.csv")
+summary(non_illumina)
 ```
 
 ![image](Summaries/all_contigs.png)
 
 
 ###Influence of genome length and technology on N50 contig
+
+
+
+
+
+##Effect of technology used on coverage and N50 contig 
 ```
 library(ggplot2)
 options(scipen = 10)
-contigs <- read.csv("~/SNP_distribution_method/Contigs/contigs.csv")
-g <- ggplot(contigs, aes(x = Sequence_lengths, y =  N50_contig, colour = Technology_used)) + geom_jitter(size = 3) + scale_colour_manual(values=Palette) +labs(x = "Genome size (bp)", y = "N50 contig") + theme_bw() 
+library(RColorBrewer)
+palette <- brewer.pal(9,"Set1")
+pal <- colorRampPalette(palette)
+coverage <- ggplot(contigs, aes(x = Coverage, y = N50_contig, colour = Technology_used)) + geom_point(size = 3) + scale_colour_manual(values=palette2) +labs(x = "Coverage", y = "contig N50") + theme_bw() 
+color_technology <- ggplot(contigs, aes(x = Sequence_lengths, y = N50_contig, colour = Technology_used)) + geom_point(size = 3)  + scale_colour_manual(values=palette, name = "Technology")  + labs(x = "Genome size (bp)", y = "N50 contig") + theme_bw()
+color_technology <- color_technology + theme_minimal(base_size = 15)
 ```
 ![image](Jitter_plots/N50_genome_size.png)
 
@@ -98,29 +112,27 @@ legend(x = "topright", lwd=1,
        lty = c(2, 2), bty="n"
  ```![image](Distributions/median_mean.png)
 
-######Assemblies using Illumina HiSeq only 
-![image](Distributions/median_mean_illumina.png)
+######Assemblies using Illumina HiSeq only vs other technologies
+![image](Distributions/N50distribution.png)
 
 
-
-
-###Update
-
-![image](Distributions/density_all.png)
-![image](Distributions/Rplot.smooth.png)
-
-
-######Illumina Hiseq data only
+###GAM model
 
 ```
-df <- data.frame(x, y)
 library(mgcv)
+x <- log(illumina[illumina$Sequence_lengths > 20000000,]$Sequence_lengths)
+y <- log(illumina[illumina$Sequence_lengths > 20000000,]$N50_contig)
+df <- data.frame(x, y)
 model <- gam(y ~ s(x))
 summary(model)
 coef(gam(y ~ s(x)))
+plot(model, residuals=T, pch=19,
+     scheme=1, col='#F781BF', shade=T, xlab ="log (Genome size (bp))", ylab = "log (N50 contig)")
 ```
 
-![image](Distributions/illumina_gam.png)
+![image](Distributions/gam_illumina.png)
+
+Output:
 
 ```
 Family: gaussian 
