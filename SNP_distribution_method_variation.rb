@@ -1,6 +1,5 @@
 #encoding: utf-8
 
-require_relative 'lib/reform_ratio'
 require_relative 'lib/write_it'
 require_relative 'lib/stuff'
 require_relative 'lib/mutation'
@@ -9,6 +8,7 @@ require_relative 'lib/snp_dist'
 require_relative 'lib/plot'
 require_relative 'lib/ratio_filtering'
 require_relative 'lib/output'
+require_relative 'lib/reform_ratio'
 
 require 'pp'
 require 'benchmark'
@@ -22,6 +22,7 @@ else
 	output_folder = ARGV[1]
 	threshold = ARGV[2].to_i #degree of filtering:  100, 50, 10, 5
 	adjust = ARGV[3]
+	cross = ARGV[4]
 	puts "Looking for SNPs in #{dataset}"
 	puts "Output will be in #{dataset}/#{output_folder}"
 	if threshold > 0
@@ -66,14 +67,17 @@ dic_ht = Stuff.create_hash_number(ht)
 
 ####[2] Open FASTA files containing the ordered and unordered contigs
 ##Create array with ordered fragments (from fasta_file) and from shuffled fragments (fasta_shuffle)
-frags = ReformRatio.fasta_array(fasta_file)
-frags_shuffled = ReformRatio.fasta_array(fasta_shuffle)
+frags = Stuff.fasta_array(fasta_file)
+frags_shuffled = Stuff.fasta_array(fasta_shuffle)
 
 ##From the previous array take ids and lengths and put them in 2 separate new arrays
-ids_ok, lengths_ok, id_len_ok = ReformRatio.fasta_id_n_lengths(frags)
-ids, lengths, id_len = ReformRatio.fasta_id_n_lengths(frags_shuffled)
+ids_ok, lengths_ok, id_len_ok = Stuff.fasta_id_n_lengths(frags)
+ids, lengths, id_len = Stuff.fasta_id_n_lengths(frags_shuffled)
 
-genome_length = ReformRatio.genome_length(fasta_file)
+genome_length = Stuff.genome_length(fasta_file)
+
+average_contig = genome_length/ids.length
+
 
 ##Assign the number of SNPs to each fragment in the shuffled list (hash)
 ##If a fragment does not have SNPs, the value assigned will be 0.
@@ -84,6 +88,20 @@ shuf_ht, shuf_snps_ht = Stuff.define_snps(ids, dic_ht)
 
 
 ####[3] Pre-filtering. Calculate Hom/het ratios for shuffled and ordered set of contigs. If a threshold > 0 was provided, this value is the percentage of the maximum ratio below which a contig will be discarded
+# def filtering 
+# dic_ratios, ratios, ids_short, dic_ratios_inv  = Ratio_filtering.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
+# dic_ratios_shuf, ratios_shuf, ids_short_shuf, dic_ratios_inv_shuf = Ratio_filtering.important_ratios(shuf_snps_hm, shuf_snps_ht, ids, threshold, adjust) 
+# contigs_discarded = ids.length - ids_short.length
+# puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
+
+
+# while ids.length > 20*contigs_discarded do 
+# 	threshold = threshold*2
+# 	puts "filtering too low, increase to #{threshold} %"
+
+# 	contigs_discarded = ids.length - ids_short.length
+# 	puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
+# end 
 
 dic_ratios, ratios, ids_short, dic_ratios_inv  = Ratio_filtering.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
 dic_ratios_shuf, ratios_shuf, ids_short_shuf, dic_ratios_inv_shuf = Ratio_filtering.important_ratios(shuf_snps_hm, shuf_snps_ht, ids, threshold, adjust) 
@@ -100,9 +118,7 @@ shuf_hm, shu_snps_hm = Stuff.define_snps(shuf_short_ids, dic_hm)
 
 ##Calculate how many contigs were discarded
 
-contigs_discarded = ids.length - ids_short.length
-puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
-
+shuf_hm, shu_snps_hm = Stuff.define_snps(shuf_short_ids, dic_hm)
 
 ####[4] SDM 
 ## Calculate scores (number of homozygous SNPs in each contig divided by fragment length)
@@ -113,17 +129,21 @@ dic_shuf_hm_norm = SDM.normalise_by_length(lengths, shuf_hm)
 #with this value in a list. Then, the list is cut by half and each half is added to a new array (right, that will be used 
 #to reconstruct the right side of the distribution, and left, for the left side)
 
-perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, cross, dic_pos_hm)
-
-#puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
 
 
-#Define SNPs in the r ordered array of fragments.
+perm_hm, perm_ratio, mut, hyp_positions = SDM.calling_SDM(dic_shuf_hm_norm, dic_ratios_inv_shuf, dic_pos_hm, cross, average_contig)
+
+puts "Hypothetical positions carrying the causal mutation #{hyp_positions}"
+
+# #Define SNPs in the r ordered array of fragments.
 dic_or_hm, snps_hm_or = Stuff.define_snps(perm_hm, dic_hm)
 dic_or_ht, snps_ht_or = Stuff.define_snps(perm_hm, dic_ht)
 
+
+thres = 0 
+pp thres
 #Calculate ratios in the contig permutation obtained from SDM
-dic_expected_ratios, expected_ratios, exp_ids_short, exp_inv_ratios = Ratio_filtering.important_ratios(snps_hm_or, snps_ht_or, perm_hm, threshold, adjust)
+dic_expected_ratios, expected_ratios, exp_ids_short, exp_inv_ratios = Ratio_filtering.important_ratios(snps_hm_or, snps_ht_or, perm_hm, thres, adjust)
 
 ####[5] Outputs
 
@@ -135,8 +155,8 @@ File.open("#{loc}/frags_ordered_thres#{threshold}.fasta", "w+") do |f|
 end
 
 fasta_ordered = "#{loc}/frags_ordered_thres#{threshold}.fasta"
-frags_ordered = ReformRatio.fasta_array(fasta_ordered)
-ids_or, lengths_or, id_len_or = ReformRatio.fasta_id_n_lengths(frags_ordered)
+frags_ordered = Stuff.fasta_array(fasta_ordered)
+ids_or, lengths_or, id_len_or = Stuff.fasta_id_n_lengths(frags_ordered)
 
 contig_size = (genome_length/ids_ok.length).to_f
 center = contig_size*(perm_hm.length) 
@@ -146,8 +166,10 @@ puts "______________________"
 #Make Output directory
 Dir.mkdir("#{output_folder}")
 
-#Create arrays with the  SNP positions in the new ordered file.
+# #Create arrays with the  SNP positions in the new ordered file.
 het_snps, hom_snps = ReformRatio.perm_pos(frags_ordered, snp_data)
+
+
 WriteIt::write_txt("#{output_folder}/hyp_positions", hyp_positions)
 WriteIt::write_txt("#{output_folder}/perm_hm", hom_snps) 
 WriteIt::write_txt("#{output_folder}/perm_ht", het_snps)
