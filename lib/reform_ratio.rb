@@ -16,26 +16,6 @@ class ReformRatio
 		return ids, lengths, id_len
 	end
 
-	# Input: VCF file
-	# Output 0: Array of VCF chrom field (fragment identifiers)
-	# Output 1: Array of VCF pos field (positions of snps on fragments)
-	# Output 2: Hash with fragment id keys and the corresponding number of snps as an integer values
-	# Output 3: Array of VCF info field (hashes of the info values e.g. key: AF, value: allele frequency)
-	def self.get_snp_data(vcf_file)
-		vcfs_chrom, vcfs_pos, vcfs_info = [], [], []
-		File.open(vcf_file, "r").each do |line| # get array of vcf lines, you can call a method on one line
-			next if line =~ /^#/
-			v = Bio::DB::Vcf.new(line)
-			vcfs_chrom << v.chrom
-			vcfs_pos << v.pos
-			vcfs_info << v.info # so this will be an array of hashes of strings
-		end
-		num_snps_frag_hash = Hash.new(0)
-		vcfs_chrom.each {|v| num_snps_frag_hash[v] +=1 } # we have the number of snps on each frag, by counting the repeats of each frag in the vcf
-		# the frag_id(.chrom) is the key, the number of snps for that frag is the value. putting the number of snps for each frag into hash
-		return vcfs_chrom, vcfs_pos, num_snps_frag_hash, vcfs_info
-	end
-
 	# Input: FASTA file
 	# Output: Array of Bio::FastaFormat entries
 	def self.fasta_array(fasta_file)

@@ -52,11 +52,9 @@ class Vcf
 		        short_vcfs_pos_c.delete(pos)
 		    end 
 		end 
-		pp child_chr_vcf
 		short_child_chr_vcf = []
 		child_chr_vcf.each do |line|
 		    position = line.split("\t")[1].to_i
-		    pp position
 		    if short_vcfs_pos_c.include?(position) 
 		        short_child_chr_vcf << line
 		    end 

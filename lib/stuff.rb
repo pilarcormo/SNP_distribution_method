@@ -1,12 +1,46 @@
 
 
 #encoding: utf-8
-require_relative 'reform_ratio'
+require 'bio'
+require 'bio-samtools'
 require 'pp'
 
 ##Open the vcf file and create lists of heterozygous and homozygous SNPs
 
 class Stuff
+	# Input: Array of Bio::FastaFormat entries
+	# Output 0: Array of identifiers
+	# Output 1: Array of lengths (integers)
+	def self.fasta_id_n_lengths(fasta)
+		ids, lengths = [], []
+		id_len = {}
+		fasta.each do |i|
+			ids << i.entry_id
+			lengths << i.length
+			id_len.store(i.entry_id, i.length)
+		end
+		return ids, lengths, id_len
+	end
+
+	# Input: FASTA file
+	# Output: Array of Bio::FastaFormat entries
+	def self.fasta_array(fasta_file)
+		fasta = [] # we have the lengths of each fasta, but the frags are different to those of the vcf/hash(this only has the frags w snps)
+		Bio::FastaFormat.open(fasta_file).each do |i| # get array of fasta format frags, ##  WE NEED TO REORDER THE FASTA FRAGS HERE, TO TEST DIFFERENT ARRANGEMENTS
+			fasta << i
+		end
+		return fasta
+	end
+
+	# Input: FASTA file
+	# Output: Integer of the length of the genome
+	def self.genome_length(fasta_file)
+		lengths = []
+		fasta_array(fasta_file).each do |frag|
+			lengths << frag.length
+		end
+		return lengths.inject(:+)
+	end
 	##Input: vcf file
 	##Ouput: lists of hm and ht SNPS
 	def self.snps_in_vcf(vcf_file, ht_cutoff=0.5, hm_cutoff=1.0)
@@ -78,22 +112,24 @@ class Stuff
 	##Output1: New hash with the number of SNPs assigned to the unordered fragments
 	##Output2: Array with the number of SNPs 
   	def self.define_snps(ids, dic_snps)
-		shuf = {}
+		dic_snps_num = {}
 		snps = []
 		ids.each { |frag|
 	      if dic_snps.has_key?(frag)
-	        shuf.store(frag, dic_snps[frag].to_f)
+	        dic_snps_num.store(frag, dic_snps[frag].to_f)
 	      else
-	        shuf.store(frag, 0)
+	        dic_snps_num.store(frag, 0)
 	      end
 	  	}
-		shuf.each { |id, snp| snps << snp }
-		return shuf, snps
+		dic_snps_num.each { |id, snp| snps << snp }
+		return dic_snps_num, snps
 	end
 
-	def self.define_global_pos(ids, dic_pos, id_length)
+	def self.define_global_pos(ids, dic_pos, lengths)
 		global_array, lens = [], []
 	  	or_pos, temporal_pos, dic_global_pos, idlen_s = {}, {}, {}, {}
+
+	  	pp ids, dic_pos, lengths
 		# ids.each { |frag|
 		#     if dic_pos.has_key?(frag)
 		#       or_pos.store(frag, dic_pos[frag])
@@ -102,20 +138,20 @@ class Stuff
 	 #  	keys = or_pos.keys
 	  	# temporal_pos.store(keys[0], or_pos[keys[0]])
 	  	# or_pos.delete_if { |frag, pos|  temporal_pos.has_key?(frag)}
-	  	id_length.each do |frag, length|
-	  		idlen_s.store(frag, length)
-	  		lens << length
-	  	end 
+	  	# id_length.each do |frag, length|
+	  	# 	idlen_s.store(frag, length)
+	  	# 	lens << length
+	  	# end 
 	  	x = 1 
-	  	lens.length.times do |i|
-	  		lens[x] = lens[x-1].to_i + lens[x].to_i 
+	  	lengths.length.times do |i|
+	  		lengths[x] = lengths[x-1].to_i + lengths[x].to_i 
 	  		x += 1
 	  	end 
 
 	  	x = 0 
     	dic_pos.each do |frag, array|
 	  		array.each do |pos|
-	  			pos2 = (pos.to_i+lens[x].to_i)
+	  			pos2 = (pos.to_i+lengths[x].to_i)
 	  			global_array << pos2
 	  		end  
 	  		x += 1
