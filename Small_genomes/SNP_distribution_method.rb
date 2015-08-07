@@ -45,7 +45,6 @@ ht_list = WriteIt.file_to_ints_array("arabidopsis_datasets/#{dataset}/ht_snps.tx
 ##############################################################
 ##############################################################
 
-
 ####[1] Open VCF file 
 snp_data, hm, ht, frag_pos = Stuff.snps_in_vcf(vcf_file)
 

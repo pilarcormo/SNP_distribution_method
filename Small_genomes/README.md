@@ -108,11 +108,9 @@ Run ```ruby SNP_distribution_method_variation.rb (1) (2) (3)```
 	- 0 -> filtering step off. 
 	- larger than 0 -> filtering step on.  If the filtering step is required, the threshold astringency is provided as an integer (1, 5, 10, 20). Each integer represents the percentage of the maximum ratio below which a contig will be discarded. In example, if 1 is specified, SDM will discard those contigs with a ratio falling below 1% of the maximum ratio while a value of 20 is more astringent  will discard those contigs with a ratio falling below 20% of the maximum ratio. 
 4.  **Factor to calculate the ratio.** Float (1, 0.1, 0.01...). 
-5.  **Type of cross** (two options: back or out). 
 
-To test SDM, the input dataset folder (1) is obtained by running the model_genome explained above. It will generate a FASTA file with the correctly ordered fragments, another FASTA file the shuffled fragments, text files with the list of homozygous and heterozygus SNPs and a VCF file with the SNPs. In the model genomes, the pre-filtering step (3) was not initially used (threshold = 0), the factor (4) was set to 1 and the type of cross (5) was fixed to back. 
-
-The output after running SDM will be a new FASTA file with the suggested order of contigs, and inside the output folder we will have: 
+To test SDM, the input dataset folder (1) is obtained by running the model_genome explained above. It will generate a FASTA file with the correctly ordered fragments, another FASTA file the shuffled fragments, text files with the list of homozygous and heterozygus SNPs and a VCF file with the SNPs. In the model genomes, the pre-filtering step (3) was not initially used (threshold = 0) and the factor (4) was set to 1.
+The output after running SDM will be a new FASTA file with the suggested order of contigs, and the output folder will contain: 
 
 - Text files for homozygous and heterozygous SNPs after sorting step (perm_hm and perm_ht). 
 - Text files for homozygous and heterozygous SNPs after pre-filtering step (hm_snps_short, ht_snps_short) in the correctly ordered genome. If the threshold is set to 0, those will be equal to the initial input files. 

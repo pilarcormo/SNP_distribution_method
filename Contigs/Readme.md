@@ -130,7 +130,7 @@ plot(model, residuals=T, pch=19,
      scheme=1, col='#F781BF', shade=T, xlab ="log (Genome size (bp))", ylab = "log (N50 contig)")
 ```
 
-![image](Distributions/gam_illumina.png)
+![image](Distributions/illumina_gam.png)
 
 Output:
 

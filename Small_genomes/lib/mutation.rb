@@ -15,16 +15,10 @@ class Mutation
 		n = 2000
 
 		hyp = SNPdist.hyp_snps(ratios, genome_length)
-	
 		peak =  LocateMutation.find_peak(hyp, n) # Find the peak in the approximated (hypothetical SNP) distribution
- 
 		causal = LocateMutation.closest_snp(peak, hm)
 		perm_hyp = SNPdist.hyp_snps(expected_ratios, genome_length)
-
-
 		perm_peak = LocateMutation.find_peak(perm_hyp, n)
-
-
 		candidate = LocateMutation.closest_snp(perm_peak, perm_hm)
 
 		normalised = (candidate - causal).abs
