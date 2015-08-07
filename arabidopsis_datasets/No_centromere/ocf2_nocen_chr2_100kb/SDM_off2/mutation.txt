@@ -1,2 +1,0 @@
-The length of the group of contigs that form the peak of the distribution is 19551266 bp
-The mutation is likely to be found on the following contigs {"frag80"=>[1727, 49461, 49462, 54366, 102656], "frag1"=>[9773, 22178, 23681, 33496, 55086, 112447], "frag108"=>[41498, 54836, 69852, 100367], "frag110"=>[584, 71893, 90656, 108271]}
