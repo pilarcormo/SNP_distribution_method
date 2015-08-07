@@ -12,5 +12,7 @@ ratio1 <- ggplot(ratio_positions0_1, aes(Position, Ratio)) + geom_point(colour="
 ratio01 <- ggplot(ratio_positions0_0.1, aes(Position, Ratio)) + geom_point(colour="darkblue", shape=21, size = 4) + xlab(" ") + ylab("Ratio") + xlim(5000000, 15000000) + theme_bw() + ggtitle("Factor = 0.1")
 ratio001 <- ggplot(ratio_positions0_0.01, aes(Position, Ratio)) + geom_point(colour="darkblue", shape=21, size = 4) + xlab(" ") + ylab("Ratio") + xlim(5000000, 15000000) + theme_bw() + ggtitle("Factor = 0.01")
 
+
+
 together <- grid.arrange(ratio1, ratio01, ratio001, ratiolen,  ncol = 2, main = "10kb contigs")
 

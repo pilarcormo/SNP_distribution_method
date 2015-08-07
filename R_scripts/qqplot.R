@@ -22,9 +22,8 @@ hm <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/intere
 hm2 <- read.table("~/SNP_distribution_method/Reads/m_mutants/B_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
 hm3 <- read.table("~/SNP_distribution_method/Reads/BCF2/Interesting_3/hm_nocen.txt", quote="\"")
 hm4 <- read.table("~/SNP_distribution_method/Reads/OCF2/Interesting_3/hm_nocen.txt", quote="\"")
-hm5 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/Variant_calling/sup1_2_4/hm_nocen.txt", quote="\"")
-
-
+hm5 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm_nocen.txt", quote="\"")
+options(scipen = 10)
 y1 <- c(hm$V1)
 y2 <- c(hm2$V1)
 y3 <- c(hm3$V1)
@@ -48,7 +47,7 @@ q3 <- qqplot_line(y3, "BCF2")
 q4 <- qqplot_line(y4, "OCF2")
 q5 <- qqplot_line(y5, "sup#1")
 
-q1
+
 grid.arrange(arrangeGrob(q1, q2), ncol = 2)
 
 ##Standard deviation, kurtosis and skewness of the distribution
