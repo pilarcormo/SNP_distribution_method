@@ -76,7 +76,7 @@ class SDM
         end 
      elsif cross == "out" #In case of a out-cross, 50 contigs in the middle part of the permutation taken
         if right.length > 20
-          mut << right.flatten[-20, 2]
+          mut << right.flatten[-20, 20]
           mut << left.flatten[-20, 20].reverse
           mut.flatten!
         else #If a strong filtering step reduces the total number of contigs to a number lower than 20, perm.length/2 contigs on the right and perm.length/2 on the left side of the middle point are taken. 
