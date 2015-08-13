@@ -2,12 +2,12 @@ cross,density,type
 BCF2,1678,Raw VCF
 BCF2,192,Parental filtering
 BCF2,47,Centromere removal
-BCF2,6,Candidate SNPs
+BCF2,13,Candidate SNPs
 mob1,1694,Raw VCF
 mob1,200,Parental filtering
 mob1,90,Centromere removal
-mob1,12,Candidate SNPs
+mob1,23,Candidate SNPs
 mob2,1726,Raw VCF
 mob2,193,Parental filtering
 mob2,81,Centromere removal
-mob2,11,Candidate SNPs
+mob2,23,Candidate SNPs

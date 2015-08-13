@@ -25,8 +25,8 @@ EMS mutagenesis. BCF2 reads and Landsberg erecta (Ler) background.
 **Chromosome 3**
 
 ```
-hm_bcf2 <- read.table("~/SNP_distribution_method/BCF2/BCF2_chromosome3/interesting_3/hm_nocen.txt", quote="\"")
-ht_bcf2 <- read.table("~/NP_distribution_method/BCF2/BCF2_chromosome3/interesting_3/ht_nocen.txt", quote="\"")
+hm_bcf2 <- read.table("~/SNP_distribution_method/Reads/BCF2/BCF2_chromosome3/interesting_3/hm_nocen.txt", quote="\"")
+ht_bcf2 <- read.table("~/SNP_distribution_method/Reads/BCF2/BCF2_chromosome3/interesting_3/ht_nocen.txt", quote="\"")
 ratio_bcf2 <- read.table("~/SNP_distribution_method/arabidopsis_datasets/No_centromere/bcf2_nocen_chr3_10kb/SDM_0/ratios.txt", quote="\"")
 data_hm <- c(hm_bcf2$V1)      
 data_ht <- c(ht_bcf2$V1)
@@ -44,8 +44,8 @@ EMS mutagenesis. OCF2 reads and  mir159a parent as background.
 **Chromosome 2**
 
 ```
-hm_ocf2 <- read.table("~/SNP_distribution_method/BCF2/OCF2_chromosome2/Interesting_2/hm_nocen.txt", quote="\"")
-ht_ocf2 <- read.table("~/NP_distribution_method/BCF2/OCF2_chromosome2/Interesting_2/ht_nocen.txt", quote="\"")
+hm_ocf2 <- read.table("~/SNP_distribution_method/Reads/OCF2/OCF2_chromosome2/Interesting_2/hm_nocen.txt", quote="\"")
+ht_ocf2 <- read.table("~/SNP_distribution_method/Reads/OCF2/OCF2_chromosome2/Interesting_2/ht_nocen.txt", quote="\"")
 ratio_ocf2 <- read.table("~/SNP_distribution_method/arabidopsis_datasets/No_centromere/ocf2_nocen_chr2_10kb/SDM_0/ratios.txt", quote="\"")
 data_hm <- c(hm_ocf2$V1)      
 data_ht <- c(ht_ocf2$V1)
