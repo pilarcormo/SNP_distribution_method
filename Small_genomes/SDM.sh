@@ -1,8 +1,6 @@
 
 for i in {1..5} 
 do
-	ruby snp_density.rb $i
-done 
 	ruby SNP_distribution_method.rb 1-15Mb/1Mb_A_$i SDM 0 1
 	ruby SNP_distribution_method.rb 1-15Mb/3Mb_$i SDM 0 1
 	ruby SNP_distribution_method.rb 1-15Mb/3Mb_A_$i SDM 0 1
