@@ -11,11 +11,13 @@ deviations$Contigs <- factor(deviations$Contigs, labels = c("1300", "700"))
 deviations_30$Genome_size <- factor(deviations_30$Genome_size, labels = c("30"))
 deviations_30$Contigs <- factor(deviations_30$Contigs, labels = c("4000", "2000", "1000"))
 
-Palette <- c('darkblue',"royalblue2")
+Palette <- c('red',"royalblue2")
 Palette2 <- c('darkgreen',"green4", "green3")
 
-p15 <- ggplot(deviations, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) + geom_jitter(size=3) + ylim(0, 3.2) + labs(x = "Genome size (Mb)",  y = "% of deviation") + theme_bw() + scale_colour_manual(values=Palette) + theme(text = element_text(size=15))
-p30 <- ggplot(deviations_30, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) + geom_jitter(size=3) + ylim(0, 3.2) + labs(x = "Genome size (Mb)",  y = "% of deviation") + theme_bw() + scale_colour_manual(values=Palette2) + theme(text = element_text(size=15))
+p15 <- ggplot(deviations, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) + geom_jitter(size=3) + ylim(0, 3.2) + labs(x = "Genome length (Mb)",  y = "Shift from 'real' SNP as % of genome length") + theme_bw() + scale_colour_manual(values=Palette, name  ="Number of contigs") + scale_shape_discrete(name  ="Number of contigs") + theme(text = element_text(size=20))
+p30 <- ggplot(deviations_30, aes(x = Genome_size, y = Deviation, shape = Contigs, colour = Contigs)) + geom_jitter(size=3) + ylim(0, 3.2) + labs(x = "Genome length (Mb)",  y = "Shift from 'real' SNP as % of genome length") + theme_bw() + scale_colour_manual(values=Palette2, name ="Number of contigs") + scale_shape_discrete(name  ="Number of contigs") + theme(text = element_text(size=20))
+
+
 grid <- grid.arrange(p15 , p30, ncol=2, heights=c(1, 10), widths =c(2,1), as.table =TRUE)
 
 #####Theme variations

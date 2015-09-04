@@ -21,14 +21,23 @@ leg_r2 <- function(k)
 hm <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
 hm2 <- read.table("~/SNP_distribution_method/Reads/m_mutants/B_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
 hm3 <- read.table("~/SNP_distribution_method/Reads/BCF2/Interesting_3/hm_nocen.txt", quote="\"")
-hm4 <- read.table("~/SNP_distribution_method/Reads/OCF2/Interesting_3/hm_nocen.txt", quote="\"")
-hm5 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm_nocen.txt", quote="\"")
+
+hm_pa <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/sup1_chromosome4/hm.txt", quote="\"")
+
+hm_cen <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm.txt", quote="\"")
+
+hm_pre <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm.txt", quote="\"")
+
 options(scipen = 10)
 y1 <- c(hm$V1)
 y2 <- c(hm2$V1)
 y3 <- c(hm3$V1)
 y4 <- c(hm4$V1)
 y5 <- c(hm5$V1)
+
+y_pa <- c(hm_pa$V1)
+y_cen <- c(hm_cen$V1)
+y_pre <- c(hm_pre$V1)
 
 qqplot_line <- function(y, title)
 {
@@ -41,10 +50,13 @@ qqplot_line <- function(y, title)
   len <- leg_r2(k)
 } 
 
-q1 <- list(qqplot_line(y1, "mob 2"))
-q2 <- list(qqplot_line(y2, "mob 1"))
+q1 <- list(qqplot_line(y_pre, "sup1 pre-filtering"))
+q2 <- list(qqplot_line(y_pa, "sup1 after parental filtering"))
+q3 <- list(qqplot_line(y_cen, "sup1 after centromere removal"))
+
 q3 <- qqplot_line(y3, "BCF2")
 q4 <- qqplot_line(y4, "OCF2")
+
 q5 <- qqplot_line(y5, "sup#1")
 
 

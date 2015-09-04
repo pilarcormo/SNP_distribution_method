@@ -88,20 +88,6 @@ shuf_ht, shuf_snps_ht = Stuff.define_snps(ids, dic_ht)
 
 
 ####[3] Pre-filtering. Calculate Hom/het ratios for shuffled and ordered set of contigs. If a threshold > 0 was provided, this value is the percentage of the maximum ratio below which a contig will be discarded
-# def filtering 
-# dic_ratios, ratios, ids_short, dic_ratios_inv  = Ratio_filtering.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
-# dic_ratios_shuf, ratios_shuf, ids_short_shuf, dic_ratios_inv_shuf = Ratio_filtering.important_ratios(shuf_snps_hm, shuf_snps_ht, ids, threshold, adjust) 
-# contigs_discarded = ids.length - ids_short.length
-# puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
-
-
-# while ids.length > 20*contigs_discarded do 
-# 	threshold = threshold*2
-# 	puts "filtering too low, increase to #{threshold} %"
-
-# 	contigs_discarded = ids.length - ids_short.length
-# 	puts "#{contigs_discarded} contigs out of #{ids.length} discarded"
-# end 
 
 dic_ratios, ratios, ids_short, dic_ratios_inv  = Ratio_filtering.important_ratios(snps_hm, snps_ht, ids_ok, threshold, adjust) 
 dic_ratios_shuf, ratios_shuf, ids_short_shuf, dic_ratios_inv_shuf = Ratio_filtering.important_ratios(shuf_snps_hm, shuf_snps_ht, ids, threshold, adjust) 

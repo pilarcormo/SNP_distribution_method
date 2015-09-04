@@ -1,0 +1,31 @@
+Species,Sequence_lengths,Number_of_contigs,N50_contig,Average_contig_size,Average_N50,Coverage,Technology_used
+Actinidia chinensis , 604217145 , 26721 , 58864  ,22612,0, 150.0x , Illumina
+Selaginella kraussiana , 114502747 , 105943 , 2414  ,1080,0, 150.0x , Illumina-HiSeq
+Sesamum indicum , 340463922 ,87064 , 11517 ,3910,0, 85.0x , Illumina; 454; Illumina MiSeq
+Eragrostis tef , 607317615 ,112599 , 7532  ,5393,0, 54.0x , Illumina HiSeq; 454
+Thlaspi arvense, 343012389 ,31889 , 28155 ,10756,0, 80.0x , Illumina HiSeq; Illumina MiSeq; PacBio
+Catharanthus roseus, 522653749 ,147992 ,14288,3531,0, 50.0x , Illumina HiSeq
+Triticum aestivum, 65111056 ,22149 , 3124 ,2939,0, 4.0x , 454
+Raphanus sativus,341476849,20507 , 24475 ,16651,0,267.0x, 454; PacBio; Illumina HiSeq; ABI3730
+Primula veris,309692940 ,40851 , 13157 ,7581,0, 116.0x , Illumina HiSeq; Illumina MiSeq; PacBio
+Conyza canadensis ,326165195 ,20075 , 20748 ,16247,0, 350.0x , 454; Illumina HiSeq; PacBio
+Diospyros lotus ,1104189 ,797 , 1864,1385,0, 23.0x, Illumina HiSeq
+Arabidopsis thaliana (Ler-0) ,127419454,378 ,11163166,337088,0, 140.0x, Illumina HiSeq
+Vigna radiata ,463085359 ,23499 , 48831 ,19706,0, 300.0x , Illumina HiSeq
+Vaccinium macrocarpon ,414621889 ,200946 , 4278 ,2063,0, 20.0x , Illumina GAIIx
+Raphanus raphanistrum  ,253833977 ,64732 , 10186 ,3921,0, 47.0x , Illumina GAII; 454
+Nicotiana otophora ,2474110067 ,1121520 , 11316 ,2206,0, 66.0x, Illumina HiSeq
+Glycine soja ,806921190,128699 , 24258 ,6269,0, 63.1.0x, Illumina GAII
+Oryza sativa ,309525339 ,99099 , 7471 ,3123,0, 27.0x, Illumina HiSeq
+Azadirachta indica ,261121960 ,125535, 3497 ,2080,0, 21.0x, Illumina HiSeq
+Nicotiana tabacum ,3553959712 ,797404, 21713 ,4456,0, 29.0x, Illumina HiSeq
+Nicotiana tabacum ,3613159037 ,478137, 39411 ,7556,0, 49.0x, Illumina HiSeq
+Gossypium arboreum ,1560831891 ,121184, 71965 ,12879,0, 110x, Illumina HiSeq2000
+Trifolium pratense,304979311 ,267382, 2431 ,1140,0, 58x, Illumina HiSeq
+Arabidopsis lyrata ,202972003 ,369168, 2321 ,549,0, 279.3x, Illumina HiSeq2000
+Arabidopsis halleri ,221139660 ,411213, 2864 ,537,0, 167.9x, Illumina HiSeq2000
+Spirodela polyrhiza,132009443 ,16051,14533 ,8224,0, 22.0x, 454; ABI3730
+Camelina sativa,547649377 ,55170,15644 ,9926,0, 160.0x, 454; Illumina
+Azadirachta indica,200258601 ,158611,2138 ,1262,0, 12.0x, Illumina HiSeq
+Pinus taeda,265480119,90954,16205 ,2918,0, 50x, Illumina GAIIx
+Cicer arietinum,446428800,215549,8993 ,2071,0, 13x, 454; Illumina GAIIx
