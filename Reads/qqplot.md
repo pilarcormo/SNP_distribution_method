@@ -36,62 +36,109 @@ qqplot_line <- function(y, title)
 ###1. sup1 
 [Uchida et al](http://pcp.oxfordjournals.org/content/52/4/716.long)
 
+`hm_pa <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/sup1_chromosome4/hm.txt", quote="\"")`
 
-#####Chromosome 4
-```
-hm_sup1 <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/Variant_calling/sup1_2_4/hm_nocen.txt", quote="\"")
-y5 <- c(hm_sup1$V1)
-q5 <- qqplot_line(y5, "sup#1")
-```
+`hm_cen <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm_nocen.txt", quote="\"")`
 
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/Aw_sup1-2/Variant_calling/sup1_2_4/Rplot.qqsup1.png?raw=true)
+`hm_pre <- read.table("~/SNP_distribution_method/Reads/Aw_sup1-2/filter2_chromosome4/hm.txt", quote="\"")`
+
+
+```y_pa <- c(hm_pa$V1)
+y_cen <- c(hm_cen$V1)
+y_pre <- c(hm_pre$V1)
+q1 <- list(qqplot_line(y_pre, "sup1 pre-filtering"))
+q2 <- list(qqplot_line(y_pa, "sup1 after parental filtering"))
+q3 <- list(qqplot_line(y_cen, "sup1 after centromere removal"))```
+
+![Image](Aw_sup1-2/sup1-pre.png)
+![Image](Aw_sup1-2/sup1-pa.png)
+![Image](Aw_sup1-2/sup1-cen.png)
+
 
 
 ###OCF2
 [Galvão et al](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-313X.2012.04993.x/full#ss9)
  
- 
-##### Chromosome 2
 
-```
-hm_OCF2 <- read.table("~/SNP_distribution_method/Reads/OCF2/chromosome2/Interesting_2/hm_nocen.txt", quote="\"")
-y4 <- c(hm_OCF2$V1)
-q4 <- qqplot_line(y4, "OCF2")
-```
+`hm_pa <- read.table("~/SNP_distribution_method/Reads/OCF2/OCF2_chromosome2/Interesting_2/hm.txt", quote="\"")`
 
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/OCF2/OCF2_chromosome2/Interesting_2/Rplot.qqof.png?raw=true)
+`hm_cen <- read.table("~/SNP_distribution_method/Reads/OCF2/OCF2_chromosome2/Interesting_2/hm_nocen.txt", quote="\"")`
 
+`hm_pre <- read.table("~/SNP_distribution_method/Reads/OCF2/OCF2_chromosome2/hm.txt", quote="\"")`
+
+```y_pa <- c(hm_pa$V1)
+y_cen <- c(hm_cen$V1)
+y_pre <- c(hm_pre$V1)
+q1 <- list(qqplot_line(y_pre, "OCF2 pre-filtering"))
+q2 <- list(qqplot_line(y_pa, "OCF2 after parental filtering"))
+q3 <- list(qqplot_line(y_cen, "OCF2 after centromere removal"))```
+
+![Image](OCF2/ocf2-pre.png)
+![Image](OCF2/ocf2-pa.png)
+![Image](OCF2/ocf2-cen.png)
 
 ###mob mutants 
 
 
-#####B - Chromosome 5
-```
-hm_B <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
-y1 <- c(hm_B$V1)
-q1 <- qqplot_line(y1, "mob 1")
-```
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/m_mutants/B_chromosome5/interesting_5/Rplot.qqm1.png?raw=true)
+
+#####mob1
+
+`hm_pa <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm.txt", quote="\"")`
+
+`hm_pre <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/hm.txt", quote="\"")`
+
+`hm_cen <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm_nocen.txt", quote="\"")`
+
+```y_pa <- c(hm_pa$V1)
+y_cen <- c(hm_cen$V1)
+y_pre <- c(hm_pre$V1)
+q1 <- list(qqplot_line(y_pre, "mob1 pre-filtering"))
+q2 <- list(qqplot_line(y_pa, "mob1 after parental filtering"))
+q3 <- list(qqplot_line(y_cen, "mob1 after centromere removal"))```
 
 
-#####C - Chromosome 5
-```
-hm_C <- read.table("~/SNP_distribution_method/Reads/m_mutants/C_chromosome5/interesting_5/hm_nocen.txt", quote="\"")
-y2 <- c(hm_C$V1)
-q2 <- qqplot_line(y2, "mob 2")
-```
+![Image](m_mutants/mob1-pre.png)
+![Image](m_mutants/mob1-pa.png)
+![Image](m_mutants/mob1-cen.png)
 
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/m_mutants/C_chromosome5/interesting_5/Rplot.qqm2.png?raw=true)
+
+#####mob2
+`hm_pa <- read.table("~/SNP_distribution_method/Reads/m_mutants/B_chromosome5/interesting_5/hm.txt", quote="\"")`
+
+`hm_pre <- read.table("~/SNP_distribution_method/Reads/m_mutants/B_chromosome5/hm.txt", quote="\"")`
+
+`hm_cen <- read.table("~/SNP_distribution_method/Reads/m_mutants/B_chromosome5/interesting_5/hm_nocen.txt", quote="\"")`
+
+```y_pa <- c(hm_pa$V1)
+y_cen <- c(hm_cen$V1)
+y_pre <- c(hm_pre$V1)
+q1 <- list(qqplot_line(y_pre, "mob2 pre-filtering"))
+q2 <- list(qqplot_line(y_pa, "mob2 after parental filtering"))
+q3 <- list(qqplot_line(y_cen, "mob2 after centromere removal"))```
+
+![Image](m_mutants/mob2-pre.png)
+![Image](m_mutants/mob2-pa.png)
+![Image](m_mutants/mob2-cen.png)
 
 ###BCF2
 
-##### Chromosome 3
-```
-hm_BCF2 <- read.table("~/SNP_distribution_method/Reads/BCF2/chromosome3/Interesting_3/hm_nocen.txt", quote="\"")
-y3 <- c(hm_BCF2$V1)
-q3 <- qqplot_line(y3, "BCF2")
-```
 
-![Image](https://github.com/pilarcormo/SNP_distribution_method/blob/master/Reads/BCF2/BCF2_chromosome3/Interesting_3/Rplot.qqbc.png?raw=true)
+`hm_pa <- read.table("~/SNP_distribution_method/Reads/BCF2/BCF2_chromosome3/Interesting_3/hm.txt", quote="\"")`
+
+`hm_pre <- read.table("~/SNP_distribution_method/Reads/BCF2/BCF2_chromosome3/hm.txt", quote="\"")`
+
+`hm_cen <- read.table("~/SNP_distribution_method/Reads/BCF2/BCF2_chromosome3/Interesting_3/hm_nocen.txt", quote="\"")`
+
+```y_pa <- c(hm_pa$V1)
+y_cen <- c(hm_cen$V1)
+y_pre <- c(hm_pre$V1)
+q1 <- list(qqplot_line(y_pre, "BCF2 pre-filtering"))
+q2 <- list(qqplot_line(y_pa, "BCF2 after parental filtering"))
+q3 <- list(qqplot_line(y_cen, "BCF2 after centromere removal"))```
+
+
+![Image](BCF2/bcf2-pre.png)
+![Image](BCF2/bcf2-pa.png)
+![Image](BCF2/bcf2-cen.png)
 
 
