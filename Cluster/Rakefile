@@ -1,0 +1,17 @@
+desc "Align using bwa"
+task :bwa  do
+	sh 'bwa mem TAIR_10/TAIR10_chr_all.fas tri_parent_OC.fg.reads1.fq tri_parent_OC.fg.reads2.fq > parent_oc.sam'
+end
+desc "Convert sam to bam file"
+task :bam => ["bwa"] do
+	sh 'samtools view -bS parent_oc.sam | samtools sort -m 30000000000 - parent_oc_sorted'
+end
+desc "Write pileup file"
+task :pileup  => ["bam"] do
+	sh 'samtools mpileup -B -f TAIR_10/TAIR10_chr_all.fas parent_oc_sorted.bam > parent_oc.pileup'
+end
+desc "run VarScan"
+task :varscan  => ["pileup"] do 
+	sh 'java -jar VarScan.v2.3.7.jar mpileup2snp parent_oc.pileup --output-vcf 1 > parent_oc.vcf'
+end
+

@@ -39,6 +39,7 @@ y_pa <- c(hm_pa$V1)
 y_cen <- c(hm_cen$V1)
 y_pre <- c(hm_pre$V1)
 
+
 qqplot_line <- function(y, title)
 {
   x <- rnorm(length(y), mean(y), sd(y))
@@ -64,7 +65,7 @@ grid.arrange(arrangeGrob(q1, q2), ncol = 2)
 
 ##Standard deviation, kurtosis and skewness of the distribution
 library(moments)
-sd(y)
+sd(y_cen)
 kurtosis(y)
 skewness(y)
 

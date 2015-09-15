@@ -1,16 +1,16 @@
-Species,Sequence_lengths,Number_of_contigs,N50_contig,Average_contig_size,Average_N50,Coverage,Technology_used
-Actinidia chinensis , 604217145 , 26721 , 58864  ,22612,10264, 150.0 , Illumina HiSeq
-Selaginella kraussiana , 114502747 , 105943 , 2414  ,1080,47432, 150.0x , Illumina HiSeq
-Catharanthus roseus, 522653749 ,147992 ,14288,3531,36579, 50.0x , Illumina HiSeq
-Diospyros lotus ,1104189 ,797 , 1864,1385,592, 23.0x, Illumina HiSeq
-Vigna radiata ,463085359 ,23499 , 48831 ,19706,9483, 300.0x , Illumina HiSeq
-Nicotiana otophora ,2474110067 ,1121520 , 11316 ,2206,218638, 66.0x, Illumina HiSeq
-Oryza sativa ,309525339 ,99099 , 7471 ,3123,41430, 27.0x, Illumina HiSeq
-Azadirachta indica ,261121960 ,125535, 3497 ,2080,74670, 21.0x, Illumina HiSeq
-Nicotiana tabacum ,3553959712 ,797404, 21713 ,4456,163678, 29.0x, Illumina HiSeq
-Nicotiana tabacum ,3613159037 ,478137, 39411 ,7556,91678, 49.0x, Illumina HiSeq
-Gossypium arboreum ,1560831891 ,121184, 71965 ,12879,21688, 110x, Illumina HiSeq
-Trifolium pratense,304979311 ,267382, 2431 ,1140,125454, 58x, Illumina HiSeq
-Arabidopsis lyrata ,202972003 ,369168, 2321 ,549,87450, 279.3x, Illumina HiSeq
-Arabidopsis halleri ,221139660 ,411213, 2864 ,537,77213, 167.9x, Illumina HiSeq
-Azadirachta indica,200258601 ,158611,2138 ,1262,93666, 12.0x, Illumina HiSeq
+Species,Sequence_lengths,Number_of_contigs,N50_contig,Average_contig_size,Average_N50,Coverage,Technology_used,Factor
+Actinidia chinensis , 604217145 , 26721 , 58864  ,22612,10264, 150.0 , Illumina HiSeq, 1
+Selaginella kraussiana , 114502747 , 105943 , 2414  ,1080,47432, 150.0x , Illumina HiSeq,0
+Catharanthus roseus, 522653749 ,147992 ,14288,3531,36579, 50.0x , Illumina HiSeq,1
+Diospyros lotus ,1104189 ,797 , 1864,1385,592, 23.0x, Illumina HiSeq,0
+Vigna radiata ,463085359 ,23499 , 48831 ,19706,9483, 300.0x , Illumina HiSeq,1
+Nicotiana otophora ,2474110067 ,1121520 , 11316 ,2206,218638, 66.0x, Illumina HiSeq,1
+Oryza sativa ,309525339 ,99099 , 7471 ,3123,41430, 27.0x, Illumina HiSeq,0
+Azadirachta indica ,261121960 ,125535, 3497 ,2080,74670, 21.0x, Illumina HiSeq,0
+Nicotiana tabacum ,3553959712 ,797404, 21713 ,4456,163678, 29.0x, Illumina HiSeq,1
+Nicotiana tabacum ,3613159037 ,478137, 39411 ,7556,91678, 49.0x, Illumina HiSeq,1
+Gossypium arboreum ,1560831891 ,121184, 71965 ,12879,21688, 110x, Illumina HiSeq,1
+Trifolium pratense,304979311 ,267382, 2431 ,1140,125454, 58x, Illumina HiSeq,0
+Arabidopsis lyrata ,202972003 ,369168, 2321 ,549,87450, 279.3x, Illumina HiSeq,0
+Arabidopsis halleri ,221139660 ,411213, 2864 ,537,77213, 167.9x, Illumina HiSeq,0
+Azadirachta indica,200258601 ,158611,2138 ,1262,93666, 12.0x, Illumina HiSeq,0
